@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="\README-Assets\PowerShell_File_Walker.png">
+    <img src="\README-Assets\Banner">
 </h1>
 
 The project is functional, there is ongoing work on the documentation!
