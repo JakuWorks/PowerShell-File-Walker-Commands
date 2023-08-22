@@ -1,11 +1,8 @@
-<h1 align="center">
-    <br>
-    <img src=".\README-Assets\Banner.webp" alt="Banner With 'PowerShell File Walker' Text">
-</h1>
+<br>
+<img align="center" src=".\README-Assets\Banner.webp" alt="Banner With 'PowerShell File Walker' Text">
+<p align="center"><strong>Making File Selection in PowerShell Easy!</strong></p>
 
-<h4 align="center">Making File Selection in PowerShell Easy!</h4>
-
-The project is functional, there is ongoing work on the documentation!
+The project is functional, but there is ongoing work on the documentation!
 
 Brief _(temporary)_ install guide:
 Run 'PowerShell-File-Walker.ps1' from a PowerShell terminal.
