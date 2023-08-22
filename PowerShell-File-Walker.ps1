@@ -2986,8 +2986,7 @@ function Write-uFileIntroduction {
 
         $Message += @(
             "$( "`n" * ( $script:uIntroduction_ScrollUpMessage_NewlinesAbove - 1 ) )"
-            'Scroll up for information about the applied $PROFILE...'
-            "$( $s3 )`$Profile at: '$PROFILE'"
+            "Scroll up for information about the applied $script:uProductName..."
             '...' )
 
         Set-uNewWindowSizeVariables
