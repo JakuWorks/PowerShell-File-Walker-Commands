@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img src="\README-Assets\Banner">
+    <img src="\README-Assets\Banner.png">
 </h1>
 
 The project is functional, there is ongoing work on the documentation!
