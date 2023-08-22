@@ -1,5 +1,7 @@
 <h1 align="center">
-    <img src="\README-Assets\Banner.png">
+    <br>
+    <img src="\README-Assets\Banner.webp" alt="Banner With PowerShell File Walker Text">
+    <h4 align="center">Making File Selection *Easy*.</h4>
 </h1>
 
 The project is functional, there is ongoing work on the documentation!
