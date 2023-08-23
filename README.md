@@ -7,12 +7,9 @@
 $${\Large \color{White}File \space Navigation \space Made \color{Green} \space Easy }$$
 
 <p align="center">
-  <a href="https://example.com">
-    <img src="https://img.shields.io/badge/Hello-World!-blue" />
-  </a>
 
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/releases">
-    <img src="https://img.shields.io/github/v/release/JakuWorks/PowerShell-File-Walker" alt="Latest Release Download" />
+    <img src="https://img.shields.io/github/v/release/JakuWorks/PowerShell-File-Walker" width="1200" height="250" alt="Latest Release Download" />
   </a>
 
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/commits/main">
