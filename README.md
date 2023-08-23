@@ -16,7 +16,9 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
 
 The project is functional on a standard Windows 11 PC, but there is ongoing work on the documentation!
 
-Brief _(temporary)_ install guide:
+Everything will change...
+
+Brief install guide:
 1. Download the newest [PowerShell-File-Walker.ps1 release](https://github.com/JakuWorks/Powershell-File-Walker/releases/tag/v1.0.0)
 2. Make the `PowerShell-File-Walker.ps1` file run itself every time You launch
    PowerShell. [Tip: Use a PowerShell Profile](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles)
