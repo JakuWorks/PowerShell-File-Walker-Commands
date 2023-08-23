@@ -1027,7 +1027,8 @@ function Get-uBoundary {
         [Parameter( Mandatory = $true )] [String] $Direction,
         [Parameter( Mandatory = $false, ParameterSetName = 'LengthMultiplier' )] [int] `
             $LengthMultiplier = $script:uSentinelValue_Int32,
-        [Parameter( Mandatory = $true, ParameterSetName = 'RawLength' )] [int] $RawLength = $script:uSentinelValue_Int32
+        [Parameter( Mandatory = $true, ParameterSetName = 'RawLength' )] [int] $RawLength = $script:uSentinelValue_Int32,
+        [Switch] $MinusOne
     )
 
     Set-uNewWindowSizeVariables
@@ -1042,6 +1043,10 @@ function Get-uBoundary {
 
         $Length = [Math]::Max( $Length, 0 )
         $Length = [Math]::Floor( $Length + 0.5 )
+
+        if ( $MinusOne ) {
+            $Length--
+        }
 
         return "$( $script:uBoundary_Character_Body * [Math]::Floor( $Length + 0.5 ) )"
     }
@@ -1933,7 +1938,7 @@ function Write-uFullItemList {
     }
 
     Write-Host ''
-    Write-Host "$( Get-uBoundary -RawLength $arrowLength -Direction $script:uBoundary_Direction_Name_Right )"
+    Write-Host "$( Get-uBoundary -RawLength $arrowLength -Direction $script:uBoundary_Direction_Name_Right -MinusOne )"
     Write-Host "$( ' ' * $script:uList_BeforeCounterText_SpacesIfOneDigit  ) You're at: $( $script:uOperatingPath )"
     Write-Host ''
     Write-Host "$header"
@@ -1947,7 +1952,7 @@ function Write-uFullItemList {
 
     Write-Host ''
     Write-Host "$( ' ' * $script:uList_BeforeCounterText_SpacesIfOneDigit  ) You're at: $( $script:uOperatingPath )"
-    Write-Host "$( Get-uBoundary -RawLength $arrowLength -Direction $script:uBoundary_Direction_Name_Left )"
+    Write-Host "$( Get-uBoundary -RawLength $arrowLength -Direction $script:uBoundary_Direction_Name_Left -MinusOne )"
 
     if ( -not $NoNewlineUnderList ) {
         Write-Host ''
