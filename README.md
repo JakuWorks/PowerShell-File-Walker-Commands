@@ -31,6 +31,16 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
     />
   </a>
 
+  <!-- TODO ADD A MEANINGFUL HREF -->
+  <a>
+    <img
+        src=".\GitHub-Assets\platform-Windows_Linux_MacOS-008080.svg"
+       width="194"
+        height="20"
+       alt="Supported Platforms: Windows, Linux, MacOs"
+      />
+  </a>
+
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/pulls">
     <img
       src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"
