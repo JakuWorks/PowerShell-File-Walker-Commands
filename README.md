@@ -11,25 +11,41 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
 <p align="center">
 
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/releases">
-    <img src="https://img.shields.io/github/v/release/JakuWorks/PowerShell-File-Walker" alt="Download Latest Release" />
+    <img
+      src="https://img.shields.io/github/v/release/JakuWorks/PowerShell-File-Walker"
+      alt="Download Latest Release"
+    />
   </a>
 
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/commits/main">
-    <img src="https://img.shields.io/github/last-commit/JakuWorks/PowerShell-File-Walker/main" alt="View Latest Commits" />
+    <img
+      src="https://img.shields.io/github/last-commit/JakuWorks/PowerShell-File-Walker/main"
+      alt="View Latest Commits"
+    />
   </a>
 
   <a href="https://hanadigital.github.io/grev/?user=jakuworks&repo=powershell-file-walker">
-    <img src="https://img.shields.io/github/downloads/JakuWorks/PowerShell-File-Walker/total" alt="View Download Statistics" />
+    <img
+      src="https://img.shields.io/github/downloads/JakuWorks/PowerShell-File-Walker/total"
+      alt="View Download Statistics"
+    />
   </a>
 
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/pulls">
-    <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" alt="View Pull Requests" />
+    <img
+      src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"
+      alt="View Pull Requests"
+    />
   </a>
 
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/blob/main/LICENSE">
-    <img src=".\GitHub-Assets\license-MIT-blue" width="78" height="20s" alt="View License File" />
+    <img
+      src=".\GitHub-Assets\license-MIT-blue.svg"
+      width="78"
+      height="20s"
+      alt="View License File"
+    />
   </a>
-
 </p>
 
 ---
@@ -45,7 +61,7 @@ Brief install guide:
    PowerShell. [Tip: Use a PowerShell Profile](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles)
 3. That's all! :tada:
 
-# Temporary Functionality
+# Functionality
 
 ! Read the introduction after applying the script
 
