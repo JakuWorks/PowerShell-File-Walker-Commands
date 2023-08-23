@@ -4,7 +4,7 @@
   alt="Banner With 'PowerShell File Walker' Text"
 />
 
-$${\color{White}File \space Navigation \space Made \color{Green} \space Easy }$$
+$${\Large \color{White}File \space Navigation \space Made \color{Green} \space Easy }$$
 
 <p align="center">
   <a href="https://example.com">
