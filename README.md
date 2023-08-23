@@ -9,7 +9,6 @@
 $${\Large \color{White}File \space Navigation \space Made \color{Green} \space Easy }$$
 
 <p align="center">
-
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/releases">
     <img
       src="https://img.shields.io/github/v/release/JakuWorks/PowerShell-File-Walker"
@@ -47,16 +46,16 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
     />
   </a>
 
-  <br />
+  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
 
   <!-- TODO ADD A MEANINGFUL HREF -->
   <a>
     <img
-        src=".\GitHub-Assets\platform-Windows_Linux_MacOS-008080.svg"
-       width="194"
-        height="20"
-       alt="Supported Platforms: Windows, Linux, MacOs"
-      />
+      src=".\GitHub-Assets\platform-Windows_Linux_MacOS-008080.svg"
+      width="194"
+      height="20"
+      alt="Supported Platforms: Windows, Linux, MacOs"
+    />
   </a>
 </p>
 
