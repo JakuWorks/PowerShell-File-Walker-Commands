@@ -1,6 +1,8 @@
 <img
   align="center"
   src=".\GitHub-Assets\Banner.webp"
+  width="1200"
+  height="250"
   alt="Banner With 'PowerShell File Walker' Text"
 />
 
@@ -9,7 +11,7 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
 <p align="center">
 
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/releases">
-    <img src="https://img.shields.io/github/v/release/JakuWorks/PowerShell-File-Walker" width="1200" height="250" alt="Latest Release Download" />
+    <img src="https://img.shields.io/github/v/release/JakuWorks/PowerShell-File-Walker" alt="Download Latest Release" />
   </a>
 
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/commits/main">
@@ -25,7 +27,7 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
   </a>
 
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue" alt="View License File" />
+    <img src=".\GitHub-Assets\license-MIT-blue" width="78" height="20s" alt="View License File" />
   </a>
 
 </p>
