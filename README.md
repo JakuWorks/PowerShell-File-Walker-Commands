@@ -46,9 +46,9 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
       alt="View License File"
     />
   </a>
-</p>
 
-<p align="center">
+  <br />
+
   <!-- TODO ADD A MEANINGFUL HREF -->
   <a>
     <img
