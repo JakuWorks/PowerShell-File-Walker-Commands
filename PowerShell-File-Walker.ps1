@@ -6,8 +6,8 @@
 
 
 # Written by: https://github.com/JakuWorks/
-$script:uProductName = [string] 'Powershell-File-Walker'
-$script:uCurrentVersion = [string] '1.0.0'
+$script:uProductName = [string] 'Powershell File Walker'
+$script:uCurrentVersion = [string] 'v1.0.1'
 
 # Suggestions, error reports, reviews, and feedback are really appreciated! This software is for You after all!
 
