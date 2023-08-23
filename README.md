@@ -48,3 +48,6 @@ Brief install guide:
 - [ ] A way of Gathering feedback
 - [ ] GitHub Discussions
 - [ ] Documentation for Contributors
+
+## Overview Video Notes
+- Apply Command `. "$( $PROFILE.CurrentUserAllHosts )\..\PowerShell-File-Walker.ps1"`
