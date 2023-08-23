@@ -46,8 +46,6 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
     />
   </a>
 
-  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
-
   <!-- TODO ADD A MEANINGFUL HREF -->
   <a>
     <img
