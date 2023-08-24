@@ -69,7 +69,6 @@ Before proceeding to read the below information please acknowledge.
 
 ---
 
-
 ### A fatal flaw was found in the design choices of the script - the settings are directly inside the script - this means that with every update, the User's settings would have to be manually moved. Luckily there is ongoing work to fix this :tada:.
 
 *The current solution idea*
