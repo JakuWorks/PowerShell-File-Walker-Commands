@@ -57,22 +57,36 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
   </a>
 </p>
 
+<p align="center">
+  <a href="TODO">W.I.P.</a> •
+  <a href="TODO2">W.I.P.</a>
+</p>
+
 ---
 
-The project is functional on a standard Windows 11 PC, but there is ongoing work on the documentation!
+Before proceeding to read the below information please acknowledge.
+- The script is currently unstable
+
+---
+
+
+### A fatal flaw was found in the design choices of the script - the settings are directly inside the script - this means that with every update, the User's settings would have to be manually moved. Luckily there is ongoing work to fix this :tada:.
+
+*The current solution idea*
+
+A brave engineer as stood up to fill the need - the settings will be moved to a separate config.ps1 file *(name may change)* - the User will overwrite the default configuration there - the config.ps1 will be directly loaded with the . *dot* operator, overriding the default configuration included in the main file.
+
+This solution may add just a few ms to the loading time - but no noticeable changes.
+
+A throughout online documentation will be absolutely necessary - the config.ps1 contains the overrides defined by the Users, so it's blank by default.
+
+A GitHub wiki is planned.
+
+---
 
 Everything will change...
 
-Brief install guide:
-
-1. Download the newest [PowerShell-File-Walker.ps1 release](https://github.com/JakuWorks/Powershell-File-Walker/releases/tag/v1.0.0)
-2. Make the `PowerShell-File-Walker.ps1` file run itself every time You launch
-   PowerShell. [Tip: Use a PowerShell Profile](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles)
-3. That's all! :tada:
-
 # Functionality
-
-! Read the introduction after applying the script
 
 - 'cda' - Displays a list of current directory's files
 - 'cda 1' - Goes to the first item on the list
@@ -82,7 +96,9 @@ Brief install guide:
 
 ## Software
 
-- [x] PowerShell File Walker
+- [x] PowerShell File Walker Base
+- [ ] Fix the script
+- [ ] Create a new way for managing settings
 
 ## Testing
 
@@ -103,7 +119,3 @@ Brief install guide:
 - [ ] A way of Gathering feedback
 - [ ] GitHub Discussions
 - [ ] Documentation for Contributors
-
-## Overview Video Notes
-
-- Apply Command `. "$( $PROFILE.CurrentUserAllHosts )\..\PowerShell-File-Walker.ps1"`
