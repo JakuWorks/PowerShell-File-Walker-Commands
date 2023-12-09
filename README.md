@@ -64,57 +64,27 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
 
 ---
 
-Before proceeding to read the below information please acknowledge.
-- The script is currently unstable
+v1.0.0 baby! Woo hoo! :tada: :tada: :tada:
 
----
+Go to [releases](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/releases/new) to download!
 
-### A fatal flaw was found in the design choices of the script - the settings are directly inside the script - this means that with every update, the User's settings would have to be manually moved. Luckily there is ongoing work to fix this :tada:.
 
-*The current solution idea*
+Temporary readme advertisement documentation:
 
-A brave engineer as stood up to fill the need - the settings will be moved to a separate config.ps1 file *(name may change)* - the User will overwrite the default configuration there - the config.ps1 will be directly loaded with the . *dot* operator, overriding the default configuration included in the main file.
+MAIN COMMANDS
 
-This solution may add just a few ms to the loading time - but no noticeable changes.
+cda - Instead of using `cd` and having to write the names. Simply use `cda [number]` to go to an item from the list displayed by using `cda` without anu numbers
 
-A throughout online documentation will be absolutely necessary - the config.ps1 contains the overrides defined by the Users, so it's blank by default.
+cdf - Same as cda, but for getting the full path of selected items
 
-A GitHub wiki is planned.
+BONUS COMMANDS
 
----
+elev - elevate your powershell session AND KEEP THE current working directory
+unelev - unelevate your powershell session and keep the current working directory
 
-Everything will change...
 
-# Functionality
-
-- 'cda' - Displays a list of current directory's files
-- 'cda 1' - Goes to the first item on the list
-- 'cda '0,1,2,0,1,8+10,l' '1,2,0,1,1+1,badword' - Support for crazy movements - more on that later.
-
-# Public TODO
-
-## Software
-
-- [x] PowerShell File Walker Base
-- [ ] Fix the script
-- [ ] Create a new way for managing settings
-
-## Testing
-
-- [x] Windows 11 PowerShell 5.1 (The Default Windows Version)
-- [ ] Windows 11 PowerShell 7.3 (Often named `PowerShell Core`)
-- [ ] Windows 10 PowerShell 5.1 (The Default Windows Version)
-- [ ] Windows 10 PowerShell 7.3 (Often named `PowerShell Core`)
-- [ ] Ubuntu 22.04.2 Desktop
-- [ ] MacOs _(I will gladly accept MacOs testers)_
-
-## Documentation
-
-- [ ] README
-- [ ] GitHub Wiki
-
-## Other
-
-- [ ] A way of Gathering feedback
-- [ ] GitHub Discussions
-- [ ] Documentation for Contributors
+Main Features:
+- 4 awesome commands
+- 89 settings!
+- Extensive documentation (use Get-Help [command]) to display it
+- This script is so good even I use it personally
