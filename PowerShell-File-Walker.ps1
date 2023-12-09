@@ -1,4 +1,4 @@
-# if ( $script:w6_AlreadyLoaded ) { continue }  # todo uncomment this
+if ( $script:w6_AlreadyLoaded ) { continue }
 ( $script:w6_LoadingTimeStopwatch = [System.Diagnostics.Stopwatch]::new() ).Start()
 $script:w6_AlreadyLoaded = $true
 $script:w6_StartingWindowTitle = [string] $host.UI.RawUI.WindowTitle
