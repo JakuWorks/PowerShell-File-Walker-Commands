@@ -1,10 +1,10 @@
 The simplified function of the execution policies is this:
 
-> To stop all PowerShell scripts from working
+> To stop PowerShell scripts from working
 
-PowerShell scripts are simply text files that contain PowerShell commands, that PowerShell can run. They usually have these extensions: `.ps1` *(powershell script)*, `.psm1` *(powershell module)*, `.psd1` *(powershell data file)*
+PowerShell scripts are files that contain PowerShell commands, that PowerShell can run. They usually have these extensions: `.ps1` *(powershell script)*, `.psm1` *(powershell module)*, `.psd1` *(powershell data file)*
 
-## Two main dangers of using Bypass execution policy
+## Two main dangers of using the Bypass execution policy
 
 1. A non-technical user mistakenly running a PowerShell script downloaded from the internet (more common)
 
