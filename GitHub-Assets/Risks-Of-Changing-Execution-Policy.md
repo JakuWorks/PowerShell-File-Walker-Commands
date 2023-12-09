@@ -6,7 +6,7 @@ PowerShell scripts are files that contain PowerShell commands, that PowerShell c
 
 ## Two main dangers of using the Bypass execution policy
 
-1. A non-technical user mistakenly running a PowerShell script downloaded from the internet (more common)
+### 1. A non-technical user mistakenly running a PowerShell script downloaded from the internet (more common)
 
 - Example: a non-technical person receives an e-mail with a virus that is a PowerShell script. They download it and try to run it.
 
@@ -14,7 +14,7 @@ PowerShell scripts are files that contain PowerShell commands, that PowerShell c
 
    - If the execution policy was `Bypass`, they would (unaware of the danger) run the virus and destroy their PC
 
-2. A virus that uses a PowerShell script to do its malicious stuff **will not be blocked** (less common)
+### 2. A virus that uses a PowerShell script to do its malicious stuff **will not be blocked** (less common)
 
 - PowerShell scripts are VERY RARELY used by malware. So if you would get a virus on your PC, then there is a super small chance that virus uses a PowerShell script to do a certain action. The virus itself may not be written in PowerShell entirely, but it may use a PowerShell script to do something.
 
