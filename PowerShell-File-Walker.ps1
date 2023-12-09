@@ -1,115 +1,248 @@
-# --------------------------------> USER ZONE <--------------------------------
-# BY USING THIS SOFTWARE, YOU AGREE TO THE MIT LICENSE AT THE END OF THIS FILE.
+# if ( $script:w6_AlreadyLoaded ) { continue }  # todo uncomment this
+( $script:w6_LoadingTimeStopwatch = [System.Diagnostics.Stopwatch]::new() ).Start()
+$script:w6_AlreadyLoaded = $true
+$script:w6_StartingWindowTitle = [string] $host.UI.RawUI.WindowTitle
+$script:w6_Product_Name = [string] 'PowerShell-File-Walker Commands Bundle'
+$script:w6_Product_Version = [string] 'v1.0.0'
 
+# BY USING/MODIFYING/SHARING/DEALING WITH THIS SOFTWARE, YOU AGREE TO ITS LICENSE!
 
-# This file contains the cda and cdf functions that make changing paths in PowerShell a piece of cake!
+# ---------------------------------- LICENSE ----------------------------------
+# MIT License
 
+# Copyright (c) 2023 Jakub Wojnowski
 
-# Written by: https://github.com/JakuWorks/
-$script:uProductName = [string] 'Powershell File Walker'
-$script:uCurrentVersion = [string] 'v1.0.1'
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 
-# Suggestions, error reports, reviews, and feedback are really appreciated! This software is for You after all!
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+# -------------------------------- Introduction -------------------------------
 
-# Note: Due to the single-file nature of this product - all the documentation, functionality, licenses are placed in
-#       this single file.
+# This file contains cda and cdf functions that make file navigation in PowerShell a piece of cake!
+# It also contains the elev and unelev functions
 
-# ---------------------------------- SETTINGS ---------------------------------
-# Feedback about the default settings configuration is welcome!
+#                 I'd appreciate a notice of the The Original Project
+#                 in Your edits/forks - https://github.com/JakuWorks/PowerShell-File-Walker
+#                 I'm no lawyer, so make sure the MIT doesn't ask for that already
 
-# ------------ Basic Settings -----------
-$script:uIntroduction_Toggle = [bool] $true
-$script:uList_FileAttributes_Toggle = [bool] $true
-$script:uList_Colors_Toggle = [bool] $true
+# Note about forks:
+#       One of the main reasons for making this project was to fill my GitHub with stars - so I could have a good portfolio during freelancing
+#       I would love to see people fork/upgrade this software - so we can help more people. But please keep in mind that I really need a good portfolio to even have a chance at freelancing
+#       To be clear: My dream outcome is that you place message and a link to the original project at the bottom of your README, and encourage people to support the original project by giving it a star
 
-$script:uIntroduction_Greeting_CurrentTimeText_Toggle = [bool] $true
-$script:uIntroduction_Greeting_CurrentTimeText_Format = [int] '24' # Available options: '24', '12', 'Both'.
+# Note about contributing to beta:
+#       Tl;dr - Don't do it yet... Wait until I create a better contributing experience for you
+#       Writing a contributor's guide will be done at the end stage of development. Right now (!) the contributing experience is terrible. I recommend not doing it YET, because there is ZERO onboarding
+#       No one likes declining other people's commits. I hate it too... But unless a pull request is GREAT, and I would have zero concerns - I literally cannot accept it and therefore I MUST decline it
 
-$script:uList_NegativeValues_Toggle = [bool] $false
-$script:uList_NegativeValues_ShowEveryXthListing = [int] 5
-$script:uList_BeforeDisplay_SoftCleanTerminal = [bool] $true
-$script:uList_Stick_MoveTerminalAfterCorrectAnswer = [bool] $true
-$script:uList_Attributes_FirstDash_Character = [string] '>'
-$script:uList_Attributes_ClosingNumberPrefix = [string] ''
-$script:uList_Attributes_ClosingNumberSuffix = [string] '' # If You have very long file names or very little screen
-# space, to the point, where one file name takes over one terminal line - I recommend setting this setting
-# to the ' apostrophe character.
-
-$script:uElev_Default_ExitCurrentTerminal = [bool] $false
-$script:uNoElev_Default_ExitCurrentTerminal = [bool] $false
-
-$script:uIntroduction_ScrollUpMessage_DoDisplay = [bool] $true
-$script:uIntroduction_DoClearTerminalBeforeIntroduction = [bool] $false # Turning this ON may hide errors that occurred
-# during setup.
-
-# From the advanced settings You may be interested in:
-#   - Changing the colors for attributes on the cda/cdf lists.
-#     For example making the listings with the attribute 'System' be Dark Blue. ( This is already the default
-#     behaviour )
-#   - Changing the aliases for commands.
-#     For example adding an alias for 'noelev' named 'nudo'. ( This is already the default behaviour )
-
-
-# ---------- Advanced Settings ----------
+# Note about this project:
+#       This was intended to be a "small personal project", that would take me 2 weeks. It's the 4'th month now and the project is still not finished...
 #
-# Note: To further understand the settings, please acknowledge:
-#       - this script dynamically makes use of the current terminal window size and changes some of it's text,
-#         responses, etc. accordingly
-#       - You can pass a negative value as the stick option or to the cda/cdf functions - it will select the item but
-#         from the end. e.g. 'cda -1' will select the last value on the list.
-
-#       - The Before Attributes zone refers to for example:
-#           [1] SomeFileName
-#       - The Attributes zone refers to for example:
-#                            >  -  -> System, Readonly
-#       - The After Attributes zone refers to for example:
-#                                                      [1]
-#       - Combined they give:
-#           [1] SomeFileName >  -  -> System, Readonly [1]
-
-#       - Do not enter stupid values. Try to avoid decimals, values of an another type than default
+#       Today (4'th of November 2023) and I've almost finished the Documentation
 #
+#       After the documentation is done, there will be a "wait and see" period
+#       The "wait and see" period will last until this project becomes popular (so 40-100 stars)
+#       I will focus on something else during this period
+#
+#       After this project reaches some level popularity, I will try to find the time, and revolutionize all the documentation - the code will mostly remain unchanged
+#       The "revolution" period is where I depersonalize this project, and make it more professional
+#       I will probably remove the Introduction section in this script entirely, and replace it with something better, more depersonalized
+#       The documentation will contain less "I", and more "we"
+#       This is also where I make documentation, guidelines, etc. for contributors, and prepare this project to be continued by others, so I can focus on other things
+#
+#       This is as far as the plans go right now. It's hard to predict what will happen in the future
 
-$script:uAlways_Write_Approximate_Loading_Time = [bool] $false # This itself extends the loading time by a few
-# milliseconds.
+# Note about irrelevant comments:
+#       Please remove/edit any no-longer-relevant comments
 
-if ( $script:uAlways_Write_Approximate_Loading_Time ) { $script:uLoadingStartTime = ( Get-Date ) } # Do not mind this line. Counting the approximate loading time starts here.
+# Note about the data file:
+#       The script creates a .dotfile at the user's home directory. It is used to store data. Currently the .dotfile has only one thing to store - the loads count.
+#       The writing/reading code is very primitive. Just simple ReadAllText and WriteAllText operations
+#       To store more than one piece of information you'd have to upgrade this script
 
-$script:uList_Attributes_MinCharactersOffset_Right = [int] 30
-$script:uList_Attributes_MinCharactersOffset_Left1 = [int] 300 # A high number here ( i.e. 300 ) makes attributes
-# stretch to the left as far as they can whilst respecting the offset from the right.
-$script:uList_Attributes_MinCharactersOffset_Left2 = [int] 7
-$script:uList_Attributes_MinCharactersOffset_Left3 = [int] 3
-$script:uList_Attributes_SpacesBetweenDashes = [int] 35
-$script:uList_Attributes_Character_Dash = [string] '-'
-$script:uList_Attributes_Character_Space = [string] ' '
-$script:uList_Attributes_Character_Arrow = [string] '->'
-$script:uList_Attributes_ExclusionList = [string[]] @( 'Directory', 'NotContentIndexed', 'ReparsePoint' )
-$script:uList_Attributes_PriorityList = [string[]] @( 'System' )
-$script:uList_Attributes_FirstDash_SpacesBefore = [int] 4
+# Note about prefixes:
+#       Most script-scope variables and functions are prefixed to avoid the user overriding them them by mistake
 
-$script:uList_Attributes_Colors_Default_Priority = [int] 10
-$script:uList_Attributes_Colors = [hashtable] @{
-    # Note: To get a colorized list with all valid color combinations use 'Write-uColorCombinations' <- Epilepsy warning
-    #       The default order is - for each foreground color, all background colors are displayed.
-    #       Use '-Swap' to flip the sorting to - For each background color, all foreground colors are displayed.
+# Note about sentinel values:
+#       Many $false, $null, '', and other negative values were replaced with $script:w6_SentinelValue_String,
+#       because it's easier to compare and evaluate a sentinel string than a $null
+
+# Helpful RegExes to make code formatting easier:
+#       Here are some RegExes to help find formatting overlooks:
+
+#       These RegExes should work with VSCode's Ctrl+F:
+
+#       - Find () brackets without spaces -  (?:(?<! |\(|\n)\))|(?:\((?! |\)|\n))
+
+#       - Find {} brackets without spaces -  (?:(?<! |\{|\n)\})|(?:\{(?! |\}|\n))
+
+#       - Find [] brackets with spaces -  (?:\[(?= )|(?<= )\])
+
+#       - Find function definitions without 'w6_' -  (?:function \w+-[^w][^6][^_]\w*)
+
+#       - Find script-scope variables without 'w6_' -  (?:\$script:[^w][^6][^_]\w*)
+
+#       These RegExes do not work with VSCode's Ctrl+F
+
+#       - Find variables with missing '$script:' (experimental)
+#           \$(?!script:)(\w+(?!\w))(?<=\$script:\1[\S\s]*)
+#         Works on https://regex101.com with the ECMAScript (JavaScript) flavour
+#         Explanation: If a script-scope variable is defined with '$script:', BUT later the variable is referenced WITHOUT '$script:' - the reference WITHOUT '$script' should be matched by this regex
+#         e.g.:
+#         $RegexTest_Hello        <- doesn't match, because this regex does not match backwards BEFORE a definition with '$script'
+#         $script:RegexTest_Hello <- doesn't match. A reference with '$script:' tells the regex that this is a script-scope variable
+#         $RegexTest_Hello        <- should match, because there is missing '$script' text
+
+
+# ------------------------------ Default Settings -----------------------------
+
+# This is an important section where all default settings are stored
+$script:w6_Boundary_Character_Body = [string] '-'
+$script:w6_Boundary_Character_LeftTip = [string] '<'
+$script:w6_Boundary_Character_RightTip = [string] '>'
+$script:w6_Boundary_Length_Full = [double] 1 # Changing this multiplier affects every other Length
+$script:w6_Boundary_Length_Long = [double] 0.95
+$script:w6_Boundary_Length_Max = [double] 1 # Same as full, but doesn't affect other other Lengths
+$script:w6_Boundary_Length_Medium = [double] 0.65
+$script:w6_Boundary_Length_Short = [double] 0.45
+$script:w6_CdaLikeCommands_InputCharactersPattern_SeparatorCharacter = [string] ','
+$script:w6_Elev_Default_ExitCurrentSession = [bool] $false
+$script:w6_Elev_NewConsoleTitle = [string] $script:w6_StartingWindowTitle
+$script:w6_Get_Color_Combinations_Characters_PaddingToMiddle = [string] ' '
+$script:w6_Introduction_DoClearConsoleBeforeIntroduction = [bool] $true # Turning this ON may hide errors that occurred during setup
+$script:w6_Introduction_Greeting_CurrentTimeText_Format = [int] 24 # Available options: 24, 12, 'Both'
+$script:w6_Introduction_Greeting_StartHour_Afternoon = [int] 12
+$script:w6_Introduction_Greeting_StartHour_Evening = [int] 17
+$script:w6_Introduction_Greeting_StartHour_Morning = [int] 5
+$script:w6_Introduction_Greeting_Text_Afternoon = [string] 'Good Afternoon!'
+$script:w6_Introduction_Greeting_Text_Evening = [string] 'Good Evening!'
+$script:w6_Introduction_Greeting_Text_Fallback = [string] 'Greetings!'
+$script:w6_Introduction_Greeting_Text_Morning = [string] 'Good Morning!'
+$script:w6_Introduction_MaxTotalAutomaticWrites = [int] 3
+$script:w6_Introduction_ScrollUpMessage_DoDisplay = [bool] $true
+$script:w6_Introduction_ScrollUpMessage_NewlinesAbove = [int] 5
+$script:w6_Introduction_Toggle = [bool] $false
+$script:w6_Introduction_Toggle_CommandsHelp = [bool] $true
+$script:w6_Introduction_Toggle_ConfigStats = [bool] $true
+$script:w6_Introduction_Toggle_DetectedOS = [bool] $true
+$script:w6_Introduction_Toggle_Greeting = [bool] $true
+$script:w6_List_AfterAttributesListNumber_ListNumber_Visible = [bool] $true # Turning this off may be useful if you want to have custom "frame" for cda - you can change the afterattributes
+$script:w6_List_AfterAttributesListNumber_ToggleFullDisplay = [bool] $true
+$script:w6_List_Attributes_BlackList_cda = [string[]] @( 'Directory', 'NotContentIndexed', 'ReparsePoint', 'Normal', 'Archive' )
+$script:w6_List_Attributes_BlackList_cdf = [string[]] @( 'NotContentIndexed', 'ReparsePoint', 'Normal', 'Archive' )
+$script:w6_List_Attributes_Character_Arrow = [string] ' -> '
+$script:w6_List_Attributes_Character_AttributeSeparator = [string] ', '
+$script:w6_List_Attributes_Character_Dash = [string] '-'
+$script:w6_List_Attributes_Character_Space = [string] ' '
+$script:w6_List_Attributes_ClosingNumberPrefix = [string] ''
+$script:w6_List_Attributes_ClosingNumberSuffix = [string] '' # If you have very long file names or very little screen space, to the point, where one file name takes over one console line - I recommend setting this setting to the ' apostrophe character.
+$script:w6_List_Attributes_Colors_Default_Priority = [double] 10
+$script:w6_List_Attributes_FirstDash_Character = [string] '>'
+$script:w6_List_Attributes_FirstDash_SpacesBefore = [int] 4
+$script:w6_List_Attributes_MinCharactersSeparating_Left1 = [int] 3000 # A high number here makes attributes stretch to the left as far as they can whilst respecting the Separation from the right # Preferred amount of spaces
+$script:w6_List_Attributes_MinCharactersSeparating_Left2 = [int] 7 # The minimum amount of spaces before starting to decrease Right
+$script:w6_List_Attributes_MinCharactersSeparating_Left3 = [int] 3  # The absolute minimum amount of spaces
+$script:w6_List_Attributes_MinCharactersSeparating_Right = [int] 30
+$script:w6_List_Attributes_PriorityList_cda = [string[]] @( 'System' )
+$script:w6_List_Attributes_PriorityList_cdf = [string[]] @( 'System' )
+$script:w6_List_Attributes_SpacesBetweenDashes = [int] 35
+$script:w6_List_BeforeCounterText_Character_Space = [string] ' '
+$script:w6_List_BeforeCounterText_SpacesIfOneDigit = [int] 3
+$script:w6_List_BeforeDisplay_SoftClearConsole = [bool] $true
+$script:w6_List_Boundary_LengthEquation_WindowWidthSubtracting_MinCharactersSeparatingRightMultiplier = [double] 0.9
+$script:w6_List_Character_AccessDenied = [string] '!'
+$script:w6_List_Character_Bracket_ListNumber_AfterAttributes_Closing = [string] ']'
+$script:w6_List_Character_Bracket_ListNumber_AfterAttributes_Opening = [string] ' ['
+$script:w6_List_Character_Bracket_ListNumber_BeforeAttributes_Closing = [string] ']'
+$script:w6_List_Character_Bracket_ListNumber_BeforeAttributes_Opening = [string] '['
+$script:w6_List_Character_DisplayList = [string] 'l'
+$script:w6_List_Character_DisplayList_DoDisplayOnList = [bool] $false # Controls if the 'DisplayList' character will itself be displayed on the list.
+$script:w6_List_Character_ExitStick = [string] 'q'
+$script:w6_List_Character_Zero = [string] '0'
+$script:w6_List_Colors_Toggle = [bool] $true
+$script:w6_List_FileAttributes_Toggle = [bool] $true
+$script:w6_List_ForceFiles_DefaultValue = [bool] $true
+$script:w6_List_Input_MathCharacters = [string[]] @( '*', '/', '%', '+', '-', '(', ')', '.' ) # During the first cda/cdf/stick call, the script filters these characters. If any of these characters is a PowerShell command/alias, then it's removed from the list. E.g. '%' is an alias for ForEach-Object by default, so it's removed from the list later on.
+$script:w6_List_NegativeValues_Display_Separator = [string] ','
+$script:w6_List_NegativeValues_Display_ShowEveryXthListing = [int] 5
+$script:w6_List_NegativeValues_Display_Toggle = [bool] $false
+$script:w6_List_Stick_BadInput_FirstTime = [bool] $true # If set to true - the first time an incorrect stick option is passed - an alternative (longer) message will be displayed. # TODO FINISHED HERE
+$script:w6_List_Stick_BadInput_MaxErrorRetries = [int] 4
+$script:w6_List_Stick_BadInput_Sleep_Milliseconds_FirstTime = [int] 1000
+$script:w6_List_Stick_BadInput_Sleep_Milliseconds_NotFirstTime = [int] 300
+$script:w6_List_WindowTitle_Processing = [string] 'Processing...'
+$script:w6_List_WriteSelectedFiles_DefaultValue_cda = [bool] $false
+$script:w6_List_WriteSelectedFiles_DefaultValue_cdf = [bool] $false
+$script:w6_SetOperatingPath_DefaultParameterValue_Silent_IfUsedBy_Script = [bool] $true
+$script:w6_SetOperatingPath_DefaultParameterValue_Silent_IfUsedBy_User = [bool] $false
+$script:w6_TaskbarFlashing_FlashTimes = [int] 100
+$script:w6_TaskbarFlashing_OneFlashDurationMilliseconds = [int] 1500
+$script:w6_Unelev_Default_ExitCurrentSession = [bool] $false
+$script:w6_Unelev_NewConsoleTitle = [string] $script:w6_StartingWindowTitle
+$script:w6_Unelev_ScheduledTaskName_RemoveMeNamedPrefix = [string] '(REMOVE ME)'
+$script:w6_Write_Approximate_Loading_Time = [bool] $true
+
+$script:w6_List_Attributes_RenameTable = [hashtable] @{
+    # 'ReadOnly'   = 'R'
+    # 'Hidden'     = 'H'
+    # 'System'     = 'S'
+    # 'Directory'  = 'D'
+    # 'Archive'    = 'A'
+    # 'Normal'     = 'N'
+    # 'Temporary'  = 'T'
+    # 'Compressed' = 'C'
+    # 'Offline'    = 'O'
+    # 'Encrypted'  = 'E'
+    # 'ReparsePoint' = 'RP'
+    # 'NotContentIndexed' = 'NCI'
+
+    # 'ReadOnly'          = [char]::ConvertFromUtf32( 0x1F635 )
+    # 'Hidden'            = [char]::ConvertFromUtf32( 0x1F648 )
+    # 'System'            = [char]::ConvertFromUtf32( 0x1F976 )
+    # 'Directory'         = [char]::ConvertFromUtf32( 0x1F4C1 )
+    # 'Archive'           = [char]::ConvertFromUtf32( 0x1F60E )
+    # 'Normal'            = [char]::ConvertFromUtf32( 0x1F610 )
+    # 'Temporary'         = [char]::ConvertFromUtf32( 0x1F605 )
+    # 'Compressed'        = [char]::ConvertFromUtf32( 0x1F4A9 )
+    # 'Offline'           = [char]::ConvertFromUtf32( 0x1F47E )
+    # 'Encrypted'         = [char]::ConvertFromUtf32( 0x1F47B )
+    # 'ReparsePoint'      = [char]::ConvertFromUtf32( 0x1F517 )
+    # 'NotContentIndexed' = [char]::ConvertFromUtf32( 0x1F4A1 )
+}
+
+$script:w6_List_Attributes_Colors = [hashtable] @{
+    # Use 'Write-w6_ColorCombinations' to get a colored list with all valid color combinations <- Epilepsy warning
+    # The default order is - for each foreground color, all background colors are displayed.
+    # Use '-Swap' to flip the sorting to - For each background color, all foreground colors are displayed.
     #
-    # Note: To get a raw list of Available Colors use: 'Write-uColors'.
+    # To get a raw list of Available Colors use: 'Write-w6_Colors'.
 
-    # Note: If many match - the one with the __ LOWEST __ priority will be applied.
+    # If many match - the one with the __ LOWEST __ priority will be applied.
 
-    # Here is an example of one full entry:
-    # 'The attribute name displayed on the list ( Case Does Not Matter )' = @{
+    # # Example of one full entry:
+    # 'The attribute name displayed on the list' = @{
     #     'BackgroundColor_Priority' = 1
     #     'BackgroundColor'          = 'Red'
     #     'ForegroundColor_Priority' = 1
     #     'ForegroundColor'          = 'Blue'
     # }
-    # Another Example:
+    # # Second example:
     # 'Hidden' = @{
     #     'ForegroundColor_Priority' = 6
-    #     'ForegroundColor' = 'DarkGray'
+    #     'ForegroundColor'          = 'DarkGray'
     # }
 
     'System' = @{
@@ -122,119 +255,51 @@ $script:uList_Attributes_Colors = [hashtable] @{
         'ForegroundColor'          = 'DarkGray'
     }
 
+
     # Advanced configuration:
 
     # Attribute Name:
     #  - 'Any' - Will always be applied
 
     # Color Name:
-    #  - 'Default' - You can explicitly use the default color chosen by the console.
+    #  - 'Default' - you can explicitly say to use the default color chosen by the console.
 }
 
-$script:uList_Stick_BadInput_Sleep_Milliseconds_FirstTime = [int] 1000
-$script:uList_Stick_BadInput_Sleep_Milliseconds_NotFirstTime = [int] 300
-$script:uList_Stick_BadInput_MaxErrorRetries = [int] 4
-$script:uList_Stick_BadInput_FirstTime = [bool] $true # If set to true - the first time an incorrect stick option is
-# passed - an alternative message will be displayed.
-
-$script:uList_Character_DisplayList_DoDisplayOnList = [bool] $false # Controls if the 'DisplayList' character will
-# itself be displayed on the list.
-$script:uList_Character_DisplayList = [string] 'l'
-$script:uList_Character_Zero = [string] '0'
-$script:uList_Character_ExitStick = [string] 'q'
-$script:uList_Character_AccessDenied = [string] '!'
-$script:uList_Character_Bracket_BeforeAttributes_Opening = [string] '['
-$script:uList_Character_Bracket_BeforeAttributes_Closing = [string] ']'
-$script:uList_Character_Bracket_AfterAttributes_Opening = [string] '['
-$script:uList_Character_Bracket_AfterAttributes_Closing = [string] ']'
-
-$script:uList_BeforeCounterText_Character_Space = [string] ' '
-$script:uList_BeforeCounterText_SpacesIfOneDigit = [int] 3
-
-$script:uList_Title_Processing = [string] 'Processing...'
-$script:uList_NegativeValues_Separator = [string] ','
-$script:uList_BoundaryArrowBody_RightOffsetMultiplier = [int] 0.3 # The "RightOffset" means the MinCharactersOffset_Right
-$script:uList_Input_Padding_Times = [int] 1
-$script:uList_Input_MathCharactersToFilter = [string[]] @( '*', '/', '%', '+', '-', '(', ')', '.' ) # These characters
-# are filtered during the first cda/cdf/stick call. If any of these characters is a powershell command/alias, then it's
-# removed from the list. E.x. '%' is an alias for ForEach-Object by default, so it's removed from the list later on.
-
-$script:uIntroduction_Greeting_StartHour_Morning = [int] 5
-$script:uIntroduction_Greeting_StartHour_Afternoon = [int] 12
-$script:uIntroduction_Greeting_StartHour_Evening = [int] 17
-$script:uIntroduction_Greeting_Text_Morning = [string] 'Good Morning'
-$script:uIntroduction_Greeting_Text_Afternoon = [string] 'Good Afternoon'
-$script:uIntroduction_Greeting_Text_Evening = [string] 'Good Evening'
-$script:uIntroduction_Greeting_Text_Fallback = [string] 'Greetings'
-$script:uIntroduction_Greeting_Text_Symbol = [String ]'!'
-
-$script:uBoundary_Character_Body = [string] '-'
-$script:uBoundary_Character_RightTip = [string] '>'
-$script:uBoundary_Character_LeftTip = [string] '<'
-$script:uBoundary_Length_Full = [int] 1 # Changing this multiplier affects every other Length by default
-$script:uBoundary_Length_Max = [int] 1 # Same as full, but doesn't affect other other Lengths
-$script:uBoundary_Length_Long = [int] 0.95
-$script:uBoundary_Length_Medium = [int] 0.65
-$script:uBoundary_Length_Short = [int] 0.45
-
-$script:uIntroduction_ScrollUpMessage_NewlinesAbove = [int] 5
-
-$script:uTaskbarFlashing_OneFlashDurationMilliseconds = [int] 1500
-$script:uTaskbarFlashing_FlashTimes = [int] 100
-
-$script:uElev_NewTerminalTitle = [string] 'Windows PowerShell'
-$script:uNoElev_NewTerminalTitle = [string] 'Windows PowerShell'
-$script:uNoElev_ScheduledTaskName_DeleteMePrefix = [string] '(DELETE ME)'
-$script:uNoElev_WindowsTerminalProcessName = [string] 'WindowsTerminal'
-
-$script:uSetOperatingPath_DefaultSilent_IfUsedBy_Script = [bool] $true
-$script:uSetOperatingPath_DefaultSilent_IfUsedBy_User = [bool] $false
-
-$script:uCdaLikeInputCharactersPattern_SeparatorCharacter = [string] ','
-
-$script:uGet_Color_Combinations_Characters_PaddingToMiddle = [string] ' '
-
+# Aliases Notes:
 # A big amount of aliases can noticeably decrease the loading times - some options are commented out.
-$script:uAliases_cda = [string[]] @(
-    'Set-DirectoryAlphabetically'
+# Double ## means that the alias is considered better than others
+
+$script:w6_Aliases_cda = [string[]] @(
+    ## 'Set-DirectoryAlphabetically'
 )
 
-$script:uAliases_cdf = [string[]] @(
-    'Get-CurrentDirectoryFile'
+$script:w6_Aliases_cdf = [string[]] @(
+    ## 'Get-CurrentDirectoryFile'
 )
 
-$script:uAliases_elev = [string[]] @(
-    # 'Elevate'
-    # 'ElevateTerminal'
-    # 'ElevatePowerShellTerminal'
-    # 'OpenElevatedTerminal'
-    # 'OpenElevatedPowerShellTerminal'
+$script:w6_Aliases_elev = [string[]] @(
+    ## 'Elevate'
 
     # 'Elevate-Terminal'
     # 'Elevate-PowerShellTerminal'
     # 'Open-ElevatedTerminal'
-    'Open-ElevatedPowerShellTerminal'
+    ## 'Open-ElevatedPowerShellTerminal'
 
-    # 'wsudo' # Short for 'Windows Sudo'
-    # 'wudo'
-    'sudo' # The 'elev' command works only on Windows machines, therefore - this alias won't overwrite
-    #        the built-in 'sudo' command in Unix systems ( Linux, MacOS, etc. ).
+    ## 'wsudo' # Short for 'Windows Sudo'
+    'wudo' # Short for 'wsudo'
+    # 'sudo' # The 'elev' command works only on Windows machines, therefore - this alias WON'T overwrite
+    #        the built-in 'sudo' command in Unix systems ( Linux, MacOS, etc. )
 )
 
-$script:uAliases_noelev = [string[]] @(
-    # 'Unelevate'
-
-    # 'UnelevateTerminal'
-    # 'UnelevatePowerShellTerminal'
-    # 'OpenUnelevatedTerminal'
-    # 'OpenUnelevatedPowerShellTerminal'
+$script:w6_Aliases_unelev = [string[]] @(
+    ## 'Unelevate'
 
     # 'Unelevate-Terminal'
     # 'Unelevate-PowerShellTerminal'
     # 'Open-UnelevatedTerminal'
-    'Open-UnelevatedPowerShellTerminal'
+    ## 'Open-UnelevatedPowerShellTerminal'
 
-    'unsudo'
+    ## 'unsudo'
     # 'usudo'
     # 'uudo'
     # 'udo'
@@ -254,167 +319,79 @@ $script:uAliases_noelev = [string[]] @(
     # 'nosudo'
     # 'nsudo'
     'nudo'
+    # 'wnudo'
 )
 
 # Indentation for messages.
-$s1 = [string] ' '
-$s2 = [string] '  '
-$s3 = [string] '   '
-$s4 = [string] '      '
-$s5 = [string] '        '
-$s6 = [string] '          '
+$w6_s1 = [string] ' '
+$w6_s2 = [string] '  '
+# $w6_s3 = [string] '   ' # Unused
+$w6_s4 = [string] '      '
+# $w6_s5 = [string] '        ' # Unused
+$w6_s6 = [string] '          '
 
-# ---------------------------------> DEV ZONE <--------------------------------
+# ---------------------------- PRIVATE FUNCTIONS 1 ----------------------------
 
-# IMPORTANT NOTE: The license is at the end of the file. It's MIT.
-#
-#                 I'd appreciate a notice of the The Original Project
-#                 in Your edit/fork READMEs - https://github.com/JakuWorks/PowerShell-Directory-Walker
-#                 I'm no lawyer, so make sure the MIT doesn't require that as well.
-
-# Note: Most script-scope variable/function names are prefixed, not to risk the user overriding them/using them by
-#       mistake. Most helper functions from this script were not designed to be reusable outside this script, so they
-#       are also prefixed.
-
-# Note: In many cases, $false, $null, and any other negative values were replaced with $script:uSentinelValue_String,
-#       because it's easier to compare and evaluate a sentinel string than a $null.
-
-# Note: If You wish to edit this code while keeping its length style - The Rulers/Line Length Guides are:
-#       - after 79'th character - section headers
-#       - after 120'th character - everything else.
-#       There are a few places where the limit was ignored to enhance readability.
-
-# Note: Since You can clearly see that the cade has almost every bracket separated by a space, and all functions
-#       have a 'u' prefix after the dash - here are some useful RegExes to help find overlooks:
-
-#       - Find Bad () brackets -  (?:(?<! |\(|\n)\))|(?:\((?! |\)|\n))
-
-#       - Find Bad {} brackets -  (?:(?<! |\(|\n)\})|(?:\{(?! |\)|\n))
-
-#       - Find Bad [] brackets -  (?:(?:\[ )|(?: \]))
-
-#       - Find Functions without 'u' - (?:function \w+-[^u]\w*)
-
-#       - Find script-scope variables without 'u' - (?:\$script:[^u]\w*)
-
-#       - Find script-scope variables that were referenced without '$script:' (Some code editors might not support
-#         this regex) - Use RegExr! When a script-scope variable was defined with '$script:' but later the variable
-#         was referenced without '$script:' - the bad reference should be matched by this regex.
-#         I also recommend testing it - \$(?!script:)(\w+(?!\w))(?<=\$script:\1[\S\s]*)
-
-# Tool: There are lots of settings - use this. You may find the code You want by doing Ctrl+F on a setting that may be
-#       used by the code You're looking for.
-#       e.x. To find where the 'Default' abstract color is handled - You may
-#       simply Ctrl+F on $script:uList_Attributes_Colors_Name_DefaultColor.
-
-# Improvement Ideas - these are ideas - feedback is needed - some of these might actually decrease the value
-#                     of this product:
-
-#       - Use lists instead of arrays when applicable to improve performance
-
-#       - Use hash tables where applicable to improve performance
-
-#       - Format the code to better fit the PowerShell script style
-
-#       - Further break down the parts of larger functions into smaller 'tools'
-
-#       - Support attribute colors for the Zero on the files list.
-
-#       - Support multiple attribute combinations in attribute colors.
-#         For example:
-#            $TheColorsSetting = @{
-#                'Hidden, System' = @{  # <---- LOOK HERE
-#                    'ForegroundColor_Priority' = 1
-#                    'ForegroundColor'          = 'DarkBlue'
-#                }
-#                 'System'         = @{
-#                    'ForegroundColor_Priority' = 2
-#                    'ForegroundColor'          = 'Blue'
-#                }
-#                 'Hidden'         = @{
-#                    'ForegroundColor_Priority' = 3
-#                    'ForegroundColor'          = 'DarkGray'
-#                }
-#            }
-
-#       - A setting to enable deeper zero listings in cda. For example:
-#          [0] C:/Current/Working/Directory
-#         [0a] C:/Current/Working
-#         [0b] C:/Current
-#         [0c] C:/
-
-#       - A way to search/ fuzzy search by name in cda/cdf.
-#           _This would be really rewarding - Who wouldn't want this feature? - but troublesome to implement correctly._
-#             Tl;DR - Unless this product is going to be viral, and this feature will be requested - implementing
-#                      this feature would consume a lot of time, and require to undo many design choices.
-#                      It lays in the "High Effort, High Reward" category.
-#           Brainstorm:
-#             - Cross-Platform? - Not all consoles may support 'undoing' line writes.
-#               The "`r" and "`b" may be useful. There are also .NET functions to change the cursor position.
-#               But then there's also a need to undo line breaks.
-#             - Time and effort? - The script was not created with an idea of searching through the list. It would
-#               probably require huge a amount of time to 'undo' all the design choices.
-#             - If this was ever implemented - the vision is that the list would update during typing. Maybe storing
-#               the list lines variable for later use ( instead of just writing it ). Maybe using a variable that has
-#               a list of the original non formatted current directory children result - filtering through that list -
-#               saving the indexes of the matched items from the list - writing the lines of the __ formatted list __
-#               that have the same index as the matched items from the unformatted list.
-#               Then some computer wizardry function that will simply write the list in the same place, and delete
-#               the previous one - put these lines in, and that's all the job for writing.
-#             - How would the input be supported? An input box below the list that ( with some wizardry ) would update
-#               the list every time something is written - would require tremendous care to optimize such a thing.
-#             - Ok but what about selecting the file? I have no idea.
-#               Maybe using the Up and Down arrows, and Enter.
-#               Maybe the user would write the name until only one result is left. Fuzzy name searching would be pretty
-#               neat here, because it does not require to write the entire name to select between 'MyLongFileName_1' and
-#               'MyLongFileName_2'.
-#
-#       - Simplify The Installation - the vision is to be able to install this product with a PowerShell command, while
-#         keeping the ease of configuration and portability. A PowerShell module might be the solution if We do it
-#         correctly.
-#
-#       - Convert the script to a powershell module
-#          Current User Feedback:
-#           - None
-#          Notes:
-#             - This would destroy the single-file nature of this product.
-#             - Maybe make two versions - single-file and module.
-#             - The installation would be easier ( simply use 'Install-Module' )
-#             - The configuration would be harder to learn, and less portable compared to one file. Instead of just
-#               changing a variable in a dedicated zone __in one file__, You'd have to learn where is the configuration
-#               file, and use a new format ( JSON )
-#             - The code would be cleaner ( probably ) because 'splitting' the code into small modules would force
-#               the functions to be more reusable, and 'detached' ( less global variables ) . This is harder when using
-#               a single file.
-#          Would Require:
-#             - Handling settings with a JSON file and verifying it with a JSON schema.
-#               Note: Most users of this product probably understand how to edit JSONs.
-#             - Moving all documentation to GitHub since accessing this single file would become harder.
-#             - Splitting the script into smaller modules - since a PowerShell module is no longer a single file - it
-#               would be beneficial to use the new 'space'.
-#               Splitting into smaller modules would force Us to write better, more portable, maintainable code.
-
-# ------------------------------ HELPER FUNCTIONS -----------------------------
+# These two commands have proven to be very valuable for profiling this script
+# ms means "measure script"
+# mss means "measure script sort" - because mss sorts the output
+# IMPORTANT: YOU MUST HAVE THE PSPROFILER MODULE INSTALLED `Install-Module PSProfiler`
+# function ms {
+#     pwsh -NoProfile -Command {
+#         $FilePath = 'PATH TO YOUR POWERSHELL-FILE-WALKER COMMANDS BUNDLE SCRIPT HERE'
+#         $scriptContent = Get-Content -Path $FilePath -Raw
+#         $scriptBlock = [scriptblock]::Create( $scriptContent )
+#         Clear-Host
+#         Measure-Script -ScriptBlock $scriptBlock -Top 120
+#     }
+# }
+# function mss {
+#     pwsh -NoProfile -Command {
+#         $FilePath = 'PATH TO YOUR POWERSHELL-FILE-WALKER COMMANDS BUNDLE SCRIPT HERE'
+#         $scriptContent = Get-Content -Path $FilePath -Raw
+#         $scriptBlock = [scriptblock]::Create( $scriptContent )
+#         Clear-Host
+#         Measure-Script -ScriptBlock $scriptBlock -Top 120 | Sort-Object -Property ExecutionTime
+#     }
+# }
 
 
-function Get-uValueOrFallback {
+function Get-w6_StringSplitWithArray {
     param(
-        [Parameter( Mandatory = $false )] [Object] $ToReturn,
-        [Parameter( Mandatory = $false )] [Object] $Fallback,
-        [Parameter( Mandatory = $false )] [Object] $BlacklistOneItem = $script:uSentinelValue_String2,
-        [Parameter( Mandatory = $false )] [Object] $BlacklistMultipleItems = $script:uSentinelValue_String2,
-        [Parameter( Mandatory = $false )] [Object] $PrependIfCorrect = '',
-        [Parameter( Mandatory = $false )] [Object] $AppendIfCorrect = '',
-        [Parameter( Mandatory = $false )] [Object] $AppendAfterComparison = '',
-        [Parameter( Mandatory = $false )] [Object] $PrependAfterComparison = '',
-        [Switch] $IsMultiInputBlacklistOneItem
+        [Parameter( Mandatory = $true )] [object] $String,
+        [Parameter( Mandatory = $true )] [object] $Array
     )
 
-    $isToReturnEqualToBlacklist = ( ( $script:uSentinelValue_String2 -ne $BlacklistOneItem ) `
-            -and ( ( $ToReturn -eq $BlacklistOneItem ) `
-                -or ( Get-uIsEqualByCompareObject -ItemOne $ToReturn -ItemTwo $BlacklistOneItem ) ) )
+    $Array = @( $Array )
 
-    $isToReturnInBlacklist = ( ( $script:uSentinelValue_String2 -ne $BlacklistMultipleItems ) `
+    $stringSplit = @( $String )
+
+    foreach ( $Item in $Array ) {
+        $stringSplit = @( @( $stringSplit ).Split( $Item ) )
+    }
+
+    return @( $stringSplit )
+}
+
+
+function Get-w6_ValueOrFallback {
+    param(
+        [Parameter( Mandatory = $false )] [object] $ToReturn,
+        [Parameter( Mandatory = $false )] [object] $Fallback,
+        [Parameter( Mandatory = $false )] [object] $BlacklistOneItem = $script:w6_SentinelValue_String2,
+        [Parameter( Mandatory = $false )] [object] $BlacklistMultipleItems = $script:w6_SentinelValue_String2,
+        [Parameter( Mandatory = $false )] [object] $PrependIfCorrect = '',
+        [Parameter( Mandatory = $false )] [object] $AppendIfCorrect = '',
+        [Parameter( Mandatory = $false )] [object] $AppendAfterComparison = '',
+        [Parameter( Mandatory = $false )] [object] $PrependAfterComparison = '',
+        [switch] $IsMultiInputBlacklistOneItem
+    )
+
+    $isToReturnEqualToBlacklist = ( ( $script:w6_SentinelValue_String2 -ne $BlacklistOneItem ) `
+            -and ( ( $ToReturn -eq $BlacklistOneItem ) `
+                -or ( Get-w6_IsEqualByCompareObject -ItemOne $ToReturn -ItemTwo $BlacklistOneItem ) ) )
+
+    $isToReturnInBlacklist = ( ( $script:w6_SentinelValue_String2 -ne $BlacklistMultipleItems ) `
             -and ( ( $toReturn -in $BlacklistMultipleItems ) ) )
 
     if ( $isToReturnEqualToBlacklist -or $isToReturnInBlacklist ) {
@@ -428,78 +405,89 @@ function Get-uValueOrFallback {
 }
 
 
-function Get-uKernelName {
+function Get-w6_StringWithoutDoubleSlashes {
+    param(
+        [Parameter( Mandatory = $true )] [string] $String
+    )
+
+    return ( ( $String -replace ( '\\\\', '\' ) ) -replace ( '//', '/' ) )
+}
+
+
+function Get-w6_KernelName {
     try {
         return ( uname --kernel-name )
     }
     catch {
-        return $script:uSentinelValue_String
+        return $script:w6_SentinelValue_Unknown
     }
     # Improvement idea: Be more explicit with error catching here.
 }
 
 
-function Get-uUnixOSType {
+function Get-w6_UnixOSType {
     param(
-        [Parameter( Mandatory = $false )] [String] $KernelName = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [string] $KernelName = $script:w6_SentinelValue_String
     )
 
-    try {
-        if ( $script:uSentinelValue_String -eq $KernelName ) {
-            return $script:uSentinelValue_String
-        }
+    $KernelName = $KernelName.ToLower().Trim()
 
-        $KernelName = $KernelName.ToLower().Trim()
-
-        if ( $KernelName -match 'linux' ) {
-            return $script:uOSType_Return_Linux
-        }
-
-        if ( $KernelName -match 'darwin' ) {
-            return $script:uOSType_Return_MaxOS
-        }
-
-        return $script:uSentinelValue_String
+    if ( $KernelName -match 'linux' ) {
+        return $script:w6_OSType_Return_Linux
     }
-    catch {
-        return $script:uSentinelValue_String
+
+    if ( $KernelName -match 'darwin' ) {
+        return $script:w6_OSType_Return_MaxOS
     }
+
+    return $script:w6_SentinelValue_Unknown
     # Improvement idea: Be more explicit with error catching here.
 
 }
 
 
-function Get-uOSType {
+function Get-w6_OSType {
 
     try {
         $OSType = ( [System.Environment]::OSVersion.Platform )
 
         if ( $OSType -eq 'Win32NT' ) {
-            return $script:uOSType_Return_Windows
+            return $script:w6_OSType_Return_Windows
         }
 
         if ( $OSType -eq 'Unix' ) {
-            return Get-uUnixOSType -KernelName ( Get-uKernelName )
+            return ( Get-w6_UnixOSType -KernelName ( Get-w6_KernelName ) )
         }
-
-        return $script:uSentinelValue_String
     }
     catch {
-        return $script:uSentinelValue_String
+        continue
     }
     # Improvement idea: Be more explicit with error catching here.
 
+    return $script:w6_OSType_Return_Unknown
+
 }
 
 
-function Set-uNewWindowSizeVariables {
-    $script:uRawUIWindowSize = ( $host.UI.RawUI.WindowSize )
-    $script:uWindow_Height = ( [Math]::Floor( $script:uRawUIWindowSize.Height + 0.5 ) )
-    $script:uWindow_Width = ( [Math]::Floor( $script:uRawUIWindowSize.Width + 0.5 ) )
+function Set-w6_NewWindowSizeVariables {
+    param(
+        [switch] $Height,
+        [switch] $Width
+    )
+
+    $rawUIWindowSize = ( $host.UI.RawUI.WindowSize )
+
+    if ( $Height ) {
+        $script:w6_Window_Height = ( [Math]::Floor( $rawUIWindowSize.Height + 0.5 ) )
+    }
+
+    if ( $Width ) {
+        $script:w6_Window_Width = ( [Math]::Floor( $rawUIWindowSize.Width + 0.5 ) )
+    }
 }
 
 
-function ConvertTo-uDoubleDirectly {
+function ConvertTo-w6_DoubleDirectly {
     param(
         [Parameter( Mandatory = $true )] [ref] $ValueReference
     )
@@ -514,13 +502,13 @@ function ConvertTo-uDoubleDirectly {
 }
 
 
-function ConvertTo-uStringDirectly {
+function ConvertTo-w6_StringDirectly {
     param(
         [Parameter( Mandatory = $true )] [ref] $ValueReference
     )
 
     try {
-        $ValueReference.Value = ( [String] ( $ValueReference.Value ) )
+        $ValueReference.Value = ( [string] ( $ValueReference.Value ) )
         return $true
     }
     catch {
@@ -529,47 +517,24 @@ function ConvertTo-uStringDirectly {
 }
 
 
-function Write-uHostIfIsNotAnEmptyString {
+function Write-w6_HostIfIsNotAnEmptyString {
     param(
-        [Parameter( Mandatory = $false )] [Object] $Message
+        [Parameter( Mandatory = $false )] [object] $Message
     )
 
-    if ( ( $script:uSentinelValue_String -ne $Message ) `
-            -and ( ConvertTo-uStringDirectly -ValueReference ( [ref] $Message ) ) `
+    if ( ( $script:w6_SentinelValue_String -ne $Message ) `
+            -and ( ConvertTo-w6_StringDirectly -ValueReference ( [ref] $Message ) ) `
             -and ( '' -ne $Message ) ) {
         Write-Host $Message
     }
 }
 
 
-function Debug-uGetErrorObject {
-    try {
-        1 / 0
-    }
-    catch {
-        return $_
-    }
-}
-
-
-function Get-uIsEqualByCompareObject {
+function Get-w6_IsEqualByCompareObject {
     param(
-        [Parameter( Mandatory = $false )] [Object] $ItemOne,
-        [Parameter( Mandatory = $false )] [Object] $ItemTwo
+        [Parameter( Mandatory = $false )] [object] $ItemOne,
+        [Parameter( Mandatory = $false )] [object] $ItemTwo
     )
-
-    $negativeValues = @( $script:uSentinelValue_String, $script:uSentinelValue_Int32,
-        $script:uSentinelValue_Scriptblock, '', $null )
-
-    $itemOne_IsNull = ( $ItemOne -in $negativeValues )
-    $itemTwo_IsNull = ( $ItemTwo -in $negativeValues )
-
-    if ( $itemOne_IsNull -and $itemTwo_IsNull ) {
-        return $true
-    }
-    elseif ( $itemOne_IsNull -or $itemTwo_IsNull ) {
-        return $false
-    }
 
     $comparison = ( Compare-Object -ReferenceObject $ItemOne -DifferenceObject $ItemTwo )
 
@@ -580,341 +545,558 @@ function Get-uIsEqualByCompareObject {
 }
 
 
-function Write-uShortErrorCatchMessage {
+function Write-w6_ShortErrorCatchMessage {
     param(
-        [Parameter( Mandatory = $false )] [String] $Introduction = $script:uSentinelValue_String,
+        [Parameter( Mandatory = $false )] [string] $Introduction = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [string] $SuspectedReason = $script:w6_SentinelValue_String,
 
-        [Parameter( Mandatory = $false, ParameterSetName = 'ErrorObject' )] [Object] $ErrorObject = $script:uSentinelValue_String,
+        [Parameter( Mandatory = $false )] [string] $IntroductionIntroduction = '',
+        [Parameter( Mandatory = $false )] [string] $ExceptionMessageIntroduction = '  Exception Message: ',
+        [Parameter( Mandatory = $false )] [string] $SuspectedReasonIntroduction = '  Suspected Reason: ',
+        [Parameter( Mandatory = $false )] [string] $ExceptionLineIntroduction = 'Exception Line: ',
 
-        [Parameter( Mandatory = $false, ParameterSetName = 'CustomDetails' )] [Object] $CustomExceptionMessage = $script:uSentinelValue_String,
-        [Parameter( Mandatory = $false, ParameterSetName = 'CustomDetails' )] [Object] $CustomExceptionLine = $script:uSentinelValue_Int32,
-        [Parameter( Mandatory = $false, ParameterSetName = 'CustomDetails' )] [Switch] $NoErrorDetails,
+        [Parameter( Mandatory = $false )] [string] $UpperBoundary = '',
+        [Parameter( Mandatory = $false )] [string] $LowerBoundary = '',
 
-        [Parameter( Mandatory = $false )] [String] $ExceptionMessageIntroduction = '  Exception Message: ',
-        [Parameter( Mandatory = $false )] [String] $ExceptionLineIntroduction = 'Exception Line: '
+        [Parameter( Mandatory = $false, ParameterSetName = 'ErrorObject' )] [object] $ErrorObject = $script:w6_SentinelValue_String,
+
+        [Parameter( Mandatory = $false, ParameterSetName = 'CustomDetails' )] [object] $CustomExceptionMessage = $script:w6_SentinelValue_String,
+
+        [Parameter( Mandatory = $false, ParameterSetName = 'CustomDetails' )] [object] $CustomExceptionLine = $script:w6_SentinelValue_String,
+
+        [Parameter( Mandatory = $false, ParameterSetName = 'CustomDetails' )] [switch] $NoErrorDetails
     )
 
-    $commonBadArgumentValues = @( $null, $script:uSentinelValue_String, $script:uSentinelValue_Int32, '' )
+    $commonBadArgumentValues = @( $null, $script:w6_SentinelValue_String )
 
-    $Introduction = ( Get-uValueOrFallback `
+    $IntroductionMessage = ( Get-w6_ValueOrFallback `
             -ToReturn $Introduction `
             -Fallback 'An Exception Has Been Caught!' `
+            -PrependIfCorrect $IntroductionIntroduction `
             -BlacklistMultipleItems $commonBadArgumentValues )
 
-    if ( $NoErrorDetails ) {
-        Write-Host ''
-        Write-Host $Introduction
-        Write-Host ''
-
-        return
-    }
-
-    $ExceptionMessage = ( Get-uValueOrFallback `
+    $ExceptionMessage = ( Get-w6_ValueOrFallback `
             -ToReturn $CustomExceptionMessage `
             -Fallback ( $ErrorObject.Exception.Message ) `
             -BlacklistMultipleItems $commonBadArgumentValues )
 
-    $ExceptionMessage = ( Get-uValueOrFallback `
-            -ToReturn $ExceptionMessage `
+    $SuspectedReasonMessage = ( Get-w6_ValueOrFallback `
+            -ToReturn $SuspectedReason `
             -Fallback '' `
-            -PrependIfCorrect $ExceptionMessageIntroduction `
+            -PrependIfCorrect $SuspectedReasonIntroduction `
             -BlacklistMultipleItems $commonBadArgumentValues )
 
-    $ExceptionLineMessage = ( Get-uValueOrFallback `
+    $ExceptionLineMessage = ( Get-w6_ValueOrFallback `
             -ToReturn $CustomExceptionLine `
             -Fallback ( $ErrorObject.InvocationInfo.ScriptLineNumber ) `
             -BlacklistMultipleItems $commonBadArgumentValues )
 
-    $ExceptionLineMessage = ( Get-uValueOrFallback `
-            -ToReturn $ExceptionLineMessage `
-            -Fallback '' `
-            -PrependIfCorrect $ExceptionLineIntroduction `
-            -BlacklistMultipleItems $commonBadArgumentValues )
+    if ( $NoErrorDetails ) {
+        Write-Host $UpperBoundary
+        Write-Host $IntroductionMessage
+        Write-Host $LowerBoundary
 
-    Write-Host ''
-    Write-Host $Introduction
-    Write-uHostIfIsNotAnEmptyString -Message $ExceptionMessage
-    Write-uHostIfIsNotAnEmptyString -Message $ExceptionLineMessage
-    Write-Host ''
+        return
+    }
+
+    Write-Host $UpperBoundary
+    Write-w6_HostIfIsNotAnEmptyString -Message $IntroductionMessage
+    Write-w6_HostIfIsNotAnEmptyString -Message $ExceptionMessage
+    Write-w6_HostIfIsNotAnEmptyString -Message $SuspectedReasonMessage
+    Write-w6_HostIfIsNotAnEmptyString -Message $ExceptionLineMessage
+    Write-Host $LowerBoundary
 }
 
 
-function Get-uPathWithAddedBackslashIfNecessary {
+function Get-w6_PathWithAddedSlashIfNecessary {
     param(
-        [Parameter( Mandatory = $true )] [Object] $Path
+        [Parameter( Mandatory = $true )] [object] $Path
     )
 
-    if ( ( [System.Text.RegularExpressions.Regex]::Matches( $Path, '\\|/' ).Count ) -eq 0 ) {
-        return "$Path\"
+    if ( ( [System.Text.RegularExpressions.Regex]::Matches( $Path, $script:w6_PathSlashes_Any_Regex ).Count ) -eq 0 ) {
+        return "$( $Path )$( $script:w6_PathSlash )"
     }
-    return "$Path"
+    return ( [string] "$Path" )
 }
 
 
-function Get-uUniversalPath {
+function Get-w6_UniversalPath {
     param(
-        [Parameter( Mandatory = $false )] [String] $Path = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [string] $Path = $script:w6_SentinelValue_String
     )
 
-    if ( $Path | Select-String -Pattern $script:uSentinelValue_String -SimpleMatch ) {
-        return $script:uSentinelValue_String
+    if ( $Path.Length -ge $script:w6_SentinelValue_String.Length ) {
+        if ( $Path.Contains( $script:w6_SentinelValue_String ) ) {
+            return $script:w6_SentinelValue_String
+        }
     }
 
-    $Path = "$Path".Trim()
+    $Path = $Path.Trim()
 
-    if ( 0 -eq "$Path".Length ) {
-        return $script:uSentinelValue_String
+    if ( 0 -eq $Path.Length ) {
+        return $script:w6_SentinelValue_String
     }
 
-    $Path = ( Get-uPathWithAddedBackslashIfNecessary -Path $Path )
+    $Path = ( Get-w6_PathWithAddedSlashIfNecessary -Path $Path )
+    $Path = ( Get-w6_StringWithoutDoubleSlashes -String $Path )
 
     try {
-        return ( ( ( Convert-Path -Path $Path -ErrorAction Stop ) -replace '\\\\', '\' ) -replace '\/\/', '/' )
+        return ( Convert-Path -Path $Path -ErrorAction Stop )
     }
     catch {
-        return $script:uSentinelValue_String
+        return $script:w6_SentinelValue_String
     }
 
-    return $script:uSentinelValue_String
+    return $script:w6_SentinelValue_String
 }
 
 
-function Set-uOperatingPathIfValid {
+function Set-w6_OperatingPathIfValid {
     param(
-        [Parameter( Mandatory = $false )] [String] $Path = $script:uSentinelValue_String,
-        [Switch] $Silent = $script:uSetOperatingPath_DefaultSilent_IfUsedBy_User
+        [Parameter( Mandatory = $false )] [string] $Path = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [string] $Fallback = $script:w6_SentinelValue_String,
+        [switch] $Silent = $script:w6_SetOperatingPath_DefaultParameterValue_Silent_IfUsedBy_User
     )
 
     $universalFailureIntroduction = "Failed to set the Operating Path to '$Path'"
 
-    function Write-uShortCustomFailureMessageIfNotSilent {
+    function Write-w6_ShortCustomFailureMessageIfNotSilent {
         param(
-            [Parameter( Mandatory = $true )] [String] $CustomExceptionMessage
+            [Parameter( Mandatory = $true )] [string] $CustomExceptionMessage
         )
 
         if ( -not $Silent ) {
-            Write-uShortErrorCatchMessage `
+            Write-w6_ShortErrorCatchMessage `
                 -Introduction $universalFailureIntroduction `
                 -CustomExceptionMessage:$CustomExceptionMessage
         }
     }
 
     try {
-        if ( $script:uSentinelValue_String -eq $Path ) {
-            Write-uShortCustomFailureMessageIfNotSilent -CustomExceptionMessage 'No Path Received!'
+        if ( $script:w6_SentinelValue_String -eq $Path ) {
+            Write-w6_ShortCustomFailureMessageIfNotSilent -CustomExceptionMessage 'No Path Received!'
             return
         }
 
-        $pathUniversal = ( Get-uUniversalPath -Path $Path )
+        $pathUniversal = ( Get-w6_UniversalPath -Path $Path )
 
         if ( -not ( Test-Path -Path $pathUniversal -PathType Container -ErrorAction Stop ) ) {
-            Write-uShortCustomFailureMessageIfNotSilent -CustomExceptionMessage 'The passed Path is not a valid Folder!'
+            Write-w6_ShortCustomFailureMessageIfNotSilent -CustomExceptionMessage 'The passed Path isn''t a valid Folder!'
             return
         }
 
-        $script:uOperatingPath = $pathUniversal
+        $script:w6_OperatingPath = $pathUniversal
 
         if ( -not $Silent ) {
             Write-Host ''
-            Write-Host "Successfully set the Operating Path to '$pathUniversal'"
+            Write-Host "Successfully set `$script:w6_OperatingPath to '$script:w6_OperatingPath'"
             Write-Host ''
         }
 
         return
     }
     catch {
-        Write-uShortErrorCatchMessage -Introduction $universalFailureIntroduction -ErrorObject $_
+        if ( $script:w6_SentinelValue_String -eq $Fallback ) {
+            Write-w6_ShortErrorCatchMessage -Introduction $universalFailureIntroduction -ErrorObject $_
+        }
+        else {
+            Set-w6_OperatingPathIfValid -Path:$Fallback -Silent:$Silent
+        }
     }
 }
 
 
-function Get-uWindowsIsUserAdmin {
-    try {
-        $currentUser = ( [System.Security.Principal.WindowsIdentity]::GetCurrent() )
-        $windowsPrincipal = ( New-Object System.Security.Principal.WindowsPrincipal( $currentUser ) )
-        return ( $windowsPrincipal.IsInRole( [System.Security.Principal.WindowsBuiltInRole]::Administrator ) )
+function Import-w6_TaskbarFlasherIfNecessary {
+    if ( -not $script:w6_TaskbarFlashing_DoLoad ) {
+        return
     }
-    catch {
-        return $script:uSentinelValue_String
-    }
-    # Improvement idea: Be more explicit with error catching here.
-}
 
-
-# ------------------ Globals, Constants & Developer Settings ------------------
-
-$script:uOSType_Return_Windows = 'Windows'
-$script:uOSType_Return_Linux = 'Linux'
-$script:uOSType_Return_MacOS = 'MacOS'
-$script:uOSType_Return_Unknown = 'Unknown'
-
-$script:uSentinelValue_String = [String] '_1_SENTINEL_VALUE_1_wP7,2.@yu~ B>4''CT""RW\4`eid[$ir(];I-\ }NK<mFfl""""6UWapsNgbO3VQ~ } )D-*Pqd%3@"L )K$Ga,RZv`c''''ASh M1x { L!GYjx5|2zgzY+8s''+?]el";IM#( S%B<HD 1?C/""""9{ E.QfJ7n[Uk^q8p|u0XH&F=b!''*_/65r0yAkJVm&jtwc9o=tX Zo''#_:nOh:^Ev_1_SENTINEL_VALUE_1_'
-$script:uSentinelValue_String2 = [String] '_2_SENTINEL_VALUE_2_DefZ''P"&F"S!v>s6J~fvZM''k~.92c|!C<~@t6Fwz\Re3U~4^$4RJ@#p%",`E$H2mNJyIbo6""""/U*nfp5W?`9m%/UL/e"^C\/''''&`V*Mr;$zDPn''L/8*:9P""q*Gc;$|#&( 8p7Wk&M )9\Bic%-#H!aC@=T4F_n"""fE*j5S }P=DEFnUA]C{ 8L]Y$^CQ_2_SENTINEL_VALUE_2_'
-$script:uSentinelValue_Int32 = [int32] 1986515346 # This cannot be larger than 2^31-1
-$script:uSentinelValue_Scriptblock = [scriptblock] { $null = $script:uSentinelValue_String }
-
-$script:uBoundary_Direction_Name_Left = 'Left'
-$script:uBoundary_Direction_Name_Right = 'Right'
-
-$script:uList_Attributes_Colors_Default_Priority = ( [double] $script:uList_Attributes_Colors_Default_Priority )
-
-$script:uList_Attributes_Colors_ValidColors = ( [enum]::GetNames( [System.ConsoleColor] ) )
-$script:uList_Attributes_Colors_Name_BackgroundColor = 'BackgroundColor'
-$script:uList_Attributes_Colors_Name_BackgroundColor_Priority = 'BackgroundColor_Priority'
-$script:uList_Attributes_Colors_Name_ForegroundColor = 'ForegroundColor'
-$script:uList_Attributes_Colors_Name_ForegroundColor_Priority = 'ForegroundColor_Priority'
-$script:uList_Attributes_Colors_Name_DefaultColor = 'Default'
-$script:uList_Attributes_Colors_Name_Any = 'Any'
-
-$script:uList_Raw_Names_Line = 'Line'
-$script:uList_Raw_Names_Colors = 'Colors'
-
-$script:uIntroduction_Greeting_CurrentTimeText_Name_Both = 'both'
-$script:uIntroduction_Greeting_CurrentTimeText_Name_24 = '24'
-$script:uIntroduction_Greeting_CurrentTimeText_Name_12 = '12'
-
-
-$script:uUnixEpochDate = ( Get-Date -Year 1970 -Month 1 -Day 1 -Hour 0 -Minute 0 -Second 0 )
-$script:uTime_Format_24 = 'HH:mm'
-
-$script:uCurrentOSType = ( Get-uOSType )
-
-$script:uIsWindows = ( $script:uOSType_Return_Windows -eq $script:uCurrentOSType )
-
-$script:uLastWindowTitle = $script:uSentinelValue_String
-
-if ( $script:uIsWindows ) {
-    $script:uWindowsTerminalIsAdmin = ( Get-uWindowsIsUserAdmin )
-
-    # If possible - keep Your class imports here for organization
+    $script:w6_TaskbarFlashing_DoLoad = $false
 
     Add-Type -TypeDefinition @'
-    // Modified from this source:
-    // https://learn-powershell.net/2013/08/26/make-a-window-flash-in-taskbar-using-powershell-and-pinvoke/
+        // Modified from this source:
+        // https://learn-PowerShell.net/2013/08/26/make-a-window-flash-in-taskbar-using-PowerShell-and-pinvoke/
 
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Runtime.InteropServices;
+        using System;
+        using System.Runtime.InteropServices;
 
-    public class uTaskbarFlasher
-    {
-        [StructLayout( LayoutKind.Sequential )]
-        public struct FLASHWINFO
+        public static class w6_TaskbarFlasher
         {
-            public UInt32 cbSize;
-            public IntPtr hwnd;
-            public UInt32 dwFlags;
-            public UInt32 uCount;
-            public UInt32 dwTimeout;
+            [StructLayout( LayoutKind.Sequential )]
+            private struct FLASHWINFO
+            {
+                // public const UInt32 FLASHW_STOP = 0;  // Stop flashing. The system restores the window to its original state.
+                // public const UInt32 FLASHW_CAPTION = 1;  // Flash the window caption.
+                // public const UInt32 FLASHW_TRAY = 2;  // Flash the taskbar button.
+                public const UInt32 FLASHW_ALL = 3;  // Flash both the window caption and taskbar button. This is equivalent to setting both the FLASHW_CAPTION | FLASHW_TRAY flags.
+                // public const UInt32 FLASHW_TIMER = 4;  // Keeps flashing, until the FLASHW_STOP flag is set.
+                public const UInt32 FLASHW_TIMERNOFG = 12;  // Keeps flashing until the window comes to the foreground.
+
+                public UInt32 cbSize;
+                public IntPtr hwnd;
+                public UInt32 dwFlags;
+                public UInt32 uCount;
+                public UInt32 dwTimeout;
+            }
+
+            private static readonly UInt32 FlashwinfoSize = Convert.ToUInt32( Marshal.SizeOf( typeof( FLASHWINFO ) ) );
+
+            [DllImport( "kernel32.dll" )]
+            public static extern IntPtr GetConsoleWindow();
+
+            [DllImport( "user32.dll" )]
+            [return: MarshalAs( UnmanagedType.Bool )]
+            private static extern bool FlashWindowEx( ref FLASHWINFO pwfi );
+
+            public static bool FlashWindow( IntPtr handle, UInt32 timeout, UInt32 count )
+            {
+                FLASHWINFO fInfo = new FLASHWINFO
+                {
+                    cbSize = FlashwinfoSize,
+                    hwnd = handle,
+                    dwFlags = FLASHWINFO.FLASHW_ALL | FLASHWINFO.FLASHW_TIMERNOFG,
+                    uCount = count,
+                    dwTimeout = timeout
+                };
+
+                return FlashWindowEx( ref fInfo );
+            }
+
         }
-
-        //Flags:
-
-            // Stop flashing. The system restores the window to its original state.
-        const UInt32 FLASHW_STOP = 0;
-
-            // Flash the window caption.
-        const UInt32 FLASHW_CAPTION = 1;
-
-            // Flash the taskbar button.
-        const UInt32 FLASHW_TRAY = 2;
-
-            // Flash both the window caption and taskbar button.
-            // This is equivalent to setting the FLASHW_CAPTION | FLASHW_TRAY flags.
-        const UInt32 FLASHW_ALL = 3;
-
-            // Flash continuously, until the FLASHW_STOP flag is set.
-        const UInt32 FLASHW_TIMER = 4;
-
-            // Flash continuously until the window comes to the foreground.
-        const UInt32 FLASHW_TIMERNOFG = 12;
-
-        [DllImport( "kernel32.dll" )]
-        public static extern IntPtr GetConsoleWindow();
-
-        [DllImport( "user32.dll" )]
-        [return: MarshalAs( UnmanagedType.Bool )]
-        private static extern bool FlashWindowEx( ref FLASHWINFO pwfi );
-
-        public static bool FlashWindow( IntPtr handle, UInt32 timeout, UInt32 count )
-        {
-            IntPtr hWnd = handle;
-            FLASHWINFO fInfo = new FLASHWINFO();
-
-            fInfo.cbSize = Convert.ToUInt32( Marshal.SizeOf( fInfo ) );
-            fInfo.hwnd = hWnd;
-            fInfo.dwFlags = FLASHW_ALL | FLASHW_TIMERNOFG;
-            fInfo.uCount = count;
-            fInfo.dwTimeout = timeout;
-
-            return FlashWindowEx( ref fInfo );
-        }
-
-    }
 '@
-
 }
 
-$script:f = ''
 
-$script:uOperatingPath = $script:uSentinelValue_String
-Set-uOperatingPathIfValid `
-    -Path '.\' `
-    -Silent:$script:uSetOperatingPath_DefaultSilent_IfUsedBy_Script
-
-$script:uWhichByAlphabet = $script:uSentinelValue_String
-
-$script:uRawUIWindowSize = $script:uSentinelValue_String
-$script:uWindow_Height = $script:uSentinelValue_String
-$script:uWindow_Width = $script:uSentinelValue_String
-Set-uNewWindowSizeVariables
-
-$script:uBoundary_Character_RightTip_Length = $script:uBoundary_Character_RightTip.Length
-$script:uBoundary_Character_LeftTip_Length = $script:uBoundary_Character_LeftTip.Length
-
-try {
-    $script:uIntroduction_Greeting_CurrentTimeText_Format = ( [String] $script:uIntroduction_Greeting_CurrentTimeText_Format ).ToLower()
-}
-catch {
-    $script:uIntroduction_Greeting_CurrentTimeText_Format = $script:uIntroduction_Greeting_CurrentTimeText_Name_Both
-}
-# Improvement idea: Be more explicit with error catching here.
-
-if ( ( $script:uIntroduction_Greeting_CurrentTimeText_Format -ne $script:uIntroduction_Greeting_CurrentTimeText_Name_Both ) `
-        -and ( $script:uIntroduction_Greeting_CurrentTimeText_Format -ne $script:uIntroduction_Greeting_CurrentTimeText_Name_24 ) `
-        -and ( $script:uIntroduction_Greeting_CurrentTimeText_Format -ne $script:uIntroduction_Greeting_CurrentTimeText_Name_12 ) ) {
-    $script:uIntroduction_Greeting_CurrentTimeText_Format = $script:uIntroduction_Greeting_CurrentTimeText_Name_Both
-}
-
-if ( $script:uList_NegativeValues_ShowEveryXthListing -le 0 ) {
-    $script:uList_NegativeValues_ShowEveryXthListing = 1
-}
-
-$script:uCdaLikeInputCharacters_Filtered = $script:uSentinelValue_String # Lazy Loaded due to performance
-
-$script:uGetUniversalPath_AllowedEndCharacters = @( '/', '\' )
-$script:uGetUniversalPath_DefaultEndCharacter = '\'
-
-$script:uSystemIOAllDefaultFileAttributes = @( [Enum]::GetValues( [System.IO.FileAttributes] ) )
-
-
-# ----------------------------- HELPER FUNCTIONS 2 ----------------------------
-
-
-function Get-uPaddedTextToConsoleMiddle {
+function Get-w6_StringExtendedToLength {
     param(
-        [Parameter( Mandatory = $false )] [String] $Text = '',
-        [Parameter( Mandatory = $false )] [String] $Padding = ' ',
-        [Parameter( Mandatory = $false )] [String] $Prepend = '',
-        [Parameter( Mandatory = $false )] [String] $Append = ''
+        [Parameter( Mandatory = $true )] $String,
+        [Parameter( Mandatory = $true )] $Length
     )
 
-    Set-uNewWindowSizeVariables
+    if ( $String -eq '' ) {
+        return ''
+    }
+
+    $stringLength = $String.Length
+    $fullRepeatsAmount = [Math]::FLoor( $Length / $stringLength )
+    $fullRepeats = $String * $fullRepeatsAmount
+
+    $leftOverCharactersAmount = ( $Length % $stringLength )
+    $leftOverCharacters = if ( $leftOverCharactersAmount -eq 0 ) {
+        ''
+    }
+    else {
+        @( $String[0..( $leftOverCharactersAmount - 1 )] ) -join ''
+    }
+
+    $extendedString = $fullRepeats + $leftOverCharacters
+
+    return $extendedString
+}
+
+
+function Get-w6_BoundaryArrowBody {
+    param(
+        [Parameter( Mandatory = $true )] $Length, # Any real number - int, double, etc. - but not NaN
+        [switch] $DoNotMinusOne
+    )
+
+    $Length = [Math]::Floor( $Length + 0.5 )
+
+    if ( -not $DoNotMinusOne ) {
+        $Length--
+    }
+
+    return "$( $script:w6_Boundary_Character_Body * $Length )"
+}
+
+
+function Get-w6_Boundary {
+    param(
+        [Parameter( Mandatory = $true )] [string] $Direction,
+        [Parameter( Mandatory = $false, ParameterSetName = 'LengthMultiplier' )] [double] `
+            $LengthMultiplier = $script:w6_SentinelValue_Double,
+        [Parameter( Mandatory = $false, ParameterSetName = 'RawLength' )] [double] `
+            $RawLength = $script:w6_SentinelValue_Double,
+        [switch] $DoNotMinusOne,
+        [switch] $MinusOneOnlyIfMaxWidth
+    )
+
+    $alreadySetWindowWidth = $false
+
+    $isRightDirection = ( $Direction -eq $script:w6_Boundary_Direction_Name_Right )
+
+    $tipLength = if ( $isRightDirection ) {
+        $script:w6_Boundary_Character_RightTip_Length
+    }
+    else {
+        $script:w6_Boundary_Character_LeftTip_Length
+    }
+
+    if ( $script:w6_SentinelValue_Double -ne $LengthMultiplier ) {
+        Set-w6_NewWindowSizeVariables -Width
+        $alreadySetWindowWidth = $true
+        $length = $LengthMultiplier * ( $script:w6_Window_Width - $tipLength )
+    }
+    elseif ( $script:w6_SentinelValue_Double -ne $RawLength ) {
+        $length = $RawLength - $tipLength
+    }
+    else {
+        return ''
+    }
+
+    if ( $MinusOneOnlyIfMaxWidth ) {
+        if ( -not $alreadySetWindowWidth ) {
+            Set-w6_NewWindowSizeVariables -Width
+        }
+
+        $totalLengthRaw = $length + $tipLength
+
+        if ( $totalLengthRaw -ge $script:w6_Window_Width ) {
+            $DoNotMinusOne = $false
+        }
+        else {
+            $DoNotMinusOne = $true
+        }
+    }
+
+    $length = [Math]::Max( 1, $length )
+    $arrowBody = ( Get-w6_BoundaryArrowBody `
+            -Length $length `
+            -DoNotMinusOne:$DoNotMinusOne )
+
+    if ( $isRightDirection ) {
+        return "$( $arrowBody )$( $script:w6_Boundary_Character_RightTip )"
+    }
+    else {
+        return "$( $script:w6_Boundary_Character_LeftTip )$( $arrowBody )"
+    }
+
+    return ''
+}
+
+
+function Update-w6_IntroductionTotalAutomaticWrites {
+    param(
+        [Parameter( Mandatory = $true )] [string] $Value
+    )
+
+    try {
+        $null = [System.IO.File]::WriteAllText( $script:w6_Introduction_TotalAutomaticWrites_Path, $Value )
+        $script:w6_Introduction_TotalAutomaticWrites = [int] $Value
+    }
+    catch [System.Management.Automation.MethodInvocationException] {
+        Write-w6_ShortErrorCatchMessage `
+            -CustomExceptionMessage 'Updating the PowerShell-File-Walker total automatic introduction writes count file has failed!'
+
+        # `nSuspected reason: Invalid path was generated '$script:w6_Introduction_TotalAutomaticWrites_Path'
+    }
+}
+
+
+<#
+.SYNOPSIS
+    Reset the amount of remaining automatic introduction writes in the PowerShell-File-Walker Commands Bundle
+.DESCRIPTION
+    *Reset-FileWalkerIntroductionAutomaticWrites is a command from the PowerShell-File-Walker Commands Bundle
+
+    Use this command if you want to reset the amount of remaining automatic introduction writes in the PowerShell-File-Walker Commands Bundle
+
+    How do automatic introductions work?
+    The PowerShell-File-Walker Commands Bundle automatically writes its introduction when it's loaded
+
+    When the Commands Bundle is being loaded, it compares the Total Loads Count with the Maximum Loads Setting
+    If the Total Loads Count is smaller than the Maximum Loads Setting - the introduction will be displayed
+    Usually the Maximum Loads Setting is around 3
+
+    Reset-FileWalkerIntroductionAutomaticWrites sets the Total Loads Count back to 0
+.LINK
+    [placeholder] - Online documentation (not finished yet)
+.LINK
+    Write-FileWalkerIntroduction -> Manually write the introduction
+#> # TODO ADD A NOTE THAT THIS COMMAND IS CUSTOMIZABLE
+
+function Reset-FileWalkerIntroductionAutomaticWrites {
+    Update-w6_IntroductionTotalAutomaticWrites -Value $script:w6_Introduction_TotalAutomaticWrites_Default_String
+}
+
+# ----------------- Globals, Constants & Developer Settings 1 -----------------
+# Changing these variables is like playing with the fire
+
+$script:w6_SentinelValue_String = [string] '_1_SENTINEL_VALUE_1_wP7,2.@yu~ B>4''CT""RW\4`eid[$ir(];I-\ }NK<mFfl""""6UWapsNgbO3VQ~ } )D-*Pqd%3@"L )K$Ga,RZv`c''''ASh M1x { L!GYjx5|2zgzY+8s''+?]el";IM#( S%B<HD 1?C/""""9{ E.QfJ7n[Uk^q8p|u0XH&F=b!''*_/65r0yAkJVm&jtwc9o=tX Zo''#_:nOh:^Ev_1_SENTINEL_VALUE_1_'
+$script:w6_SentinelValue_String2 = [string] '_2_SENTINEL_VALUE_2_DefZ''P"&F"S!v>s6J~fvZM''k~.92c|!C<~@t6Fwz\Re3U~4^$4RJ@#p%",`E$H2mNJyIbo6""""/U*nfp5W?`9m%/UL/e"^C\/''''&`V*Mr;$zDPn''L/8*:9P""q*Gc;$|#&( 8p7Wk&M )9\Bic%-#H!aC@=T4F_n"""fE*j5S }P=DEFnUA]C{ 8L]Y$^CQ_2_SENTINEL_VALUE_2_'
+$script:w6_SentinelValue_Int32 = [int] 1986515346 # Number can't be larger than 2^31-1
+$script:w6_SentinelValue_Double = [double] 0.086983872618053 # This number is very near the maximum decimal places for a Double
+$script:w6_SentinelValue_Scriptblock = [scriptblock] { $null = $script:w6_SentinelValue_String }
+
+# Developer variables that do not depend on other developer variables
+$script:f = ''
+$script:w6_Boundary_Direction_Name_Left = 'Left'
+$script:w6_Boundary_Direction_Name_Right = 'Right'
+$script:w6_CdaLikeInputCharacters_Filtered = $script:w6_SentinelValue_String  # Lazy Loaded due to performance
+$script:w6_Introduction_Greeting_CurrentTimeText_Name_12 = '12'
+$script:w6_Introduction_Greeting_CurrentTimeText_Name_24 = '24'
+$script:w6_Introduction_Greeting_CurrentTimeText_Name_Both = 'both'
+$script:w6_LastWindowTitle = $script:w6_SentinelValue_String
+$script:w6_List_Attributes_Colors_Name_Any = 'Any'
+$script:w6_List_Attributes_Colors_Name_BackgroundColor = 'BackgroundColor'
+$script:w6_List_Attributes_Colors_Name_BackgroundColor_Priority = 'BackgroundColor_Priority'
+$script:w6_List_Attributes_Colors_Name_DefaultColor = 'Default'
+$script:w6_List_Attributes_Colors_Name_ForegroundColor = 'ForegroundColor'
+$script:w6_List_Attributes_Colors_Name_ForegroundColor_Priority = 'ForegroundColor_Priority'
+$script:w6_List_Attributes_Colors_ValidColors = ( [enum]::GetNames( [System.ConsoleColor] ) )
+$script:w6_List_Raw_Names_Line_Color = 'Color'
+$script:w6_List_Raw_Names_Line_Text = 'Text'
+$script:w6_List_Times_DefaultValue = 1
+$script:w6_OSType_Return_Linux = 'Linux'
+$script:w6_OSType_Return_MacOS = 'MacOS'
+$script:w6_OSType_Return_Unknown = 'Unknown'
+$script:w6_OSType_Return_Windows = 'Windows'
+$script:w6_PathSlashes = @( '\', '/' )
+$script:w6_PathSlashes_Any_Regex = '\\|\/'
+$script:w6_Product_Path = ( $MyInvocation.MyCommand.Path )
+$script:w6_PSEdition = $PSVersionTable.PSEdition
+$script:w6_Time_Format_24 = 'HH:mm'
+$script:w6_UnixEpochDate = ( Get-Date -Year 1970 -Month 1 -Day 1 -Hour 0 -Minute 0 -Second 0 )
+$script:w6_WhichByAlphabet = $script:w6_SentinelValue_String
+$script:w6_ElevationCommands_UnsetTitle = ''
+
+# Developer variables that DO depend on other developer variables / settings
+$script:w6_Product_Name_KebabCase = ( ( $script:w6_Product_Name.ToLower() ) -replace ( ' ', '-' ) )
+$script:w6_CurrentOSType = ( Get-w6_OSType )
+$script:w6_IsWindows = ( $script:w6_OSType_Return_Windows -eq $script:w6_CurrentOSType )
+$script:w6_PathSlash = if ( $script:w6_IsWindows ) { '\' } else { '/' }
+$script:w6_TaskbarFlashing_DoLoad = ( $script:w6_IsWindows )
+$script:w6_UserHomeDirectory = if ( $script:w6_IsWindows ) { $env:USERPROFILE } else { $env:HOME }
+$script:w6_Boundary_Character_RightTip_Length = $script:w6_Boundary_Character_RightTip.Length
+$script:w6_Boundary_Character_LeftTip_Length = $script:w6_Boundary_Character_LeftTip.Length
+$script:w6_Boundary_Character_Body_Length = $script:w6_Boundary_Character_Body.Length
+
+
+# ------------------------- Loading User Configuration ------------------------
+
+$script:w6_ConfigParentPaths = @( @(
+        [System.IO.Path]::GetFullPath( ( $PROFILE.AllUsersAllHosts ) ),
+        [System.IO.Path]::GetFullPath( ( $PROFILE.AllUsersCurrentHost ) ),
+        [System.IO.Path]::GetFullPath( ( $PROFILE.CurrentUserAllHosts ) ),
+        [System.IO.Path]::GetFullPath( ( $PROFILE.CurrentUserCurrentHost ) ),
+        [System.IO.Path]::GetFullPath( ( Get-w6_StringWithoutDoubleSlashes -String "$( $script:w6_Product_Path )$( $script:w6_PathSlash ).." ) )
+    ) | Select-Object -Unique
+)
+
+$script:w6_ConfigFileName = 'PowerShell-File-Walker-Config.ps1'
+$script:w6_Config_Found_Count = 0
+$script:w6_Config_Found_Files = @()
+$script:w6_Config_Success_Count = 0
+$script:w6_Config_Error_Count = 0
+$script:w6_Config_Error_CathMessages = @()
+
+foreach ( $configParentPath in $script:w6_ConfigParentPaths ) {
+    $configPath = ( $configParentPath + $script:w6_PathSlash + $script:w6_ConfigFileName )
+    $configPath = ( Get-w6_StringWithoutDoubleSlashes -String $configPath )
+    $wasFound = $true
+
+    try {
+        . ( $configPath )
+        $script:w6_Config_Success_Count++
+    }
+    catch [System.Management.Automation.CommandNotFoundException] {
+        $wasFound = $false
+    }
+    catch {
+        $script:w6_Config_Error_Count++
+
+        $script:w6_Config_Error_CathMessages += @"
+$( Get-w6_Boundary -Direction $script:w6_Boundary_Direction_Name_Left -LengthMultiplier $script:w6_Boundary_Length_Long )
+  Errors have occurred while loading the User Configuration Files:
+
+$_
+$( Get-w6_Boundary -Direction $script:w6_Boundary_Direction_Name_Right -LengthMultiplier $script:w6_Boundary_Length_Long )
+
+"@
+    }
+
+    if ( $wasFound ) {
+        $script:w6_Config_Found_Files += $configPath
+        $script:w6_Config_Found_Count++
+    }
+}
+
+
+# ----------------- Globals, Constants & Developer Settings 2 -----------------
+
+Set-w6_NewWindowSizeVariables -Height -Width
+
+$script:w6_Introduction_Greeting_CurrentTimeText_Format = ( [string] $script:w6_Introduction_Greeting_CurrentTimeText_Format ).ToLower()
+if ( $true `
+        -and ( "$script:w6_Introduction_Greeting_CurrentTimeText_Format" -ne "$script:w6_Introduction_Greeting_CurrentTimeText_Name_Both" ) `
+        -and ( "$script:w6_Introduction_Greeting_CurrentTimeText_Format" -ne "$script:w6_Introduction_Greeting_CurrentTimeText_Name_24" ) `
+        -and ( "$script:w6_Introduction_Greeting_CurrentTimeText_Format" -ne "$script:w6_Introduction_Greeting_CurrentTimeText_Name_12" ) ) {
+
+    $script:w6_Introduction_Greeting_CurrentTimeText_Format = $script:w6_Introduction_Greeting_CurrentTimeText_Name_Both
+}
+
+$script:w6_List_Attributes_Colors_ValidColors_HashSet = [System.Collections.Generic.HashSet[string]]::new( $script:w6_List_Attributes_Colors_ValidColors )
+if ( $script:w6_List_NegativeValues_Display_ShowEveryXthListing -lt 1 ) {
+    $script:w6_List_NegativeValues_Display_ShowEveryXthListing = 1
+}
+
+$script:w6_OperatingPath = $script:w6_SentinelValue_String
+Set-w6_OperatingPathIfValid `
+    -Path '.\' `
+    -Silent:$script:w6_SetOperatingPath_DefaultParameterValue_Silent_IfUsedBy_Script
+
+$script:w6_PowerShellLaunchCommand = if ( $script:w6_PSEdition -eq 'Core' ) { 'pwsh' } else { 'PowerShell' }
+
+$script:w6_SystemIOAllDefaultFileAttributes = @( [Enum]::GetValues( [System.IO.FileAttributes] ) )
+
+$script:w6_List_Attributes_Character_FullSpaces = $script:w6_List_Attributes_Character_Space * $script:w6_List_Attributes_SpacesBetweenDashes
+$script:w6_List_Attributes_Character_FullSpacesAndNormalDash = "$( $script:w6_List_Attributes_Character_FullSpaces )$( $script:w6_List_Attributes_Character_Dash )"
+$script:w6_List_Attributes_Character_FullSpacesAndNormalDash_Length = $script:w6_List_Attributes_Character_FullSpacesAndNormalDash.Length
+$script:w6_List_Attributes_Character_FirstSpacesAndFirstDash = (
+    "$( $script:w6_List_Attributes_Character_Space * $script:w6_List_Attributes_FirstDash_SpacesBefore )",
+    "$script:w6_List_Attributes_FirstDash_Character" -join ''
+)
+
+if ( $script:w6_Introduction_Toggle ) {
+    $script:w6_Introduction_TotalAutomaticWrites_Default_String = '0'
+    $script:w6_Introduction_TotalAutomaticWrites_Default_Int = [int] $script:w6_Introduction_TotalAutomaticWrites_Default_String
+
+    $script:w6_Introduction_TotalAutomaticWrites_Path = ( Get-w6_StringWithoutDoubleSlashes -String `
+            "$( $script:w6_UserHomeDirectory )$( $script:w6_PathSlash ).$( $script:w6_Product_Name_KebabCase )-data"
+    )
+
+    try {
+        $script:w6_Introduction_TotalAutomaticWrites = [int] ( [System.IO.File]::ReadAllText( $script:w6_Introduction_TotalAutomaticWrites_Path ) )
+    }
+    catch [System.IO.DirectoryNotFoundException] {
+        Reset-FileWalkerIntroductionAutomaticWrites
+    }
+    catch [System.IO.FileNotFoundException] {
+        Reset-FileWalkerIntroductionAutomaticWrites
+    }
+    catch [System.InvalidCastException] {
+        Reset-FileWalkerIntroductionAutomaticWrites
+    }
+
+    $script:w6_Introduction_Toggle = ( $script:w6_Introduction_TotalAutomaticWrites -le ( $script:w6_Introduction_MaxTotalAutomaticWrites - 1 ) )
+}
+
+# ---------------------------- PRIVATE FUNCTIONS 2 ----------------------------
+
+
+function Get-w6_PaddedTextToConsoleMiddle {
+    param(
+        [Parameter( Mandatory = $false )] [string] $Text = '',
+        [Parameter( Mandatory = $false )] [string] $Padding = ' ',
+        [Parameter( Mandatory = $false )] [string] $Prepend = '',
+        [Parameter( Mandatory = $false )] [string] $Append = ''
+    )
+
+    Set-w6_NewWindowSizeVariables -Width
 
     $nonPaddingLength = $Prepend.Length + $text.Length + $Append.Length
-    $neededPaddingTotal = ( $script:uWindow_Width - $nonPaddingLength ) / $Padding.Length
+    $neededPaddingTotal = ( $script:w6_Window_Width - $nonPaddingLength ) / $Padding.Length
     $neededPaddingEven = $neededPaddingTotal / 2
 
     $paddingLeftAmount = [Math]::Max( [Math]::Ceiling( $neededPaddingEven ), 1 )
@@ -927,28 +1109,34 @@ function Get-uPaddedTextToConsoleMiddle {
 }
 
 
-function Write-uColorCombination {
+function Write-w6_OneColorCombination {
     param(
-        [Parameter( Mandatory = $true )] [Object] $BackgroundColor,
-        [Parameter( Mandatory = $true )] [Object] $ForegroundColor,
-        [Parameter( Mandatory = $false )] [Object] $CustomText = $script:uSentinelValue_String,
-        [Switch] $Swap
+        [Parameter( Mandatory = $true )] [object] $BackgroundColor,
+        [Parameter( Mandatory = $true )] [object] $ForegroundColor,
+        [Parameter( Mandatory = $false )] [object] $CustomText = $script:w6_SentinelValue_String,
+        [switch] $Swap,
+        [switch] $NoAlign
     )
 
     if ( $Swap ) {
         $BackgroundColor, $ForegroundColor = $ForegroundColor, $BackgroundColor
     }
 
-    if ( $script:uSentinelValue_String -eq $CustomText ) {
+    if ( $script:w6_SentinelValue_String -eq $CustomText ) {
         $textRaw = "This is $ForegroundColor Text on a $BackgroundColor Background."
     }
     else {
         $textRaw = $CustomText
     }
 
-    $text = ( Get-uPaddedTextToConsoleMiddle `
-            -Text $textRaw `
-            -Padding $script:uGet_Color_Combinations_Characters_PaddingToMiddle )
+    if ( $NoAlign ) {
+        $text = $textRaw
+    }
+    else {
+        $text = ( Get-w6_PaddedTextToConsoleMiddle `
+                -Text $textRaw `
+                -Padding $script:w6_Get_Color_Combinations_Characters_PaddingToMiddle )
+    }
 
     Write-Host `
         -Object $text `
@@ -959,46 +1147,23 @@ function Write-uColorCombination {
 }
 
 
-function Write-uColorCombinations {
-    param(
-        [Parameter( Mandatory = $false )] [Object] $CustomText = $script:uSentinelValue_String,
-        [Switch] $Swap
-    )
-
+function Write-w6_Colors {
     Write-Host ''
-
-    foreach ( $foregroundColor in $script:uList_Attributes_Colors_ValidColors ) {
-        foreach ( $backgroundColor in $script:uList_Attributes_Colors_ValidColors ) {
-
-            Write-uColorCombination `
-                -CustomText:$CustomText `
-                -BackgroundColor $backgroundColor `
-                -ForegroundColor $foregroundColor `
-                -Swap:$Swap `
-
-        }
-        Write-Host ''
-    }
-}
-
-
-function Write-uColors {
-    Write-Host ''
-    Write-Host $script:uList_Attributes_Colors_ValidColors -Separator "`n"
+    Write-Host $script:w6_List_Attributes_Colors_ValidColors -Separator "`n"
     Write-Host ''
 }
 
 
-function Get-uFlattenedArray {
+function Get-w6_FlattenedArray {
     param(
-        [Parameter( Mandatory = $false )] [Object] $Array = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [object] $Array = $script:w6_SentinelValue_String
     )
 
     $flattenedArray = @()
 
     foreach ( $item in $Array ) {
         if ( $item -is [array] ) {
-            $flattenedArray += ( Get-uFlattenedArray -Array $item )
+            $flattenedArray += ( Get-w6_FlattenedArray -Array $item )
         }
         else {
             $flattenedArray += $item
@@ -1009,7 +1174,7 @@ function Get-uFlattenedArray {
 }
 
 
-function Set-uAliasBulk {
+function Set-w6_AliasBulk {
     param(
         [Parameter( Mandatory = $true )] $Value,
         [Parameter( Mandatory = $true )] $Aliases,
@@ -1022,91 +1187,24 @@ function Set-uAliasBulk {
 }
 
 
-function Get-uBoundary {
+function Set-w6_WindowTitleToBringBack {
     param(
-        [Parameter( Mandatory = $true )] [String] $Direction,
-        [Parameter( Mandatory = $false, ParameterSetName = 'LengthMultiplier' )] [int] `
-            $LengthMultiplier = $script:uSentinelValue_Int32,
-        [Parameter( Mandatory = $true, ParameterSetName = 'RawLength' )] [int] $RawLength = $script:uSentinelValue_Int32,
-        [Switch] $MinusOne
+        [Parameter( Mandatory = $false )] $Title = $script:w6_SentinelValue_String
     )
 
-    Set-uNewWindowSizeVariables
-    $RawLength = ( [Math]::Max( 1, $RawLength ) )
-    $isRightDirection = ( $Direction -eq $script:uBoundary_Direction_Name_Right )
-    $isLeftDirection = ( $Direction -eq $script:uBoundary_Direction_Name_Left )
-
-    function Get-uArrowBody {
-        param(
-            [Parameter( Mandatory = $true )] $Length # Any Rational Number
-        )
-
-        $Length = [Math]::Max( $Length, 0 )
-        $Length = [Math]::Floor( $Length + 0.5 )
-
-        if ( $MinusOne ) {
-            $Length--
-        }
-
-        return "$( $script:uBoundary_Character_Body * [Math]::Floor( $Length + 0.5 ) )"
-    }
-
-    if ( $script:uSentinelValue_Int32 -ne $LengthMultiplier ) {
-
-        if ( $isRightDirection ) {
-            $length = $LengthMultiplier * ( $script:uWindow_Width - $script:uBoundary_Character_RightTip_Length )
-            $arrowBody = ( Get-uArrowBody -Length $Length )
-
-            return "$( $arrowBody )$( $script:uBoundary_Character_RightTip )"
-        }
-
-        if ( $isLeftDirection ) {
-            $length = $LengthMultiplier * ( $script:uWindow_Width - $script:uBoundary_Character_LeftTip_Length )
-            $arrowBody = ( Get-uArrowBody -Length $length )
-
-            return "$( $script:uBoundary_Character_LeftTip )$( $arrowBody )"
-        }
-    }
-
-    if ( $script:uSentinelValue_Int32 -ne $RawLength ) {
-
-        if ( $isRightDirection ) {
-            $length = ( $RawLength - $script:uBoundary_Character_RightTip_Length )
-            $arrowBody = ( Get-uArrowBody -Length $length )
-
-            return "$( $arrowBody )$( $script:uBoundary_Character_RightTip )"
-        }
-
-        if ( $isLeftDirection ) {
-            $length = $RawLength - $script:uBoundary_Character_LeftTip_Length
-            $arrowBody = ( Get-uArrowBody -Length $length )
-
-            return "$( $script:uBoundary_Character_LeftTip )$( $arrowBody )"
-        }
-    }
-
-    return ''
-}
-
-
-function Set-uWindowTitleToBringBack {
-    param(
-        [Parameter( Mandatory = $false )] $Title = $script:uSentinelValue_String
-    )
-
-    if ( $script:uSentinelValue_String -eq $Title ) {
-        return $True
+    if ( $script:w6_SentinelValue_String -eq $Title ) {
+        return $true
     }
 
     try {
-        $script:uLastWindowTitle = $host.UI.RawUI.WindowTitle
+        $script:w6_LastWindowTitle = $host.UI.RawUI.WindowTitle
     }
     catch {
         return $false
     }
 
     try {
-        $host.UI.RawUI.WindowTitle = $script:uLastWindowTitle
+        $host.UI.RawUI.WindowTitle = $script:w6_LastWindowTitle
     }
     catch {
         return $false
@@ -1118,7 +1216,7 @@ function Set-uWindowTitleToBringBack {
     catch {
 
         try {
-            $host.UI.RawUI.WindowTitle = $script:uLastWindowTitle
+            $host.UI.RawUI.WindowTitle = $script:w6_LastWindowTitle
         }
         catch {
             return $false
@@ -1131,59 +1229,59 @@ function Set-uWindowTitleToBringBack {
 }
 
 
-function Set-uLastWindowTitle {
+function Set-w6_LastWindowTitle {
 
-    function Invoke-uSuccessSequence {
-        $script:uLastWindowTitle = $script:uSentinelValue_String
+    function Invoke-w6_SuccessSequence {
+        $script:w6_LastWindowTitle = $script:w6_SentinelValue_String
         return $true
     }
 
-    function Invoke-uFailureSequence {
+    function Invoke-w6_FailureSequence {
 
-        if ( $script:uLastWindowTitle -eq $host.UI.RawUI.WindowTitle ) {
-            return ( Invoke-uSuccessSequence )
+        if ( $script:w6_LastWindowTitle -eq $host.UI.RawUI.WindowTitle ) {
+            return ( Invoke-w6_SuccessSequence )
         }
 
         try {
-            $host.UI.RawUI.WindowTitle = $script:uLastWindowTitle # A retry
-            return ( Invoke-uSuccessSequence )
+            $host.UI.RawUI.WindowTitle = $script:w6_LastWindowTitle # This is a retry
+            return ( Invoke-w6_SuccessSequence )
         }
         catch { }
 
-        Write-Host ( Get-uBoundary -Direction $script:uBoundary_Direction_Name_Right -LengthMultiplier $script:uBoundary_Length_Long )
-        Write-Host " !!! Failed to set the window title back to:`n$script:uLastWindowTitle"
-        Write-Host ( Get-uBoundary -Direction $script:uBoundary_Direction_Name_Left -LengthMultiplier $script:uBoundary_Length_Long )
+        Write-Host ( Get-w6_Boundary -Direction $script:w6_Boundary_Direction_Name_Right -LengthMultiplier $script:w6_Boundary_Length_Long )
+        Write-Host " !!! Failed to set the window title back to:`n$script:w6_LastWindowTitle"
+        Write-Host ( Get-w6_Boundary -Direction $script:w6_Boundary_Direction_Name_Left -LengthMultiplier $script:w6_Boundary_Length_Long )
 
         return $false
     }
 
-    if ( $script:uSentinelValue_String -eq $script:uLastWindowTitle ) {
-        return ( Invoke-uSuccessSequence )
+    if ( $script:w6_SentinelValue_String -eq $script:w6_LastWindowTitle ) {
+        return ( Invoke-w6_SuccessSequence )
     }
 
     try {
         $host.UI.RawUI.WindowTitle = $host.UI.RawUI.WindowTitle
     }
     catch {
-        return ( Invoke-uFailureSequence )
+        return ( Invoke-w6_FailureSequence )
     }
 
     try {
-        $host.UI.RawUI.WindowTitle = $script:uLastWindowTitle
-        return ( Invoke-uSuccessSequence )
+        $host.UI.RawUI.WindowTitle = $script:w6_LastWindowTitle
+        return ( Invoke-w6_SuccessSequence )
     }
     catch {
-        return ( Invoke-uFailureSequence )
+        return ( Invoke-w6_FailureSequence )
     }
 }
 
 
-function Add-uDirectlyToArrayIfBoolTrue {
+function Add-w6_DirectlyToArrayIfBoolTrue {
     param(
         [Parameter( Mandatory = $true )] [ref] $ArrayReference,
-        [Parameter( Mandatory = $false )] [Object] $ToAdd,
-        [Switch] $Prepend,
-        [Switch] $Bool
+        [Parameter( Mandatory = $false )] [object] $ToAdd,
+        [switch] $Prepend,
+        [switch] $Bool
     )
 
     if ( -not $Bool ) {
@@ -1195,15 +1293,15 @@ function Add-uDirectlyToArrayIfBoolTrue {
         return
     }
 
-    $ArrayReference.Value = @( @( $ArrayReference.Value ) + @( $ToAdd ) )
+    $ArrayReference.Value += $ToAdd
 }
 
 
-function Get-uPaddedArrayToLength {
+function Get-w6_PaddedArrayToLength {
     param(
-        [Parameter( Mandatory = $false )] [Object] $ArrayToPad,
+        [Parameter( Mandatory = $false )] [object] $ArrayToPad,
         [Parameter( Mandatory = $false )] [int] $Length,
-        [Parameter( Mandatory = $false )] [Object] $PaddingObject
+        [Parameter( Mandatory = $false )] [object] $PaddingObject
     )
 
     $paddingLength = ( $Length - $ArrayToPad.Length )
@@ -1218,20 +1316,20 @@ function Get-uPaddedArrayToLength {
 }
 
 
-function Get-uPrioritizedArrayOfStrings {
+function Get-w6_PrioritizedArrayOfStrings {
     param(
-        [Parameter( Mandatory = $false )] [Object] $Array = $script:uSentinelValue_String,
-        [Parameter( Mandatory = $false )] [Object] $Priorities = $script:uSentinelValue_String,
-        [Switch] $Capitalize,
-        [Switch] $CaseSensitiveComparison,
-        [Switch] $DoNotRemoveEmptyStrings
+        [Parameter( Mandatory = $false )] [object] $Array = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [object] $Priorities = $script:w6_SentinelValue_String,
+        [switch] $Capitalize,
+        [switch] $CaseSensitiveComparison,
+        [switch] $DoNotRemoveEmptyStrings
     )
 
-    if ( $script:uSentinelValue_String -eq $Array ) {
+    if ( $script:w6_SentinelValue_String -eq $Array ) {
         return @()
     }
 
-    if ( $script:uSentinelValue_String -eq $Priorities ) {
+    if ( $script:w6_SentinelValue_String -eq $Priorities ) {
         return $Array
     }
 
@@ -1243,58 +1341,24 @@ function Get-uPrioritizedArrayOfStrings {
 
     $newArray = @()
 
-    function Add-uPrioritized {
-        param(
-            [Parameter( Mandatory = $false )] [String] $Item = $script:uSentinelValue_String
-        )
-
-        if ( $script:uSentinelValue_String -eq $Item ) {
-            return @( $newArray )
-        }
-
-        if ( $Capitalize ) {
-            $Item = $Item.ToUpper()
-        }
-
-        return @( @( $Item ) + @( $newArray ) )
-    }
-
-    function Add-uNormal {
-        param(
-            [Parameter( Mandatory = $false )] [String] $Item = $script:uSentinelValue_String
-        )
-
-        if ( $script:uSentinelValue_String -eq $Item ) {
-            return @( $newArray )
-        }
-
-        return @( @( $newArray ) + @( $Item ) )
-    }
-
-    function Get-uIsValueAPriority {
-        param(
-            [Parameter( Mandatory = $false )] [String] $Item = $script:uSentinelValue_String
-        )
-
-        if ( $script:uSentinelValue_String -eq $Item ) {
-            return $false
-        }
-
-        if ( $CaseSensitiveComparison ) {
-            return ( $Item -cin $Priorities )
-        }
-        return ( $Item -in $Priorities )
-    }
-
     for ( $i = 0; $i -lt $arrayLength; $i++ ) {
 
-        $Item = ( $Array[$i] )
+        $Item = [string] ( $Array[$i] )
 
-        if ( Get-uIsValueAPriority -Item $Item ) {
-            $newArray = @( Add-uPrioritized -Item $Item )
+        if ( $script:w6_SentinelValue_String -eq $Item ) {
+            continue
+        }
+
+        if ( ( $CaseSensitiveComparison -and ( $Item -cin $Priorities ) ) -or `
+            ( -not $CaseSensitiveComparison -and ( $Item -in $Priorities ) ) ) {
+
+            if ( $Capitalize ) {
+                $Item = $Item.ToUpper()
+            }
+            $newArray = @( @( $Item ) + @( $newArray ) )
         }
         else {
-            $newArray = @( Add-uNormal -Item $Item )
+            $newArray += $Item
         }
 
     }
@@ -1308,12 +1372,12 @@ function Get-uPrioritizedArrayOfStrings {
 }
 
 
-function Set-uNewColorVariableIfCandidateBetter {
+function Set-w6_NewColorVariableIfCandidateBetter {
     param(
         [Parameter( Mandatory = $true )] [ref] $CurrentColorReference,
         [Parameter( Mandatory = $true )] [ref] $CurrentColorPriorityReference,
-        [Parameter( Mandatory = $false )] [Object] $CandidateColor = $script:uSentinelValue_String,
-        [Parameter( Mandatory = $false )] [Object] $CandidatePriority = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [object] $CandidateColor = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [object] $CandidatePriority = $script:w6_SentinelValue_String
     )
 
     if ( $null -eq $CandidateColor ) {
@@ -1321,16 +1385,16 @@ function Set-uNewColorVariableIfCandidateBetter {
     }
 
     if ( ( $null -eq $CandidatePriority ) -or `
-        ( -not ( ConvertTo-uDoubleDirectly -ValueReference ( [ref] $CandidatePriority ) ) ) ) {
-        $CandidatePriority = $script:uList_Attributes_Colors_Default_Priority
+        ( -not ( ConvertTo-w6_DoubleDirectly -ValueReference ( [ref] $CandidatePriority ) ) ) ) {
+        $CandidatePriority = $script:w6_List_Attributes_Colors_Default_Priority
     }
 
-    if ( -not ( ConvertTo-uDoubleDirectly -ValueReference $CurrentColorPriorityReference ) ) {
-        $CurrentColorPriorityReference.Value = $script:uList_Attributes_Colors_Default_Priority
+    if ( -not ( ConvertTo-w6_DoubleDirectly -ValueReference $CurrentColorPriorityReference ) ) {
+        $CurrentColorPriorityReference.Value = $script:w6_List_Attributes_Colors_Default_Priority
     }
 
-    if ( $script:uList_Attributes_Colors_Name_DefaultColor -eq $CandidateColor ) {
-        $CandidateColor = $script:uSentinelValue_String
+    if ( $script:w6_List_Attributes_Colors_Name_DefaultColor -eq $CandidateColor ) {
+        $CandidateColor = $script:w6_SentinelValue_String
     }
 
     if ( $CandidatePriority -le $CurrentColorPriorityReference.Value ) {
@@ -1340,39 +1404,39 @@ function Set-uNewColorVariableIfCandidateBetter {
 }
 
 
-function Set-uNeWColorVariablesFromAttributeName {
+function Set-w6_NewColorVariablesFromAttributeName {
     param(
         [Parameter( Mandatory = $true )] [ref] $CurrentBackgroundColorReference,
         [Parameter( Mandatory = $true )] [ref] $CurrentBackgroundColorPriorityReference,
         [Parameter( Mandatory = $true )] [ref] $CurrentForegroundColorReference,
         [Parameter( Mandatory = $true )] [ref] $CurrentForegroundColorPriorityReference,
-        [Parameter( Mandatory = $false )] [Object] $AttributeName = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [object] $AttributeName = $script:w6_SentinelValue_String
     )
 
-    if ( $script:uSentinelValue_String -eq $AttributeName ) {
+    if ( $script:w6_SentinelValue_String -eq $AttributeName ) {
         return
     }
 
-    $candidate = $script:uList_Attributes_Colors[$AttributeName]
-    $badCandidates = @( $null, '', '0', $script:uSentinelValue_String )
+    $candidate = $script:w6_List_Attributes_Colors[$AttributeName]
+    $badCandidates = @( $null, '', '0', $script:w6_SentinelValue_String )
 
     if ( $candidate -in @( $badCandidates ) ) {
         continue
     }
 
-    $candidateBackgroundColor = $candidate[$script:uList_Attributes_Colors_Name_BackgroundColor]
-    $candidateBackgroundColorPriority = $candidate[$script:uList_Attributes_Colors_Name_BackgroundColor_Priority]
+    $candidateBackgroundColor = $candidate[$script:w6_List_Attributes_Colors_Name_BackgroundColor]
+    $candidateBackgroundColorPriority = $candidate[$script:w6_List_Attributes_Colors_Name_BackgroundColor_Priority]
 
-    $candidateForegroundColor = $candidate[$script:uList_Attributes_Colors_Name_ForegroundColor]
-    $candidateForegroundColorPriority = $candidate[$script:uList_Attributes_Colors_Name_ForegroundColor_Priority]
+    $candidateForegroundColor = $candidate[$script:w6_List_Attributes_Colors_Name_ForegroundColor]
+    $candidateForegroundColorPriority = $candidate[$script:w6_List_Attributes_Colors_Name_ForegroundColor_Priority]
 
-    Set-uNewColorVariableIfCandidateBetter `
+    Set-w6_NewColorVariableIfCandidateBetter `
         -CurrentColorReference $CurrentBackgroundColorReference `
         -CurrentColorPriorityReference $CurrentBackgroundColorPriorityReference `
         -CandidateColor $candidateBackgroundColor `
         -CandidatePriority $candidateBackgroundColorPriority
 
-    Set-uNewColorVariableIfCandidateBetter `
+    Set-w6_NewColorVariableIfCandidateBetter `
         -CurrentColorReference $CurrentForegroundColorReference `
         -CurrentColorPriorityReference $CurrentForegroundColorPriorityReference `
         -CandidateColor $candidateForegroundColor `
@@ -1380,26 +1444,26 @@ function Set-uNeWColorVariablesFromAttributeName {
 }
 
 
-function Get-uColorsFromFileAttributesNames {
+function Get-w6_ColorsFromFileAttributesNames {
     param(
-        [Parameter( Mandatory = $false )] [Object] $FileAttributesNames = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [object] $FileAttributesNames = $script:w6_SentinelValue_String
     )
 
-    if ( $script:uSentinelValue_String -eq $FileAttributesNames ) {
-        return $script:uSentinelValue_String
+    if ( $script:w6_SentinelValue_String -eq $FileAttributesNames ) {
+        return $script:w6_SentinelValue_String
     }
 
-    $FileAttributesNames = @( @( $FileAttributesNames ) + @( $script:uList_Attributes_Colors_Name_Any ) )
+    $FileAttributesNames = @( @( $FileAttributesNames ) + @( $script:w6_List_Attributes_Colors_Name_Any ) )
 
-    $backgroundColor = $script:uSentinelValue_String
-    $backgroundColorPriority = $script:uList_Attributes_Colors_Default_Priority
-    $foregroundColor = $script:uSentinelValue_String
-    $foregroundColorPriority = $script:uList_Attributes_Colors_Default_Priority
+    $backgroundColor = $script:w6_SentinelValue_String
+    $backgroundColorPriority = $script:w6_List_Attributes_Colors_Default_Priority
+    $foregroundColor = $script:w6_SentinelValue_String
+    $foregroundColorPriority = $script:w6_List_Attributes_Colors_Default_Priority
 
 
     foreach ( $attributeName in $FileAttributesNames ) {
 
-        Set-uNeWColorVariablesFromAttributeName `
+        Set-w6_NewColorVariablesFromAttributeName `
             -CurrentBackgroundColorReference ( [ref] $backgroundColor ) `
             -CurrentBackgroundColorPriorityReference ( [ref] $backgroundColorPriority ) `
             -CurrentForegroundColorReference ( [ref] $foregroundColor ) `
@@ -1408,26 +1472,26 @@ function Get-uColorsFromFileAttributesNames {
     }
 
     return @{
-        $script:uList_Attributes_Colors_Name_BackgroundColor = $backgroundColor
-        $script:uList_Attributes_Colors_Name_ForegroundColor = $foregroundColor
+        $script:w6_List_Attributes_Colors_Name_BackgroundColor = $backgroundColor
+        $script:w6_List_Attributes_Colors_Name_ForegroundColor = $foregroundColor
     }
 }
 
 
-function Get-uNamesListFromFileAttributes {
+function Get-w6_NamesListFromFileAttributes {
     param(
-        [Parameter( Mandatory = $false )] [Object] $fileAttributesParameter = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [object] $fileAttributesParameter = $script:w6_SentinelValue_String
     )
 
-    if ( $script:uSentinelValue_String -eq $fileAttributesParameter ) {
+    if ( $script:w6_SentinelValue_String -eq $fileAttributesParameter ) {
         return @()
     }
 
     $attributesArray = @()
 
-    foreach ( $attribute in $script:uSystemIOAllDefaultFileAttributes ) {
+    foreach ( $attribute in $script:w6_SystemIOAllDefaultFileAttributes ) {
         if ( ( $fileAttributesParameter -band $attribute ) -eq $attribute ) {
-            $attributesArray = @( @( $attributesArray ) + @( $attribute ) )
+            $attributesArray += $attribute
         }
     }
 
@@ -1435,71 +1499,54 @@ function Get-uNamesListFromFileAttributes {
 }
 
 
-function Get-uFileAttributesNamesList {
+function Get-w6_FileAttributesNames {
     param(
-        [Parameter( Mandatory = $false )] [String] $FileName = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [string] $FileName = $script:w6_SentinelValue_String
     )
 
-    $permissionDenied = $false
-    $otherError = $false
+    $noError = $true
+    $fileAttributesNames = @()
 
     try {
-        $Path = ( Get-uPathWithAddedBackslashIfNecessary -Path "$( $script:uOperatingPath )\$( $FileName )" )
-        $file = ( Get-Item -Path $Path -Force -ErrorAction Stop )
-        $fileAttributesParameter = $file.Attributes
+        $Path = ( Get-w6_PathWithAddedSlashIfNecessary `
+                -Path "$( $script:w6_OperatingPath )$( $script:w6_PathSlash )$( $FileName )" )
+        $Path = ( Get-w6_StringWithoutDoubleSlashes -String $Path )
+        $fileAttributesParameter = ( Get-Item -Path $Path -Force -ErrorAction Stop ).Attributes
     }
     catch [System.UnauthorizedAccessException] {
-        $permissionDenied = $true
+        $noError = $false
+        $fileAttributesNames += 'Permission Denied!'
     }
     catch [System.IO.FileNotFoundException] {
-        $fileNotFound = $true
+        $noError = $false
+        $fileAttributesNames += 'File Not Found!'
     }
     catch {
-        $otherError = $true
+        $noError = $false
+        $fileAttributesNames += 'ERROR!'
     }
     # Improvement idea: Be more explicit with error catching here.
 
-    if ( ( -not $permissionDenied ) -and ( -not $fileNotFound ) -and ( -not $otherError ) ) {
-        $fileAttributesNames = @( Get-uNamesListFromFileAttributes -FileAttributesParameter:$fileAttributesParameter )
+    if ( $noError ) {
+        $fileAttributesNames = @( Get-w6_NamesListFromFileAttributes -FileAttributesParameter:$fileAttributesParameter )
     }
-
-    if ( $permissionDenied ) {
-        $fileAttributesNames = @( @( $fileAttributesNames ) + @( 'Permission Denied!' ) )
-    }
-
-    if ( $fileNotFound ) {
-        $fileAttributesNames = @( @( $fileAttributesNames ) + @( 'File Not Found!' ) )
-    }
-
-    if ( $otherError ) {
-        $fileAttributesNames = @( @( $fileAttributesNames ) + @( 'ERROR!' ) )
-    }
-
-    $fileAttributesNames = @( @( $fileAttributesNames ) | Where-Object -FilterScript {
-            ( $_ -notin $script:uList_Attributes_ExclusionList ) }
-    )
-
-    $fileAttributesNames = @( Get-uPrioritizedArrayOfStrings `
-            -Array $fileAttributesNames `
-            -Priorities $script:uList_Attributes_PriorityList `
-            -Capitalize )
 
     $emptyStringValues = @( '', $null, ' ' )
 
     $fileAttributesNames = @( @( $fileAttributesNames ) | Where-Object -FilterScript {
             $_ -notin @( $emptyStringValues ) } )
 
-    return @( $fileAttributesNames )
+    return @( $fileAttributesNames | ForEach-Object -Process { [string] $_ } )
 }
 
 
-function Get-uFileAttributesStringRaw {
+function Get-w6_FileAttributesStringRaw {
     param(
-        [Parameter( Mandatory = $false )] [Object] $FileAttributesNames
+        [Parameter( Mandatory = $false )] [object] $FileAttributesNames
     )
 
     if ( $FileAttributesNames.Length -gt 0 ) {
-        $FileAttributesStringRaw = " $script:uList_Attributes_Character_Arrow $( $FileAttributesNames -join  ', ' )"
+        $FileAttributesStringRaw = "$script:w6_List_Attributes_Character_Arrow$( $FileAttributesNames -join  $script:w6_List_Attributes_Character_AttributeSeparator )"
     }
     else {
         $FileAttributesStringRaw = ''
@@ -1509,253 +1556,329 @@ function Get-uFileAttributesStringRaw {
 }
 
 
-function Get-uFileAttributesString {
+function Get-w6_FileAttributesString {
     param(
-        [Parameter( Mandatory = $false )] [Object] $FileAttributesNamesList,
-        [Parameter( Mandatory = $false )] [String] $BeforeAttributesString = $script:uSentinelValue_String,
-        [Parameter( Mandatory = $false )] [String] $AfterAttributesString = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [object] $FileAttributesNames,
+        [Parameter( Mandatory = $false )] [string] $BeforeAttributesString = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [string] $AfterAttributesString = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [object] $AttributesBlackList = @(),
+        [Parameter( Mandatory = $false )] [object] $AttributesPriorityList = @(),
+        [Switch] $AddSeparatorCharacters
     )
 
-    $fileAttributesStringRaw = ( Get-uFileAttributesStringRaw -FileAttributesNames @( $FileAttributesNamesList ) )
+    $FileAttributesNames = @( @( $FileAttributesNames ) | Where-Object -FilterScript {
+            $_ -notin $AttributesBlackList }
+    )
 
-    function Get-uAttributesStringSpacesLength {
+    $FileAttributesNames = @( Get-w6_PrioritizedArrayOfStrings `
+            -Array $FileAttributesNames `
+            -Priorities $AttributesPriorityList `
+            -Capitalize )
+
+    $FileAttributesNames = @( @( $FileAttributesNames ) | ForEach-Object -Process {
+            $aliasName = $script:w6_List_Attributes_RenameTable["$_"]
+
+            if ( $null -ne $aliasName ) {
+                $aliasName
+            }
+            else {
+                $_
+            }
+        } )
+
+    $emptyStringValues = @( '', $null, ' ' )
+
+    $FileAttributesNames = @( @( $FileAttributesNames ) | Where-Object -FilterScript {
+            $_ -notin @( $emptyStringValues ) } )
+
+    $fileAttributesStringRaw = ( Get-w6_FileAttributesStringRaw -FileAttributesNames @( $FileAttributesNames ) )
+
+    function Get-w6_AttributesStringSpacesLength {
+        # DELETE THIS DESCRIPTION ONCE IT'S IRRELEVANT
+        # Variable Abbreviations: Left1, Left2, Left3, Right
+        # This function tries to fit the best amount of spaces for the specific line based on its length and on the user's settings
+        # Steps:
+        # Important! If during any of these steps a matching amount of spaces if found, it will be instantly returned, and the function will instantly end. The script will always choose the highest acceptable amount of spaces
+        # 1. Check will the text fit with the maximum (Left1) amount of spaces  while respecting Right
+        # 2. Try to fit an amount of spaces between Left1 and Left2  while respecting Right
+        # 3. Starting from Left2. Decrease Left2 and Right by 1 until both  Left2 has reached Left3   and  Right has reached 0
+        #    note: there are max() functions to ensure that  Left2 is never decreased below Left3  and  Right is never decreased below 0
+        # 4. (fallback) Return the minimum amount of spaces (Left3)
+
+        #+ Step 1
+
         $rawLineLength = ( "$( $BeforeAttributesString )$( $fileAttributesStringRaw )$( $AfterAttributesString )" ).Length
 
-        Set-uNewWindowSizeVariables
-        $newLength = $rawLineLength + $script:uList_Attributes_MinCharactersOffset_Left1
-        $newMax = $script:uWindow_Width - $script:uList_Attributes_MinCharactersOffset_Right
+        Set-w6_NewWindowSizeVariables -Width
+        $newLength = $rawLineLength + $script:w6_List_Attributes_MinCharactersSeparating_Left1
+        $newMax = $script:w6_Window_Width - $script:w6_List_Attributes_MinCharactersSeparating_Right
 
         if ( $newLength -lt $newMax ) {
-            return $script:uList_Attributes_MinCharactersOffset_Left1
+            return $script:w6_List_Attributes_MinCharactersSeparating_Left1
         }
 
-        $newRange = $script:uList_Attributes_MinCharactersOffset_Left1 - $script:uList_Attributes_MinCharactersOffset_Left2
-        $newMax = $script:uWindow_Width - $script:uList_Attributes_MinCharactersOffset_Right
+        #+ Step 2
 
-        $firstMatchingSubtraction = $rawLineLength + $script:uList_Attributes_MinCharactersOffset_Left1 - $newMax
+        $newRange = $script:w6_List_Attributes_MinCharactersSeparating_Left1 - $script:w6_List_Attributes_MinCharactersSeparating_Left2
+        $newMax = $script:w6_Window_Width - $script:w6_List_Attributes_MinCharactersSeparating_Right
+
+        $firstMatchingSubtraction = $rawLineLength + $script:w6_List_Attributes_MinCharactersSeparating_Left1 - $newMax
 
         if ( ( $firstMatchingSubtraction -ge 0 ) -and ( $firstMatchingSubtraction -le $newRange ) ) {
-            return $script:uList_Attributes_MinCharactersOffset_Left1 - $firstMatchingSubtraction
+            return $script:w6_List_Attributes_MinCharactersSeparating_Left1 - $firstMatchingSubtraction
         }
 
-        if ( $rawLineLength + $script:uList_Attributes_MinCharactersOffset_Left2 -lt $newMax ) {
-            return $script:uList_Attributes_MinCharactersOffset_Left2
+        if ( ( $rawLineLength + $script:w6_List_Attributes_MinCharactersSeparating_Left2 ) -lt $newMax ) {
+            return $script:w6_List_Attributes_MinCharactersSeparating_Left2
         }
 
-        # The two above if statements are the optimized version of this the below for loop. I left it, because it may
-        # be easier to understand te more verbose for loop, than the math.
-        # IF ANY EDIT IN THE IFs WAS PERFORMED - IT'S LIKELY THAT THIS ARCHIVE CODE IS IRRELEVANT
+        # The two above if statements are an optimized version of the below for-loop. The for-loop has not been deleted, because it may
+        # be easier to understand the more verbose for-loop, than the 'shortcut' math from the if statements
+        # IF ANY EDIT IN THE ABOVE CODE IS PERFORMED - IT'S VERY LIKELY THAT THE BELOW FOR-LOOP IS IRRELEVANT
         # for ( $i = 0; $i -le $newRange; $i++ ) {
-        #     $newOffsetFromLeft = [Math]::Max( ( $script:uList_Attributes_MinCharactersOffset_Left1 - $i ), `
-        #             $script:uList_Attributes_MinCharactersOffset_Left2 )
-        #     $newLength = $rawLineLength + $newOffsetFromLeft
-
+        #     $newSeparationFromLeft = [Math]::Max( ( $script:w6_List_Attributes_MinCharactersSeparating_Left1 - $i ), $script:w6_List_Attributes_MinCharactersSeparating_Left2 )   # Note: The [Math]::Max() is only useful during the edge case when Left2 > Left1.  When Left1 > Left2 -> the "Left1 - i" will always be greater or equal to Left2
+        #     $newLength = $rawLineLength + $newSeparationFromLeft
+        #
         #     if ( $newLength -lt $newMax ) {
-        #         return $newOffsetFromLeft
+        #         return $newSeparationFromLeft
         #     }
         # }
 
-        $newRange = [Math]::Max( $script:uList_Attributes_MinCharactersOffset_Left3, `
-                $script:uList_Attributes_MinCharactersOffset_Right )
+        #+ Step 3
+
+        $newRange = [Math]::Max( $script:w6_List_Attributes_MinCharactersSeparating_Left2, $script:w6_List_Attributes_MinCharactersSeparating_Right )
 
         for ( $i = 0; $i -le $newRange; $i++ ) {
 
-            $newOffsetFromLeft = [Math]::Max( ( $script:uList_Attributes_MinCharactersOffset_Left2 - $i ), `
-                    $script:uList_Attributes_MinCharactersOffset_Left3 )
-            $newLength = $rawLineLength + $newOffsetFromLeft
+            $newSeparationFromLeft = [Math]::Max(
+                ( $script:w6_List_Attributes_MinCharactersSeparating_Left2 - $i ),
+                $script:w6_List_Attributes_MinCharactersSeparating_Left3
+            )
+            $newLength = $rawLineLength + $newSeparationFromLeft
 
             if ( 0 -eq $i ) {
-                $newOffsetFromRight = $script:uList_Attributes_MinCharactersOffset_Right
+                $newSeparationFromRight = $script:w6_List_Attributes_MinCharactersSeparating_Right
             }
             else {
-                $newOffsetFromRight = [Math]::Max( ( $script:uList_Attributes_MinCharactersOffset_Right - $i + 1 ), 0 )
+                $newSeparationFromRight = [Math]::Max( ( $script:w6_List_Attributes_MinCharactersSeparating_Right - $i + 1 ), 0 )
             }
 
-            $newMax = $script:uWindow_Width - $newOffsetFromRight
+            $newMax = $script:w6_Window_Width - $newSeparationFromRight
 
             if ( $newLength -lt $newMax ) {
-                return $newOffsetFromLeft
+                return $newSeparationFromLeft
             }
 
-            $newOffsetFromRight = [Math]::Max( ( $script:uList_Attributes_MinCharactersOffset_Right - $i ), 0 )
-            $newMax = $script:uWindow_Width - $newOffsetFromRight
+            $newSeparationFromRight = [Math]::Max( ( $script:w6_List_Attributes_MinCharactersSeparating_Right - $i ), 0 )
+            $newMax = $script:w6_Window_Width - $newSeparationFromRight
 
             if ( $newLength -lt $newMax ) {
-                return $newOffsetFromLeft
+                return $newSeparationFromLeft
             }
 
         }
 
-        return $script:uList_Attributes_MinCharactersOffset_Left3
+        #+ Step 4
+
+        return $script:w6_List_Attributes_MinCharactersSeparating_Left3
     }
 
-    function Get-uAttributesStringSpaces {
-        $spacesAmount = ( Get-uAttributesStringSpacesLength )
-        $spacesWithDashes = $()
+    function Get-w6_AttributesStringSpaces {
+        $spacesAmount = ( Get-w6_AttributesStringSpacesLength )
+        $spacesWithDashes = ''
 
-        $spacesAmountAfterFirstDash = $spacesAmount - $script:uList_Attributes_FirstDash_SpacesBefore - `
-            $script:uList_Attributes_FirstDash_Character.Length
+        $spacesAmountAfterFirstDash = $spacesAmount - $script:w6_List_Attributes_FirstDash_SpacesBefore - `
+            $script:w6_List_Attributes_FirstDash_Character.Length
 
         if ( ( $spacesAmountAfterFirstDash -le 0 ) -or ( '' -eq $fileAttributesStringRaw ) ) {
-            return ( $script:uList_Attributes_Character_Space * $spacesAmount )
+            return ( $script:w6_List_Attributes_Character_Space * $spacesAmount )
         }
 
-        $spacesAmount = $spacesAmountAfterFirstDash
-        $spacesWithDashes += ( `
-                "$( $script:uList_Attributes_Character_Space * $script:uList_Attributes_FirstDash_SpacesBefore )", `
-                "$script:uList_Attributes_FirstDash_Character" -join '' )
+        $spacesWithDashes += $script:w6_List_Attributes_Character_FirstSpacesAndFirstDash
 
-        $range = $spacesAmount + 1
+        $fullSpacesAndNormalDashes_Amount = [Math]::Floor(
+            $spacesAmountAfterFirstDash / $script:w6_List_Attributes_Character_FullSpacesAndNormalDash_Length )
 
-        for ( $i = 1; $i -lt $range; ) {
+        $allFullSpacesAndNormalDashes = `
+            $script:w6_List_Attributes_Character_FullSpacesAndNormalDash * $fullSpacesAndNormalDashes_Amount
 
-            if ( 0 -eq ( $i % $script:uList_Attributes_SpacesBetweenDashes ) ) {
-                $spacesWithDashes += $script:uList_Attributes_Character_Dash
-                $i += $script:uList_Attributes_Character_Dash.Length
-                continue
-            }
+        $spacesWithDashes += $allFullSpacesAndNormalDashes
 
-            $spacesWithDashes += $script:uList_Attributes_Character_Space
-            $i += $script:uList_Attributes_Character_Space.Length
-
-        }
+        $spacesWithDashes += (
+            $script:w6_List_Attributes_Character_Space * (
+                $spacesAmountAfterFirstDash % $script:w6_List_Attributes_Character_FullSpacesAndNormalDash_Length ) )
 
         return $spacesWithDashes
 
     }
 
-    return "$( Get-uAttributesStringSpaces )$( $fileAttributesStringRaw )$( $AfterAttributesString )"
+    if ( $AddSeparatorCharacters ) {
+        return "$( Get-w6_AttributesStringSpaces )$( $fileAttributesStringRaw )$( $AfterAttributesString )"
+    }
+
+    return "$( $fileAttributesStringRaw )$( $AfterAttributesString )"
 }
 
 
-function Get-uChildItems {
+function Get-w6_ChildItems {
     param(
-        [Switch] $IsDir
+        [switch] $IsDir,
+        [switch] $Force
     )
 
     try {
-        return @( Get-ChildItem -Path $script:uOperatingPath -ErrorAction Stop -Name -Directory:$IsDir -Force )
+        return @( Get-ChildItem -Path $script:w6_OperatingPath -ErrorAction Stop -Name -Directory:$IsDir -Force:$Force )
     }
     catch [System.UnauthorizedAccessException] {
-        return $script:uSentinelValue_String # When You have an access denied error here, You cannot access the entire
-        #                                     folder ( not a single file ). Therefore no handling is needed to 'try'
-        #                                     accessing these files without -Force.
+        return $script:w6_SentinelValue_String # If you have an access denied error here, you can't access the entire
+        #                                        folder, not a single file. No need to handle accessing these
+        #                                        files without -Force.
     }
 }
 
 
-function Get-uListOneLineLeftSideSpaces {
+function Get-w6_ListOneLineLeftSideSpaces {
     param(
-        [Parameter( Mandatory = $false )] [String] $CounterText = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [string] $CounterText = $script:w6_SentinelValue_String
     )
 
-    if ( $script:uSentinelValue_String -eq $CounterText ) {
+    if ( $script:w6_SentinelValue_String -eq $CounterText ) {
         return ''
     }
 
-    return ( $script:uList_BeforeCounterText_Character_Space * [Math]::Max( `
-            ( $script:uList_BeforeCounterText_SpacesIfOneDigit + 1 - "$CounterText".Length ), 0 ) )
+    return (
+        $script:w6_List_BeforeCounterText_Character_Space * [Math]::Max(
+            ( $script:w6_List_BeforeCounterText_SpacesIfOneDigit + 1 - "$CounterText".Length ), 0
+        )
+    )
 }
 
 
-function Set-uVariableFToPath {
+function Set-w6_VariableFToPath {
     param(
-        [Parameter( Mandatory = $false )] [Object] $Path = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [object] $Path = $script:w6_SentinelValue_String
     )
 
-    if ( $script:uSentinelValue_String -eq $Path ) {
+    if ( $script:w6_SentinelValue_String -eq $Path ) {
         return
     }
-    $script:f = ( Convert-Path -Path ( Get-uUniversalPath -Path $Path ) ) # The $script:f is supposed to be used by the user! Is is __not__ unused!
+
+    $script:f = [System.IO.Path]::GetFullPath( ( Get-w6_UniversalPath -Path $Path ) )
 }
 
 
-function Get-uBeforeAttributesString {
+function Get-w6_BeforeAttributesString {
     param(
-        [Parameter( Mandatory = $true )] [Object] $FileName,
+        [Parameter( Mandatory = $true )] [object] $FileName,
         [Parameter( Mandatory = $true )] [int] $PositiveCounter,
         [Parameter( Mandatory = $true )] [int] $ListLength
     )
 
-    $negativeNumberModulo = ( $PositiveCounter % $script:uList_NegativeValues_ShowEveryXthListing )
+    $negativeNumberModulo = ( $PositiveCounter % $script:w6_List_NegativeValues_Display_ShowEveryXthListing )
     $shouldNegativeCounterBeDisplayed = ( 0 -eq $negativeNumberModulo )
 
-    if ( $script:uList_NegativeValues_Toggle -and $shouldNegativeCounterBeDisplayed ) {
-        $negativeCounterText = "-$( $ListLength - $PositiveCounter + 1 )$( $script:uList_NegativeValues_Separator )"
+    if ( $script:w6_List_NegativeValues_Display_Toggle -and $shouldNegativeCounterBeDisplayed ) {
+        $negativeCounterText = "-$( $ListLength - $PositiveCounter + 1 )$( $script:w6_List_NegativeValues_Display_Separator )"
     }
     else {
         $negativeCounterText = ''
     }
 
-    $beforeAttributesString_Spaces = ( Get-uListOneLineLeftSideSpaces `
+    $beforeAttributesString_Spaces = ( Get-w6_ListOneLineLeftSideSpaces `
             -CounterText "$( $negativeCounterText )$( $PositiveCounter )" )
 
     return (
         "$beforeAttributesString_Spaces",
-        "$script:uList_Character_Bracket_BeforeAttributes_Opening",
+        "$script:w6_List_Character_Bracket_ListNumber_BeforeAttributes_Opening",
         "$negativeCounterText",
         "$PositiveCounter",
-        "$script:uList_Character_Bracket_BeforeAttributes_Closing",
+        "$script:w6_List_Character_Bracket_ListNumber_BeforeAttributes_Closing",
         ' ',
         "$FileName" -join ''
     )
 }
 
 
-function Get-uListLineFromFile {
+function Get-w6_ListLineFromFile {
     param(
-        [Parameter( Mandatory = $true )] [Object] $FileName,
+        [Parameter( Mandatory = $true )] [object] $FileName,
         [Parameter( Mandatory = $true )] [int] $PositiveCounter,
-        [Parameter( Mandatory = $true )] [int] $ListLength
+        [Parameter( Mandatory = $true )] [int] $ListLength,
+        [Parameter( Mandatory = $false )] [object] $AttributesBlackList = @(),
+        [Parameter( Mandatory = $false )] [object] $AttributesPriorityList = @()
     )
 
-    $beforeAttributesString = ( Get-uBeforeAttributesString `
+    # Note: The Space characters that separate the File Name and File Attributes are in the $fileAttributesString variable
+
+    $beforeAttributesString = ( Get-w6_BeforeAttributesString `
             -FileName $FileName `
             -PositiveCounter $PositiveCounter `
             -ListLength $ListLength )
 
-    if ( -not $script:uList_FileAttributes_Toggle ) {
+    if ( -not $script:w6_List_FileAttributes_Toggle ) {
         return $beforeAttributesString
     }
 
-    $afterAttributesString = (
-        " $script:uList_Character_Bracket_AfterAttributes_Opening",
-        "$( $script:uList_Attributes_ClosingNumberPrefix )",
-        "$( $PositiveCounter )",
-        "$( $script:uList_Attributes_ClosingNumberSuffix )",
-        "$script:uList_Character_Bracket_AfterAttributes_Closing" -join ''
-    )
-
-    $fileAttributesNamesList = @( Get-uFileAttributesNamesList -FileName $FileName )
-
-    $fileAttributesString = ( Get-uFileAttributesString `
-            -BeforeAttributesString $beforeAttributesString `
-            -AfterAttributesString $afterAttributesString `
-            -FileAttributesNamesList $fileAttributesNamesList )
-
-    if ( $script:uList_Colors_Toggle ) {
-        # The lack of '@' is not a mistype. Colors are passed as a table.
-        $colors = ( Get-uColorsFromFileAttributesNames -FileAttributesNames $fileAttributesNamesList )
+    if ( $script:w6_List_AfterAttributesListNumber_ListNumber_Visible ) {
+        $afterAttributesCounter = $PositiveCounter
     }
     else {
-        $colors = $script:uSentinelValue_String
+        $afterAttributesCounter = ''
     }
+
+
+    if ( $script:w6_List_AfterAttributesListNumber_ToggleFullDisplay ) {
+        $afterAttributesString = (
+            "$script:w6_List_Character_Bracket_ListNumber_AfterAttributes_Opening",
+            "$script:w6_List_Attributes_ClosingNumberPrefix",
+            "$afterAttributesCounter",
+            "$script:w6_List_Attributes_ClosingNumberSuffix",
+            "$script:w6_List_Character_Bracket_ListNumber_AfterAttributes_Closing" -join ''
+        )
+    }
+    else {
+        $afterAttributesString = ''
+    }
+
+    $fileAttributesNames = @( Get-w6_FileAttributesNames `
+            -FileName $FileName `
+    )
+
+    $fileAttributesString = ( Get-w6_FileAttributesString `
+            -BeforeAttributesString $beforeAttributesString `
+            -AfterAttributesString $afterAttributesString `
+            -FileAttributesNames $fileAttributesNames `
+            -AttributesBlackList:$AttributesBlackList `
+            -AttributesPriorityList:$AttributesPriorityList `
+            -AddSeparatorCharacters
+    )
+
+    if ( $script:w6_List_Colors_Toggle ) {
+        # The lack of '@' isn't a mistype. Colors are passed as a hashtable
+        $colors = ( Get-w6_ColorsFromFileAttributesNames -FileAttributesNames $fileAttributesNames )
+    }
+    else {
+        $colors = $script:w6_SentinelValue_String
+    }
+
+    $text = "$( $beforeAttributesString )$( $fileAttributesString )"
 
     return @{
-        $script:uList_Raw_Names_Line   = "$( $beforeAttributesString )$( $fileAttributesString )"
-        $script:uList_Raw_Names_Colors = $colors
+        $script:w6_List_Raw_Names_Line_Text  = $text
+        $script:w6_List_Raw_Names_Line_Color = $colors
     }
-
 
 }
 
 
-function Get-uRawEnumeratedFilesList {
+function Get-w6_RawEnumeratedFilesList {
     param(
-        [Parameter( Mandatory = $false )] [Object] $ListToEnumerate = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [object] $ListToEnumerate = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [object] $AttributesBlackList = @(),
+        [Parameter( Mandatory = $false )] [object] $AttributesPriorityList = @()
     )
 
-    if ( ( ( $script:uSentinelValue_String -eq $ListToEnumerate )  ) ) {
+    if ( ( ( $script:w6_SentinelValue_String -eq $ListToEnumerate )  ) ) {
         return
     }
 
@@ -1768,10 +1891,14 @@ function Get-uRawEnumeratedFilesList {
     $positiveCounter = 1
 
     $lines = @( @( $ListToEnumerate ) | ForEach-Object -Process {
-            Get-uListLineFromFile `
-                -FileName $_ `
-                -PositiveCounter $positiveCounter `
-                -ListLength $listLength
+            $line = ( Get-w6_ListLineFromFile `
+                    -FileName $_ `
+                    -PositiveCounter $positiveCounter `
+                    -ListLength $listLength `
+                    -AttributesBlackList:$AttributesBlackList `
+                    -AttributesPriorityList:$AttributesPriorityList )
+
+            $line
 
             $positiveCounter++ }
     )
@@ -1780,25 +1907,15 @@ function Get-uRawEnumeratedFilesList {
 }
 
 
-function Get-uIsConsoleColorValid {
+function Write-w6_HostWithColorsCushion {
     param(
-        [Parameter( Mandatory = $false )] [Object] $Color = $script:uSentinelValue_String
+        [Parameter( Mandatory = $false )] [object] $Object,
+        [Parameter( Mandatory = $false )] [object] $BackgroundColor = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [object] $ForegroundColor = $script:w6_SentinelValue_String
     )
 
-    return ( ( $Color -ne $script:uSentinelValue_String ) `
-            -and ( $Color -in $script:uList_Attributes_Colors_ValidColors ) )
-}
-
-
-function Write-uHostColorsCushion {
-    param(
-        [Parameter( Mandatory = $false )] [Object] $Object,
-        [Parameter( Mandatory = $false )] [Object] $BackgroundColor = $script:uSentinelValue_String,
-        [Parameter( Mandatory = $false )] [Object] $ForegroundColor = $script:uSentinelValue_String
-    )
-
-    $backgroundColor_IsValid = ( Get-uIsConsoleColorValid -Color $BackgroundColor )
-    $foregroundColor_IsValid = ( Get-uIsConsoleColorValid -Color $ForegroundColor )
+    $backgroundColor_IsValid = ( $script:w6_List_Attributes_Colors_ValidColors.Contains( $BackgroundColor ) )
+    $foregroundColor_IsValid = ( $script:w6_List_Attributes_Colors_ValidColors.Contains( $ForegroundColor ) )
 
     if ( $backgroundColor_IsValid -and $foregroundColor_IsValid ) {
         Write-Host `
@@ -1826,51 +1943,60 @@ function Write-uHostColorsCushion {
     }
 
     Write-Host $Object
-
 }
 
 
-function Write-uEnumeratedFileList {
+function Write-w6_EnumeratedFileList {
     param(
-        [Parameter( Mandatory = $false )] [Object] $ListToEnumerate = $script:uSentinelValue_String,
-        [Switch] $AddDisplayList,
-        [Switch] $AddZero,
-        [Switch] $AddQuitStick,
-        [Switch] $AddAccessDenied
+        [Parameter( Mandatory = $false )] [object] $ListToEnumerate = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [object] $AttributesBlackList = @(),
+        [Parameter( Mandatory = $false )] [object] $AttributesPriorityList = @(),
+        [switch] $AddDisplayList,
+        [switch] $AddZero,
+        [switch] $AddQuitStick,
+        [switch] $AddAccessDenied
     )
 
-    if ( $script:uSentinelValue_String -eq $ListToEnumerate ) {
+    if ( $script:w6_SentinelValue_String -eq $ListToEnumerate ) {
         $ListToEnumerate = @()
     }
 
     if ( $AddDisplayList ) {
-        Write-Host ( "$( Get-uListOneLineLeftSideSpaces -CounterText $script:uList_Character_DisplayList )",
-            "[$script:uList_Character_DisplayList] ",
+        Write-Host ( "$( Get-w6_ListOneLineLeftSideSpaces -CounterText $script:w6_List_Character_DisplayList )",
+            "[$script:w6_List_Character_DisplayList] ",
             'Force Write List' -join '' )
     }
 
     if ( $AddZero ) {
-        Write-Host ( "$( Get-uListOneLineLeftSideSpaces -CounterText $script:uList_Character_Zero )",
-            "[$script:uList_Character_Zero] ",
-            "Select the Parent Directory - '$( Convert-Path "$script:uOperatingPath\.." )'" -join '' )
+        $parentPath = [System.IO.Path]::GetFullPath(
+            ( Get-w6_StringWithoutDoubleSlashes -String "$( $script:w6_OperatingPath )$( $script:w6_PathSlash ).." )
+        )
+
+        Write-Host ( "$( Get-w6_ListOneLineLeftSideSpaces -CounterText $script:w6_List_Character_Zero )",
+            "[$script:w6_List_Character_Zero] Parent Directory - $parentPath" `
+                -join '' )
     }
 
     if ( $AddQuitStick ) {
-        Write-Host ( "$( Get-uListOneLineLeftSideSpaces -CounterText $script:uList_Character_ExitStick )",
-            "[$script:uList_Character_ExitStick] ",
+        Write-Host ( "$( Get-w6_ListOneLineLeftSideSpaces -CounterText $script:w6_List_Character_ExitStick )",
+            "[$script:w6_List_Character_ExitStick] ",
             'Exit Stick Mode.' -join '' )
 
     }
 
     if ( $AddAccessDenied ) {
-        Write-Host ( "$( Get-uListOneLineLeftSideSpaces -CounterText $script:uList_Character_AccessDenied )",
-            "[$script:uList_Character_AccessDenied] ",
+        Write-Host ( "$( Get-w6_ListOneLineLeftSideSpaces -CounterText $script:w6_List_Character_AccessDenied )",
+            "[$script:w6_List_Character_AccessDenied] ",
             'Access Denied!' -join '' )
     }
 
-    $enumeratedFilesWithLineInfo = ( Get-uRawEnumeratedFilesList -ListToEnumerate @( $ListToEnumerate ) )
+    $enumeratedFilesWithLineInfo = ( Get-w6_RawEnumeratedFilesList `
+            -ListToEnumerate @( $ListToEnumerate ) `
+            -AttributesBlackList:$AttributesBlackList `
+            -AttributesPriorityList:$AttributesPriorityList
+    )
 
-    if ( -not $script:uList_FileAttributes_Toggle ) {
+    if ( -not $script:w6_List_FileAttributes_Toggle ) {
         foreach ( $line in $enumeratedFilesWithLineInfo ) {
             Write-Host $line
         }
@@ -1882,18 +2008,18 @@ function Write-uEnumeratedFileList {
     }
 
     foreach ( $lineInfo in $enumeratedFilesWithLineInfo ) {
-        $line = $lineInfo[$script:uList_Raw_Names_Line]
-        $colors = $lineInfo[$script:uList_Raw_Names_Colors]
+        $line = $lineInfo[$script:w6_List_Raw_Names_Line_Text]
+        $colors = $lineInfo[$script:w6_List_Raw_Names_Line_Color]
 
-        if ( $script:uSentinelValue_String -eq $colors ) {
+        if ( $script:w6_SentinelValue_String -eq $colors ) {
             Write-Host $line
             continue
         }
 
-        $backgroundColor = $colors[$script:uList_Attributes_Colors_Name_BackgroundColor]
-        $foregroundColor = $colors[$script:uList_Attributes_Colors_Name_ForegroundColor]
+        $backgroundColor = $colors[$script:w6_List_Attributes_Colors_Name_BackgroundColor]
+        $foregroundColor = $colors[$script:w6_List_Attributes_Colors_Name_ForegroundColor]
 
-        Write-uHostColorsCushion `
+        Write-w6_HostWithColorsCushion `
             -Object $line `
             -BackgroundColor $backgroundColor `
             -ForegroundColor $foregroundColor
@@ -1901,15 +2027,18 @@ function Write-uEnumeratedFileList {
 }
 
 
-function Write-uFullItemList {
+function Write-w6_FullItemList {
     param(
-        [Parameter( Mandatory = $false )] [Object] $ChildrenItems = $script:uSentinelValue_String,
-        [Switch] $IsDir,
-        [Switch] $IsStick,
-        [Switch] $NoNewlineUnderList
+        [Parameter( Mandatory = $false )] [object] $ChildrenItems = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [object] $AttributesBlackList = @(),
+        [Parameter( Mandatory = $false )] [object] $AttributesPriorityList = @(),
+        [switch] $IsDir,
+        [switch] $IsStick,
+        [switch] $NoNewlineUnderList,
+        [switch] $SoftClearBeforeList
     )
 
-    $setWindowTitleSuccess = ( Set-uWindowTitleToBringBack -Title $script:uList_Title_Processing )
+    $setWindowTitleSuccess = ( Set-w6_WindowTitleToBringBack -Title $script:w6_List_WindowTitle_Processing )
 
     if ( $IsDir ) {
         $header = 'Found Directories:'
@@ -1920,54 +2049,66 @@ function Write-uFullItemList {
 
     $addAccessDenied = $false
 
-    if ( $script:uSentinelValue_String -eq $ChildrenItems ) {
+    if ( $script:w6_SentinelValue_String -eq $ChildrenItems ) {
         $ChildrenItems = @()
         $addAccessDenied = $true
     }
 
-    $ChildrenItems = @( @( $ChildrenItems ) | Where-Object { $_ -ne $script:uSentinelValue_String } )
+    $ChildrenItems = @( @( $ChildrenItems ) | Where-Object { $_ -ne $script:w6_SentinelValue_String } )
 
-    Set-uNewWindowSizeVariables
+    Set-w6_NewWindowSizeVariables -Width
 
-    $arrowLength = ( [Math]::Min( [Math]::Floor( $script:uWindow_Width - `
-                    $script:uList_Attributes_MinCharactersOffset_Right * `
-                    $script:uList_BoundaryArrowBody_RightOffsetMultiplier + 0.5 ), ( $script:uWindow_Width ) ) )
+    $arrowLength = [Math]::Min(
+        [Math]::Floor(
+            $script:w6_Window_Width -
+            $script:w6_List_Attributes_MinCharactersSeparating_Right *
+            $script:w6_List_Boundary_LengthEquation_WindowWidthSubtracting_MinCharactersSeparatingRightMultiplier +
+            0.5
+        ),
+        $script:w6_Window_Width
+    )
 
-    if ( $script:uList_BeforeDisplay_SoftCleanTerminal ) {
-        Write-uSoftCleanTerminal
+    if ( $SoftClearBeforeList ) {
+        Write-w6_SoftClearTerminal
     }
 
     Write-Host ''
-    Write-Host "$( Get-uBoundary -RawLength $arrowLength -Direction $script:uBoundary_Direction_Name_Right -MinusOne )"
-    Write-Host "$( ' ' * $script:uList_BeforeCounterText_SpacesIfOneDigit  ) You're at: $( $script:uOperatingPath )"
+    Write-Host "$( Get-w6_Boundary -RawLength $arrowLength -Direction $script:w6_Boundary_Direction_Name_Right -MinusOneOnlyIfMaxWidth )"
+    Write-Host "$( ' ' * $script:w6_List_BeforeCounterText_SpacesIfOneDigit  ) You're at: $( $script:w6_OperatingPath )"
     Write-Host ''
     Write-Host "$header"
 
-    Write-uEnumeratedFileList `
+    Write-w6_EnumeratedFileList `
         -ListToEnumerate $ChildrenItems `
-        -AddDisplayList:$script:uList_Character_DisplayList_DoDisplayOnList `
+        -AttributesBlackList:$AttributesBlackList `
+        -AttributesPriorityList:$AttributesPriorityList `
+        -AddDisplayList:$script:w6_List_Character_DisplayList_DoDisplayOnList `
         -AddZero `
         -AddQuitStick:$IsStick `
         -AddAccessDenied:$addAccessDenied
 
     Write-Host ''
-    Write-Host "$( ' ' * $script:uList_BeforeCounterText_SpacesIfOneDigit  ) You're at: $( $script:uOperatingPath )"
-    Write-Host "$( Get-uBoundary -RawLength $arrowLength -Direction $script:uBoundary_Direction_Name_Left -MinusOne )"
+    Write-Host "$( ' ' * $script:w6_List_BeforeCounterText_SpacesIfOneDigit  ) You're at: $( $script:w6_OperatingPath )"
+    Write-Host "$( Get-w6_Boundary -RawLength $arrowLength -Direction $script:w6_Boundary_Direction_Name_Left -MinusOneOnlyIfMaxWidth )"
 
     if ( -not $NoNewlineUnderList ) {
         Write-Host ''
     }
 
     if ( $setWindowTitleSuccess ) {
-        $null = ( Set-uLastWindowTitle )
+        $null = ( Set-w6_LastWindowTitle )
     }
 }
 
 
-function Get-uCorrect12HourFormatTime {
+function Get-w6_Correct12HourFormatTime {
+    param(
+        [Parameter( Mandatory = $true )] [object] $Date
+    )
+
     try {
-        $currentHour = ( Get-Date -Format 'HH' )
-        $currentMinute = ( Get-Date -Format 'mm' )
+        $currentHour = ( $Date.ToString( 'HH' ) )
+        $currentMinute = ( $Date.ToString( 'mm' ) )
 
         if ( $currentHour -le 12 ) {
             $current12HourFormatTime = "$( $currentHour ):$currentMinute am"
@@ -1979,52 +2120,56 @@ function Get-uCorrect12HourFormatTime {
         return "$current12HourFormatTime"
     }
     catch {
-        return $script:uSentinelValue_String
+        return $script:w6_SentinelValue_String
     }
     # Improvement idea: Be more explicit with error catching here.
 
 }
 
 
-function Get-uCurrentTimeString {
-    try {
-        $current24HourFormatTime = ( Get-Date -Format $script:uTime_Format_24 )
-        $current12HourFormatTime = ( Get-uCorrect12HourFormatTime )
+function Get-w6_CurrentTimeString {
+    param(
+        [Parameter( Mandatory = $true )] [object] $Date
+    )
 
-        if ( "$script:uIntroduction_Greeting_CurrentTimeText_Format" -eq "$script:uIntroduction_Greeting_CurrentTimeText_Name_24" ) {
-            $currentTimeTextRaw = $current24HourFormatTime
-        }
-        elseif ( "$script:uIntroduction_Greeting_CurrentTimeText_Format" -eq "$script:uIntroduction_Greeting_CurrentTimeText_Name_12" ) {
-            $currentTimeTextRaw = ( Get-uValueOrFallback `
-                    -ToReturn $current12HourFormatTime `
-                    -Fallback $current24HourFormatTime `
-                    -BlacklistOneItem $script:uSentinelValue_String )
-        }
-        else {
-            $currentTimeTextRaw24 = $current24HourFormatTime
+    $current24HourFormatTime = ( $Date.ToString( $script:w6_Time_Format_24 ) )
+    $current12HourFormatTime = ( Get-w6_Correct12HourFormatTime -Date $Date )
+    $badTimeTextValues = @( '', $script:w6_SentinelValue_String )
 
-            $currentTimeTextRaw12 = ( Get-uValueOrFallback `
-                    -ToReturn $current12HourFormatTime `
-                    -Fallback '' `
-                    -BlacklistOneItem "$script:uSentinelValue_String" `
-                    -PrependIfCorrect ' (' `
-                    -AppendIfCorrect ')' )
-
-            $currentTimeTextRaw = "$( $currentTimeTextRaw24 )$( $currentTimeTextRaw12 )"
-        }
-
-        return "It's $( $currentTimeTextRaw )!"
+    if ( "$script:w6_Introduction_Greeting_CurrentTimeText_Format" -eq "$script:w6_Introduction_Greeting_CurrentTimeText_Name_24" ) {
+        $currentTimeTextRaw = $current24HourFormatTime
     }
-    catch {
-        return ''
+    elseif ( "$script:w6_Introduction_Greeting_CurrentTimeText_Format" -eq "$script:w6_Introduction_Greeting_CurrentTimeText_Name_12" ) {
+        $currentTimeTextRaw = ( Get-w6_ValueOrFallback `
+                -ToReturn $current12HourFormatTime `
+                -Fallback $current24HourFormatTime `
+                -BlacklistMultipleItems @( '', $script:w6_SentinelValue_String ) )
     }
-    # Improvement idea: Be more explicit with error catching here.
+    else {
+        $emptyTimeTextValue = ''
 
+        $current12HourFormatTimeTextRaw = ( Get-w6_ValueOrFallback `
+                -ToReturn $current12HourFormatTime `
+                -Fallback $emptyTimeTextValue `
+                -BlacklistMultipleItems $badTimeTextValues )
+
+        $current24HourFormatTimeTextRaw = "$current24HourFormatTime"
+
+        if ( $current12HourFormatTimeTextRaw -ne '' ) {
+            $current24HourFormatTimeTextRaw = "($current24HourFormatTimeTextRaw)"
+        }
+
+        $current24HourFormatTimeTextRaw = " $current24HourFormatTimeTextRaw"
+
+        $currentTimeTextRaw = "$( $current12HourFormatTimeTextRaw )$( $current24HourFormatTimeTextRaw )"
+    }
+
+    return "It's $( $currentTimeTextRaw )!"
 }
 
 
-function Get-uIsHourBetween {
-    # This function _does_ support wrapping at midnight, and wraps 'forward'
+function Get-w6_IsHourBetween {
+    # This function _does_ support wrapping at midnight. It always wraps 'to tomorrow'
     param(
         [Parameter( Mandatory = $true )] [int] $Hour,
         [Parameter( Mandatory = $true )] [int] $MoreThan,
@@ -2038,59 +2183,60 @@ function Get-uIsHourBetween {
 }
 
 
-function Get-uGreeting {
+function Get-w6_Greeting {
 
     try {
-        $userHour = ( Get-Date -Format 'HH' )
-        $currentTimeString = " $( Get-uCurrentTimeString )"
+        $currentTime = ( Get-Date )
+        $currentTimeString = " $( Get-w6_CurrentTimeString -Date $currentTime )"
+        $currentHour = ( $currentTime.ToString( 'HH' ) )
 
-        if ( Get-uIsHourBetween `
-                -Hour $userHour `
-                -MoreThan $script:uIntroduction_Greeting_StartHour_Morning `
-                -LessThan $script:uIntroduction_Greeting_StartHour_Afternoon ) {
+        if ( Get-w6_IsHourBetween `
+                -Hour $currentHour `
+                -MoreThan $script:w6_Introduction_Greeting_StartHour_Morning `
+                -LessThan $script:w6_Introduction_Greeting_StartHour_Afternoon ) {
 
-            $greetingString = $script:uIntroduction_Greeting_Text_Morning
+            $greetingString = $script:w6_Introduction_Greeting_Text_Morning
         }
-        elseif ( Get-uIsHourBetween `
-                -Hour $userHour `
-                -MoreThan $script:uIntroduction_Greeting_StartHour_Afternoon `
-                -LessThan $script:uIntroduction_Greeting_StartHour_Evening ) {
+        elseif ( Get-w6_IsHourBetween `
+                -Hour $currentHour `
+                -MoreThan $script:w6_Introduction_Greeting_StartHour_Afternoon `
+                -LessThan $script:w6_Introduction_Greeting_StartHour_Evening ) {
 
-            $greetingString = $script:uIntroduction_Greeting_Text_Afternoon
+            $greetingString = $script:w6_Introduction_Greeting_Text_Afternoon
         }
-        elseif ( Get-uIsHourBetween `
-                -Hour $userHour `
-                -MoreThan $script:uIntroduction_Greeting_StartHour_Evening `
-                -LessThan $script:uIntroduction_Greeting_StartHour_Morning ) {
+        elseif ( Get-w6_IsHourBetween `
+                -Hour $currentHour `
+                -MoreThan $script:w6_Introduction_Greeting_StartHour_Evening `
+                -LessThan $script:w6_Introduction_Greeting_StartHour_Morning ) {
 
-            $greetingString = $script:uIntroduction_Greeting_Text_Evening
+            $greetingString = $script:w6_Introduction_Greeting_Text_Evening
         }
         else {
-            $greetingString = $script:uIntroduction_Greeting_Text_Fallback
+            $greetingString = $script:w6_Introduction_Greeting_Text_Fallback
         }
 
-        return "$greetingString$script:uIntroduction_Greeting_Text_Symbol$currentTimeString"
+        return "$greetingString$currentTimeString"
     }
     catch {
-        return $script:uSentinelValue_String
+        return $script:w6_SentinelValue_String
     }
     # Improvement idea: Be more explicit with error catching here.
 
 }
 
 
-function Get-uDoesValueFitInRange {
+function Get-w6_DoesValueFitInRange {
     param(
-        [Parameter( Mandatory = $false )] [Object] $Value = $script:uSentinelValue_String,
-        [Parameter( Mandatory = $false )] [int] $ListLength = $script:uSentinelValue_String,
-        [Switch] $AllowNegative
+        [Parameter( Mandatory = $false )] [object] $Value = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [int] $ListLength = $script:w6_SentinelValue_String,
+        [switch] $AllowNegative
     )
 
-    if ( $script:uSentinelValue_String -eq $Value ) {
+    if ( $script:w6_SentinelValue_String -eq $Value ) {
         return $false
     }
 
-    if ( $script:uSentinelValue_String -eq $ListLength ) {
+    if ( $script:w6_SentinelValue_String -eq $ListLength ) {
         return $false
     }
 
@@ -2101,7 +2247,7 @@ function Get-uDoesValueFitInRange {
         return $false
     }
 
-    if ( ( ( $AllowNegative ) -or ( $Value -ge 0 ) ) -and ( $Value -le $ListLength ) ) {
+    if ( ( $AllowNegative -and ( $Value -ge - $ListLength ) ) -or ( ( $Value -ge 0 ) ) -and ( $Value -le $ListLength ) ) {
         return $true
     }
 
@@ -2110,74 +2256,74 @@ function Get-uDoesValueFitInRange {
 }
 
 
-function Write-uSoftCleanTerminal {
-    Set-uNewWindowSizeVariables
-    Write-Host -NoNewline "$( "`n" * $script:uWindow_Height )"
+function Write-w6_SoftClearTerminal {
+    Set-w6_NewWindowSizeVariables -Height
+    Write-Host -NoNewline "$( "`n" * $script:w6_Window_Height )"
 }
 
 
-function Get-uCorrectedWhichByAlphabet {
+function Get-w6_CorrectedWhichByAlphabet {
     param(
         [Parameter( Mandatory = $true )] [int] $ListLength,
-        [Switch] $AllowDisplayListCharacter,
-        [Switch] $AllowZeroCharacter,
-        [Switch] $AllowQuitStickCharacter,
-        [Switch] $AllowNegative
+        [switch] $AllowDisplayListCharacter,
+        [switch] $AllowZeroCharacter,
+        [switch] $AllowQuitStickCharacter,
+        [switch] $AllowNegative
     )
 
-    if ( $script:uSentinelValue_String -eq $script:uWhichByAlphabet ) {
-        return $script:uSentinelValue_String
+    if ( $script:w6_SentinelValue_String -eq $script:w6_WhichByAlphabet ) {
+        return $script:w6_SentinelValue_String
     }
 
     if ( ( $AllowDisplayListCharacter ) `
-            -and ( $script:uList_Character_DisplayList -eq $script:uWhichByAlphabet  ) ) {
-        return $script:uWhichByAlphabet
+            -and ( $script:w6_List_Character_DisplayList -eq $script:w6_WhichByAlphabet  ) ) {
+        return $script:w6_WhichByAlphabet
     }
 
     if ( ( $AllowZeroCharacter ) `
-            -and ( $script:uList_Character_Zero -eq $script:uWhichByAlphabet ) ) {
-        return $script:uWhichByAlphabet
+            -and ( $script:w6_List_Character_Zero -eq $script:w6_WhichByAlphabet ) ) {
+        return $script:w6_WhichByAlphabet
     }
 
     if ( ( $AllowQuitStickCharacter ) `
-            -and ( $script:uList_Character_ExitStick -eq $script:uWhichByAlphabet ) ) {
-        return $script:uWhichByAlphabet
+            -and ( $script:w6_List_Character_ExitStick -eq $script:w6_WhichByAlphabet ) ) {
+        return $script:w6_WhichByAlphabet
     }
 
     try {
-        $whichByAlphabetInt = ( [int] $script:uWhichByAlphabet )
+        $whichByAlphabetInt = ( [int] $script:w6_WhichByAlphabet )
     }
     catch {
-        return $script:uSentinelValue_String
+        return $script:w6_SentinelValue_String
     }
 
-    $isCorrectWhichByAlphabet = ( Get-uDoesValueFitInRange -Value $whichByAlphabetInt -ListLength $ListLength `
+    $isCorrectWhichByAlphabet = ( Get-w6_DoesValueFitInRange -Value $whichByAlphabetInt -ListLength $ListLength `
             -AllowNegative:$AllowNegative )
 
-    if ( ( $isCorrectWhichByAlphabet ) -and ( $script:uSentinelValue_String -ne $isCorrectWhichByAlphabet ) ) {
+    if ( ( $isCorrectWhichByAlphabet ) -and ( $script:w6_SentinelValue_String -ne $isCorrectWhichByAlphabet ) ) {
         return $whichByAlphabetInt
     }
 
-    return $script:uSentinelValue_String
+    return $script:w6_SentinelValue_String
 }
 
 
-function Get-uNearestAvailableLocationFromPath {
+function Get-w6_NearestAvailableLocationFromPath {
     param(
-        [Parameter( Mandatory = $true )] [String] $AbsolutePath
+        [Parameter( Mandatory = $true )] [string] $AbsolutePath
     )
 
-    $absolutePathSplit = $AbsolutePath.Split( '\' )
+    $absolutePathSplit = @( Get-w6_StringSplitWithArray -String $AbsolutePath -Array @( $script:w6_PathSlashes ) )
     $absolutePathDepth = $absolutePathSplit.Length
 
-    $currentLocationSnapshot = "$( Get-Location )\"
+    $currentLocationSnapshot = "$( Get-Location )$( $script:w6_PathSlash )"
 
     for ( $i = 0; $i -lt $absolutePathDepth; $i++ ) {
         try {
             $depth = $absolutePathDepth - $i
             $depths = ( 0..( $depth - 1 ) )
-            $pathRaw = ( ( $absolutePathSplit[$depths] ) -join '\' )
-            $path = "$PathRaw\"
+            $pathRaw = ( ( $absolutePathSplit[$depths] ) -join $script:w6_PathSlash )
+            $path = "$( $PathRaw )$( $script:w6_PathSlash )"
 
             Set-Location -Path $path -ErrorAction Stop
             Set-Location -Path $currentLocationSnapshot
@@ -2192,116 +2338,150 @@ function Get-uNearestAvailableLocationFromPath {
     Set-Location -Path $currentLocationSnapshot
 
     Write-Host "Couldn't find a location near '$AbsolutePath'."
-    return $script:uSentinelValue_String
+    return $script:w6_SentinelValue_String
 }
 
 
-function Set-uNearestAvailableLocationFromPath {
+function Set-w6_NearestAvailableLocationFromPath {
     param(
-        [Parameter( Mandatory = $true )] [String] $AbsolutePath
+        [Parameter( Mandatory = $true )] [string] $AbsolutePath
     )
 
-    $nearestAvailableLocation = ( Get-uNearestAvailableLocationFromPath -AbsolutePath $AbsolutePath )
+    $nearestAvailableLocation = ( Get-w6_NearestAvailableLocationFromPath -AbsolutePath $AbsolutePath )
 
-    if ( $script:uSentinelValue_String -ne $nearestAvailableLocation ) {
-        Set-Location -Path ( Get-uNearestAvailableLocationFromPath -AbsolutePath $AbsolutePath )
+    if ( $script:w6_SentinelValue_String -ne $nearestAvailableLocation ) {
+        Set-Location -Path ( Get-w6_NearestAvailableLocationFromPath -AbsolutePath $AbsolutePath )
     }
 }
 
 
-function Start-uTaskbarFlashing {
+function Start-w6_TaskbarFlashingForWindow {
     param(
-        [Parameter( Mandatory = $true, ValueFromPipeline = $true )] [Object] $Hwid,
-        [Parameter( Mandatory = $false )] [int] $OneFlashDurationMilliseconds = $script:uTaskbarFlashing_OneFlashDurationMilliseconds,
-        [Parameter( Mandatory = $false )] [int] $FlashTimes = $script:uTaskbarFlashing_FlashTimes
+        [Parameter( Mandatory = $false, ValueFromPipeline = $true )] [int] $Hwid = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [int] $OneFlashDurationMilliseconds = $script:w6_TaskbarFlashing_OneFlashDurationMilliseconds,
+        [Parameter( Mandatory = $false )] [int] $FlashTimes = $script:w6_TaskbarFlashing_FlashTimes
     )
 
-    $null = ( [uTaskbarFlasher]::FlashWindow( $Hwid, $OneFlashDurationMilliseconds, $FlashTimes ) )
+    if ( $script:w6_SentinelValue_String -eq $Hwid ) {
+        return
+    }
+
+    if ( -not $Hwid ) {
+        return
+    }
+
+    Import-w6_TaskbarFlasherIfNecessary
+    $null = ( [w6_TaskbarFlasher]::FlashWindow( $Hwid, $OneFlashDurationMilliseconds, $FlashTimes ) )
 }
 
 
-function Start-uTaskbarFlashingForConsoleWindow {
+function Start-w6_TaskbarFlashingForCurrentConsoleWindow {
     param(
-        [Parameter( Mandatory = $false )] [int] $OneFlashDurationMilliseconds = `
-            $script:uTaskbarFlashing_OneFlashDurationMilliseconds,
-        [Parameter( Mandatory = $false )] [int] $FlashCount = $script:uTaskbarFlashing_FlashTimes
+        [Parameter( Mandatory = $false )] [int] $OneFlashDurationMilliseconds,
+        [Parameter( Mandatory = $false )] [int] $FlashTimes
     )
 
-    Start-uTaskbarFlashing `
-        -Hwid ( [uTaskbarFlasher]::GetConsoleWindow() ) `
-        -OneFlashDurationMilliseconds $script:uTaskbarFlashing_OneFlashDurationMilliseconds `
-        -FlashTimes $script:uTaskbarFlashing_FlashTimes
+    $oldTitle = $host.UI.RawUI.WindowTitle
+    $newTitle = ( New-Guid )
+
+    $host.UI.RawUI.WindowTitle = $newTitle
+    $consoleWindowProcesses = @( @( Get-Process ) | Where-Object -FilterScript { $_.MainWindowTitle -eq $newTitle } )
+    $host.UI.RawUI.WindowTitle = $oldTitle
+
+
+    foreach ( $process in $consoleWindowProcesses ) {
+        Start-w6_TaskbarFlashingForProcess -Process $process
+    }
 }
 
 
-function Start-uTaskbarFlashingForProcess {
+function Start-w6_TaskbarFlashingForProcess {
     param(
-        [Parameter( Mandatory = $true, ValueFromPipeline = $true )] $Process
+        [Parameter( Mandatory = $false, ValueFromPipeline = $false, ParameterSetName = 'ProcessId' )] $ProcessId = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false, ValueFromPipeline = $true, ParameterSetName = 'Process' )] $Process = $script:w6_SentinelValue_String,
+        [Parameter( Mandatory = $false )] [int] $OneFlashDurationMilliseconds,
+        [Parameter( Mandatory = $false )] [int] $FlashTimes
     )
 
-    Start-uTaskbarFlashing -Hwid:( $Process.MainWindowHandle )
+    if ( $script:w6_SentinelValue_String -eq $Process ) {
+        if ( $script:w6_SentinelValue_String -eq $ProcessId ) {
+            return
+        }
+
+        $Process = ( Get-Process -Id $ProcessId )
+    }
+
+    if ( -not $Process ) {
+        return
+    }
+
+    $Hwid = $Process.MainWindowHandle
+
+    if ( -not $Hwid ) {
+        return
+    }
+
+    Start-w6_TaskbarFlashingForWindow `
+        -Hwid $Hwid `
+        -OneFlashDurationMilliseconds $OneFlashDurationMilliseconds `
+        -FlashTimes $FlashTimes
 }
 
 
-function Get-uWindowsTerminalProcesses {
-    return @( Get-Process -Name $script:uNoElev_WindowsTerminalProcessName -ErrorAction SilentlyContinue )
-}
-
-
-function Unregister-uDeleteMeTasks {
+function Unregister-w6_RemoveMeNamedTasks {
     @( @( Get-ScheduledTask ) | Where-Object -FilterScript {
-            $_.TaskName.StartsWith( $script:uNoElev_ScheduledTaskName_DeleteMePrefix )
+            $_.TaskName.StartsWith( $script:w6_Unelev_ScheduledTaskName_RemoveMeNamedPrefix )
         } ) | ForEach-Object -Process { `
             Unregister-ScheduledTask -InputObject $_ -Confirm:$false -ErrorAction SilentlyContinue
     }
 }
 
 
-function Get-uCdaLikeInputPattern {
+function Get-w6_CdaLikeInputPattern {
     param(
-        [Switch] $TolerateDisplayListCharacter,
-        [Switch] $TolerateZeroCharacter,
-        [Switch] $TolerateQuitStickCharacter,
-        [Switch] $TolerateSeparatorCharacter
+        [switch] $TolerateDisplayListCharacter,
+        [switch] $TolerateZeroCharacter,
+        [switch] $TolerateQuitStickCharacter,
+        [switch] $TolerateSeparatorCharacter
     )
 
-    if ( $script:uSentinelValue_String -eq $script:uCdaLikeInputCharacters_Filtered ) {
-        $allCommandsAndAliasesNames = ( [String[]] ( Get-Command -All ).Name )
-        $allCommandsAndAliasesNamesHashSet = ( [System.Collections.Generic.HashSet[String]]::new(
+    if ( $script:w6_SentinelValue_String -eq $script:w6_CdaLikeInputCharacters_Filtered ) {
+        $allCommandsAndAliasesNames = ( Get-Command -All ).Name
+        $allCommandsAndAliasesNamesHashSet = ( [System.Collections.Generic.HashSet[System.Object]]::new(
                 $allCommandsAndAliasesNames ) )
 
-        $script:uCdaLikeInputCharacters_Filtered = @( @( $script:uList_Input_MathCharactersToFilter ) | Where-Object {
-                $_ -notin $allCommandsAndAliasesNamesHashSet }
+        $script:w6_CdaLikeInputCharacters_Filtered = @( @( $script:w6_List_Input_MathCharacters ) | Where-Object {
+                -not $allCommandsAndAliasesNamesHashSet.Contains( $_ ) }
         )
 
-        # These two above expressions can take >100ms ( very long ). Optimize them further if possible.
+        # Two above expressions can take >100ms ( very long ). Optimize them further if possible.
     }
 
-    $CdaLikeInputCharacters = $script:uCdaLikeInputCharacters_Filtered
+    $CdaLikeInputCharacters = $script:w6_CdaLikeInputCharacters_Filtered
 
-    Add-uDirectlyToArrayIfBoolTrue `
+    Add-w6_DirectlyToArrayIfBoolTrue `
         -ArrayReference ( [ref] $CdaLikeInputCharacters ) `
         -Bool:$TolerateDisplayListCharacter `
-        -ToAdd $script:uList_Character_DisplayList
+        -ToAdd $script:w6_List_Character_DisplayList
 
-    Add-uDirectlyToArrayIfBoolTrue `
+    Add-w6_DirectlyToArrayIfBoolTrue `
         -ArrayReference ( [ref] $CdaLikeInputCharacters ) `
         -Bool:$TolerateZeroCharacter `
-        -ToAdd $script:uList_Character_Zero
+        -ToAdd $script:w6_List_Character_Zero
 
-    Add-uDirectlyToArrayIfBoolTrue `
+    Add-w6_DirectlyToArrayIfBoolTrue `
         -ArrayReference ( [ref] $CdaLikeInputCharacters ) `
         -Bool:$TolerateQuitStickCharacter `
-        -ToAdd $script:uList_Character_ExitStick
+        -ToAdd $script:w6_List_Character_ExitStick
 
-    Add-uDirectlyToArrayIfBoolTrue `
+    Add-w6_DirectlyToArrayIfBoolTrue `
         -ArrayReference ( [ref] $CdaLikeInputCharacters ) `
         -Bool:$TolerateSeparatorCharacter `
-        -ToAdd $script:uCdaLikeInputCharactersPattern_SeparatorCharacter
+        -ToAdd $script:w6_CdaLikeCommands_InputCharactersPattern_SeparatorCharacter
 
     $CdaLikeInputCharacters = @( @( $CdaLikeInputCharacters ) | ForEach-Object -Process { [Regex]::Escape( $_ ) } )
 
-    $CdaLikeInputCharacters = @( @( $CdaLikeInputCharacters ) + @( '\d' ) )
+    $CdaLikeInputCharacters += '\d'
 
     $CdaLikeInputCharactersPattern = "($( @( $CdaLikeInputCharacters ) -join '|' ))+"
 
@@ -2309,24 +2489,24 @@ function Get-uCdaLikeInputPattern {
 }
 
 
-function Get-uProcessedExpressionOrFallback {
+function Get-w6_ProcessedExpressionOrFallback {
     param(
-        [Parameter( Mandatory = $false, ValueFromPipeline = $true )] [Object] $Expression,
-        [Parameter( Mandatory = $false )] [Object] $Fallback = $script:uSentinelValue_String,
-        [Switch] $TolerateDisplayListCharacter,
-        [Switch] $TolerateZeroCharacter,
-        [Switch] $TolerateQuitStickCharacter
+        [Parameter( Mandatory = $false, ValueFromPipeline = $true )] [object] $Expression,
+        [Parameter( Mandatory = $false )] [object] $Fallback = $script:w6_SentinelValue_String,
+        [switch] $TolerateDisplayListCharacter,
+        [switch] $TolerateZeroCharacter,
+        [switch] $TolerateQuitStickCharacter
     )
 
-    if ( $TolerateDisplayListCharacter -and ( $script:uList_Character_DisplayList -eq $Expression ) ) {
+    if ( $TolerateDisplayListCharacter -and ( $script:w6_List_Character_DisplayList -eq $Expression ) ) {
         return $Expression
     }
 
-    if ( $TolerateZeroCharacter -and ( $script:uList_Character_Zero -eq $Expression ) ) {
+    if ( $TolerateZeroCharacter -and ( $script:w6_List_Character_Zero -eq $Expression ) ) {
         return $Expression
     }
 
-    if ( $TolerateQuitStickCharacter -and ( $script:uList_Character_ExitStick -eq $Expression ) ) {
+    if ( $TolerateQuitStickCharacter -and ( $script:w6_List_Character_ExitStick -eq $Expression ) ) {
         return $Expression
     }
 
@@ -2340,25 +2520,25 @@ function Get-uProcessedExpressionOrFallback {
 }
 
 
-function Get-uEvaluatedExpressionsFromTextAsNestedArray {
+function Get-w6_EvaluatedExpressionsFromTextAsNestedArray {
     param(
-        [Parameter( Mandatory = $false )] [Object] $Text = $script:uSentinelValue_String,
-        [Switch] $TolerateDisplayListCharacter,
-        [Switch] $TolerateZeroCharacter,
-        [Switch] $TolerateQuitStickCharacter
+        [Parameter( Mandatory = $false )] [object] $Text = $script:w6_SentinelValue_String,
+        [switch] $TolerateDisplayListCharacter,
+        [switch] $TolerateZeroCharacter,
+        [switch] $TolerateQuitStickCharacter
     )
 
-    function Get-uFallbackReturn {
-        return , @( , @( $script:uSentinelValue_String ) )
+    function Get-w6_FallbackReturn {
+        return , @( , @( $script:w6_SentinelValue_String ) )
     }
 
     $Text = "$Text"
 
-    if ( ( '' -eq $Text ) -or ( $script:uSentinelValue_String -eq $Text ) ) {
-        return @( Get-uFallbackReturn )
+    if ( ( '' -eq $Text ) -or ( $script:w6_SentinelValue_String -eq $Text ) ) {
+        return @( Get-w6_FallbackReturn )
     }
 
-    $pattern = ( Get-uCdaLikeInputPattern `
+    $pattern = ( Get-w6_CdaLikeInputPattern `
             -TolerateDisplayListCharacter:$TolerateDisplayListCharacter `
             -TolerateZeroCharacter:$TolerateZeroCharacter `
             -TolerateQuitStickCharacter:$TolerateQuitStickCharacter `
@@ -2369,15 +2549,15 @@ function Get-uEvaluatedExpressionsFromTextAsNestedArray {
     $foundExpressions = @( $foundExpressionsRaw.Matches.Value )
 
     $foundExpressionsEmptyFiltered = @( @( $foundExpressions ) | Where-Object -FilterScript {
-        ( $null -ne $_ ) -and ( $script:uCdaLikeInputCharactersPattern_SeparatorCharacter -ne $_ ) }
+        ( $null -ne $_ ) -and ( $script:w6_CdaLikeCommands_InputCharactersPattern_SeparatorCharacter -ne $_ ) }
     )
 
     if ( 0 -eq $foundExpressionsEmptyFiltered.Length ) {
-        return @( Get-uFallbackReturn )
+        return @( Get-w6_FallbackReturn )
     }
 
     $slicedExpressions = @( @( $foundExpressionsEmptyFiltered ) | ForEach-Object -Process {
-            , @( $_.Split( $script:uCdaLikeInputCharactersPattern_SeparatorCharacter ) ) }
+            , @( $_.Split( $script:w6_CdaLikeCommands_InputCharactersPattern_SeparatorCharacter ) ) }
     )
 
     $slicedExpressionsFiltered = @( @( $slicedExpressions ) | Where-Object -FilterScript {
@@ -2385,40 +2565,34 @@ function Get-uEvaluatedExpressionsFromTextAsNestedArray {
     )
 
     $slicedExpressionsFilteredTwice = @( @( $slicedExpressionsFiltered ) | ForEach-Object -Process {
-            , @( $_ | Where-Object -FilterScript { ( $null -ne $_ ) -and ( '' -ne $_ ) } ) }
+            , @( @( $_ ) | Where-Object -FilterScript { $_ -or ( '0' -eq $_ ) } ) }
     )
 
     $slicedExpressionsFilteredThrice = @( @( $slicedExpressionsFilteredTwice ) | Where-Object -FilterScript {
-            -not ( Get-uIsEqualByCompareObject -ItemOne @() -ItemTwo $_ ) }
+            -not ( Get-w6_IsEqualByCompareObject -ItemOne @() -ItemTwo @( $_ ) ) }
     )
 
     if ( 0 -eq $slicedExpressionsFilteredThrice.Length ) {
-        return @( Get-uFallbackReturn )
-    }
-
-    function Get-uProcessedExpressions {
-        param(
-            [Parameter( Mandatory = $false )] [Object] $Expressions
-        )
-
-        $processedExpressions = @( @( $Expressions ) | ForEach-Object -Process {
-                Get-uProcessedExpressionOrFallback `
-                    -Expression $_ `
-                    -Fallback $script:uSentinelValue_String `
-                    -TolerateDisplayListCharacter:$TolerateDisplayListCharacter `
-                    -TolerateZeroCharacter:$TolerateZeroCharacter `
-                    -TolerateQuitStickCharacter:$TolerateQuitStickCharacter }
-        )
-
-        $processedExpressionsFiltered = @( @( $processedExpressions ) | Where-Object -FilterScript {
-                $_ -ne $script:uSentinelValue_String }
-        )
-
-        return $processedExpressionsFiltered
+        return @( Get-w6_FallbackReturn )
     }
 
     $processedExpressionsTwoDimensionalFiltered = @( @( $slicedExpressionsFilteredThrice ) | ForEach-Object -Process {
-            , @( Get-uProcessedExpressions -Expressions $_ ) }
+            , @(
+                $processedExpressions = @( @( $_ ) | ForEach-Object -Process {
+                        Get-w6_ProcessedExpressionOrFallback `
+                            -Expression $_ `
+                            -Fallback $script:w6_SentinelValue_String `
+                            -TolerateDisplayListCharacter:$TolerateDisplayListCharacter `
+                            -TolerateZeroCharacter:$TolerateZeroCharacter `
+                            -TolerateQuitStickCharacter:$TolerateQuitStickCharacter }
+                )
+
+                @( @( $processedExpressions ) | Where-Object -FilterScript {
+                        $_ -ne $script:w6_SentinelValue_String }
+                )
+            )
+
+        }
     )
 
     $processedExpressionsTwoDimensionalFilteredTwice = @( @( $processedExpressionsTwoDimensionalFiltered ) | `
@@ -2426,35 +2600,35 @@ function Get-uEvaluatedExpressionsFromTextAsNestedArray {
     )
 
     if ( 0 -eq $processedExpressionsTwoDimensionalFilteredTwice.Length ) {
-        return @( Get-uFallbackReturn )
+        return @( Get-w6_FallbackReturn )
     }
 
     return @( $processedExpressionsTwoDimensionalFilteredTwice )
 }
 
 
-function Get-uTwoDimensionalExtractedAndEvaluatedExpressionsFromObject {
+function Get-w6_TwoDimensionalExtractedAndEvaluatedExpressionsFromObject {
     param(
-        [Parameter( Mandatory = $false )] [Object] $Object,
-        [Parameter( Mandatory = $false )] [Object] $Padding,
-        [Switch] $TolerateDisplayListCharacter,
-        [Switch] $TolerateZeroCharacter,
-        [Switch] $TolerateQuitStickCharacter
+        [Parameter( Mandatory = $false )] [object] $Object,
+        [Parameter( Mandatory = $false )] [object] $Padding,
+        [switch] $TolerateDisplayListCharacter,
+        [switch] $TolerateZeroCharacter,
+        [switch] $TolerateQuitStickCharacter
     )
 
     if ( ( $null -ne $Object ) -and ( $Object.GetType().IsArray ) ) {
 
         $evaluatedExpressions = @( @( $Object ) | ForEach-Object -Process {
-                Get-uProcessedExpressionOrFallback `
+                Get-w6_ProcessedExpressionOrFallback `
                     -Expression $_ `
-                    -Fallback $script:uSentinelValue_String `
+                    -Fallback $script:w6_SentinelValue_String `
                     -TolerateDisplayListCharacter:$TolerateDisplayListCharacter `
                     -TolerateZeroCharacter:$TolerateZeroCharacter `
                     -TolerateQuitStickCharacter:$TolerateQuitStickCharacter }
         )
 
         $filteredExpressions = @( @( $evaluatedExpressions ) | Where-Object -FilterScript {
-                $script:uSentinelValue_String -ne $_ }
+                $script:w6_SentinelValue_String -ne $_ }
         )
 
         $processedExpressions = @( @( $filteredExpressions ) | ForEach-Object -Process { , @( $_ ) } )
@@ -2462,9 +2636,9 @@ function Get-uTwoDimensionalExtractedAndEvaluatedExpressionsFromObject {
         return @( $processedExpressions )
     }
 
-    if ( ConvertTo-uStringDirectly -ValueReference ( [ref] $Object ) ) {
+    if ( ConvertTo-w6_StringDirectly -ValueReference ( [ref] $Object ) ) {
 
-        return @( Get-uEvaluatedExpressionsFromTextAsNestedArray `
+        return @( Get-w6_EvaluatedExpressionsFromTextAsNestedArray `
                 -Text $Object `
                 -TolerateDisplayListCharacter:$TolerateDisplayListCharacter `
                 -TolerateZeroCharacter:$TolerateZeroCharacter `
@@ -2475,21 +2649,21 @@ function Get-uTwoDimensionalExtractedAndEvaluatedExpressionsFromObject {
     return @( , @( $Padding ) )
 }
 
-function Get-uWhichByAlphabetTimesQueue {
+
+function Get-w6_WhichByAlphabetTimesQueue {
     param(
-        [Parameter( Mandatory = $false, ParameterSetName = 'TwoStringInputMode' )] [Object] $WhichByAlphabet,
-        [Parameter( Mandatory = $false, ParameterSetName = 'TwoStringInputMode'  )] [Object] $Times,
-        [Parameter( Mandatory = $false, ParameterSetName = 'OneStringInputMode' )] [Object] `
-            $OneString = $script:uSentinelValue_String,
-        [Switch] $TolerateDisplayListCharacter,
-        [Switch] $TolerateZeroCharacter,
-        [Switch] $TolerateQuitStickCharacter
+        [Parameter( Mandatory = $false, ParameterSetName = 'TwoStringInputMode' )] [object] $WhichByAlphabet,
+        [Parameter( Mandatory = $false, ParameterSetName = 'TwoStringInputMode'  )] [object] $Times,
+        [Parameter( Mandatory = $false, ParameterSetName = 'OneStringInputMode' )] [object] $OneString = $script:w6_SentinelValue_String,
+        [switch] $TolerateDisplayListCharacter,
+        [switch] $TolerateZeroCharacter,
+        [switch] $TolerateQuitStickCharacter
     )
 
-    if ( $script:uSentinelValue_String -ne $OneString ) {
-        $oneStringExtract = @( Get-uTwoDimensionalExtractedAndEvaluatedExpressionsFromObject `
+    if ( $script:w6_SentinelValue_String -ne $OneString ) {
+        $oneStringExtract = @( Get-w6_TwoDimensionalExtractedAndEvaluatedExpressionsFromObject `
                 -Object:$OneString `
-                -Padding:$script:uSentinelValue_String `
+                -Padding:$script:w6_SentinelValue_String `
                 -TolerateQuitStickCharacter:$TolerateQuitStickCharacter `
                 -TolerateDisplayListCharacter:$TolerateDisplayListCharacter `
                 -TolerateZeroCharacter:$TolerateZeroCharacter )
@@ -2498,41 +2672,41 @@ function Get-uWhichByAlphabetTimesQueue {
         $timesExtract = @( $oneStringExtract[1] )
     }
     else {
-        $whichByAlphabetExtract = @( Get-uTwoDimensionalExtractedAndEvaluatedExpressionsFromObject `
+        $whichByAlphabetExtract = @( Get-w6_TwoDimensionalExtractedAndEvaluatedExpressionsFromObject `
                 -Object:$WhichByAlphabet `
-                -Padding:$script:uSentinelValue_String `
+                -Padding:$script:w6_SentinelValue_String `
                 -TolerateDisplayListCharacter:$TolerateDisplayListCharacter `
                 -TolerateZeroCharacter:$TolerateZeroCharacter `
                 -TolerateQuitStickCharacter:$TolerateQuitStickCharacter )
 
-        $timesExtract = @( Get-uTwoDimensionalExtractedAndEvaluatedExpressionsFromObject `
+        $timesExtract = @( Get-w6_TwoDimensionalExtractedAndEvaluatedExpressionsFromObject `
                 -Object:$Times `
-                -Padding:$script:uList_Input_Padding_Times `
+                -Padding 1 `
                 -TolerateDisplayListCharacter:$false `
                 -TolerateZeroCharacter:$false `
                 -TolerateQuitStickCharacter:$false )
     }
 
-    $whichByAlphabetExtract_Flattened = @( Get-uFlattenedArray -Array @( $whichByAlphabetExtract ) )
+    $whichByAlphabetExtract_Flattened = @( Get-w6_FlattenedArray -Array @( $whichByAlphabetExtract ) )
 
-    $timesExtract_Flattened = @( Get-uFlattenedArray -Array @( $timesExtract ) )
+    $timesExtract_Flattened = @( Get-w6_FlattenedArray -Array @( $timesExtract ) )
 
     $whichByAlphabet_Times_Queue_Length = ( [Math]::Max( $whichByAlphabetExtract_Flattened.Length,
             $timesExtract_Flattened.Length ) )
 
-    $whichByAlphabetQueue = @( Get-uPaddedArrayToLength `
+    $whichByAlphabetQueue = @( Get-w6_PaddedArrayToLength `
             -ArrayToPad $whichByAlphabetExtract_Flattened `
-            -PaddingObject $script:uSentinelValue_String `
+            -PaddingObject $script:w6_SentinelValue_String `
             -Length $whichByAlphabet_Times_Queue_Length )
 
-    $timesQueue = @( Get-uPaddedArrayToLength `
+    $timesQueue = @( Get-w6_PaddedArrayToLength `
             -ArrayToPad $timesExtract_Flattened `
-            -PaddingObject $script:uList_Input_Padding_Times `
+            -PaddingObject 1 `
             -Length $whichByAlphabet_Times_Queue_Length )
 
     $timesQueue = @( @( $timesQueue ) | ForEach-Object -Process {
-            if ( ( $script:uSentinelValue_String -eq $_ ) -or ( $null -eq $_ ) ) {
-                $script:uList_Input_Padding_Times
+            if ( ( $script:w6_SentinelValue_String -eq $_ ) -or ( $null -eq $_ ) ) {
+                $script:w6_List_Times_DefaultValue
             }
             else {
                 [int] $_
@@ -2552,116 +2726,111 @@ function Get-uWhichByAlphabetTimesQueue {
 }
 
 
-function Invoke-uSelectFileFromList {
+function Invoke-w6_SelectFileFromList {
     param(
-        [Switch] $UseDirectories,
-        [Switch] $Stick,
-        [Switch] $WriteSelectedFile,
-        [Switch] $NoList
+        [Parameter( Mandatory = $false )] [object] $AttributesBlackList = @(),
+        [Parameter( Mandatory = $false )] [object] $AttributesPriorityList = @(),
+        [switch] $UseDirectories,
+        [switch] $Stick,
+        [switch] $WriteSelectedFiles,
+        [switch] $NoList,
+        [switch] $ForceFiles,
+        [switch] $SoftClearBeforeList
     )
 
-    $script:uSelectFileFromList_IsStick = $Stick
+    $script:w6_SelectFileFromList_IsStick = $Stick
 
-    if ( $UseDirectories ) {
+    $script:w6_StickLoopDoBreak = $false
+    $script:w6_Children = @( Get-w6_ChildItems -IsDir:$UseDirectories -Force:$ForceFiles )
+    $ListLength = $script:w6_Children.Length
 
-        function Get-uChildren {
-            return @( Get-uChildItems -IsDir )
+    function Invoke-w6_WhichByDirectoryCorrectFormatAction {
+        if ( $script:w6_List_Character_Zero -eq $script:w6_WhichByAlphabet ) {
+            $selectedFile = (
+                Get-w6_StringWithoutDoubleSlashes -String "$( $script:w6_OperatingPath )$( $script:w6_PathSlash ).." )
         }
-
-    }
-    else {
-
-        function Get-uChildren {
-            return @( Get-uChildItems )
-        }
-
-    }
-
-    Set-uNewWindowSizeVariables
-    $script:uStickLoopDoBreak = $false
-    $script:uChildren = @( Get-uChildren )
-    $ListLength = $script:uChildren.Length
-
-    function Invoke-uWhichByDirectoryCorrectFormatAction {
-        if ( $script:uList_Character_Zero -eq $script:uWhichByAlphabet ) {
-            $selectedFile = "$script:uOperatingPath\.."
-        }
-        elseif ( $script:uList_Character_DisplayList -eq $script:uWhichByAlphabet ) {
-            Write-uFullItemList -ChildrenItems $script:uChildren -IsDir:$UseDirectories
+        elseif ( $script:w6_List_Character_DisplayList -eq $script:w6_WhichByAlphabet ) {
+            Write-w6_FullItemList `
+                -AttributesBlackList:$AttributesBlackList `
+                -AttributesPriorityList:$AttributesPriorityList `
+                -ChildrenItems $script:w6_Children `
+                -IsDir:$UseDirectories `
+                -SoftClearBeforeList:$SoftClearBeforeList
             return
         }
         else {
-            if ( ( [int] $script:uWhichByAlphabet ) -le 0 ) {
-                $selectedFile = "$script:uOperatingPath\$( $script:uChildren[$script:uWhichByAlphabet] )"
+            $operatingPathWithSlash = "$( $script:w6_OperatingPath )$( $script:w6_PathSlash )"
+            if ( ( [int] $script:w6_WhichByAlphabet ) -le 0 ) {
+                $selectedFile = "$( $operatingPathWithSlash )$( $script:w6_Children[$script:w6_WhichByAlphabet] )"
             }
             else {
-                $selectedFile = "$script:uOperatingPath\$( $script:uChildren[$script:uWhichByAlphabet - 1] )"
+                $selectedFile = "$( $operatingPathWithSlash )$( $script:w6_Children[$script:w6_WhichByAlphabet - 1] )"
             }
         }
 
-        $universalSelectedFile = ( Get-uUniversalPath -Path $selectedFile )
+        $universalSelectedFile = ( Get-w6_UniversalPath -Path $selectedFile )
 
-        $isUniversalSelectedFileSentinel = ( $script:uSentinelValue_String -eq $universalSelectedFile )
+        $isUniversalSelectedFileSentinel = ( $script:w6_SentinelValue_String -eq $universalSelectedFile )
         $isUniversalSelectedFileValid = ( Test-Path -Path $universalSelectedFile )
 
         if ( $isUniversalSelectedFileSentinel -or ( -not $isUniversalSelectedFileValid ) ) {
 
-            if ( ( -not $script:uSelectFileFromList_IsStick ) -and ( -not $NoList ) ) {
-                Write-uFullItemList -ChildrenItems $script:uChildren -IsDir:$UseDirectories
+            if ( ( -not $script:w6_SelectFileFromList_IsStick ) -and ( -not $NoList ) ) {
+                Write-w6_FullItemList `
+                    -AttributesBlackList:$AttributesBlackList `
+                    -AttributesPriorityList:$AttributesPriorityList `
+                    -ChildrenItems $script:w6_Children `
+                    -IsDir:$UseDirectories `
+                    -SoftClearBeforeList:$SoftClearBeforeList
             }
 
             return
         }
 
-        Set-uVariableFToPath -Path $universalSelectedFile
+        Set-w6_VariableFToPath -Path $universalSelectedFile
 
-        if ( $WriteSelectedFile ) {
+        if ( $WriteSelectedFiles ) {
             $selectedFileToWrite = $universalSelectedFile
             $selectedFile_LastCharacter = ( $selectedFileToWrite[-1] )
 
-            if ( $selectedFile_LastCharacter -in @( '\', '/' ) ) {
+            if ( $selectedFile_LastCharacter -in @( $script:w6_PathSlashes ) ) {
                 $selectedFileToWrite = $universalSelectedFile.Substring( 0, ( $universalSelectedFile.Length - 1 ) )
-                $selectedFileToWrite = ( Get-uPathWithAddedBackslashIfNecessary -Path $selectedFileToWrite )
+                $selectedFileToWrite = ( Get-w6_PathWithAddedSlashIfNecessary -Path $selectedFileToWrite )
             }
 
-            Write-Host "$( $script:uList_WriteSelectedFile_Prefix )$( $selectedFileToWrite )"
+            Write-Host "$( $script:w6_List_WriteSelectedFiles_Prefix )$( $selectedFileToWrite )"
         }
 
         if ( $UseDirectories ) {
             Set-Location -Path $universalSelectedFile
 
-            Set-uOperatingPathIfValid `
+            Set-w6_OperatingPathIfValid `
                 -Path $universalSelectedFile `
-                -Silent:$script:uSetOperatingPath_DefaultSilent_IfUsedBy_Script
+                -Silent:$script:w6_SetOperatingPath_DefaultParameterValue_Silent_IfUsedBy_Script
         }
         else {
             return $universalSelectedFile
         }
     }
 
-    function Invoke-uStickBadInputAction {
-        Set-uNewWindowSizeVariables
+    function Invoke-w6_StickBadInputAction {
+        $boundaryOpening = ( Get-w6_Boundary `
+                -LengthMultiplier $script:w6_Boundary_Length_Medium `
+                -Direction $script:w6_Boundary_Direction_Name_Left )
+        $boundaryClosing = ( Get-w6_Boundary `
+                -LengthMultiplier $script:w6_Boundary_Length_Medium `
+                -Direction $script:w6_Boundary_Direction_Name_Right )
 
-        $boundaryOpening = ( Get-uBoundary `
-                -LengthMultiplier $script:uBoundary_Length_Medium `
-                -Direction $script:uBoundary_Direction_Name_Left )
-        $boundaryClosing = ( Get-uBoundary `
-                -LengthMultiplier $script:uBoundary_Length_Medium `
-                -Direction $script:uBoundary_Direction_Name_Right )
-
-        if ( $script:uList_Stick_BadInput_FirstTime -eq $true ) {
-            $script:uList_Stick_BadInput_FirstTime = $false
+        if ( $script:w6_List_Stick_BadInput_FirstTime -eq $true ) {
+            $script:w6_List_Stick_BadInput_FirstTime = $false
 
             $secondsToWaitSuffix = 'seconds'
 
-            $isSleepSecondsMoreThan2 = ( $script:uList_Stick_BadInput_Sleep_Milliseconds_FirstTime -lt 2000 )
-            $isSleepSecondsLessOrEqual1 = ( $script:uList_Stick_BadInput_Sleep_Milliseconds_FirstTime -ge 1000 )
-
-            if ( $isSleepSecondsMoreThan2 -and $isSleepSecondsLessOrEqual1 ) {
+            if ( 1000 -eq $script:w6_List_Stick_BadInput_Sleep_Milliseconds_FirstTime ) {
                 $secondsToWaitSuffix = 'second'
             }
 
-            $secondsToWait = $script:uList_Stick_BadInput_Sleep_Milliseconds_FirstTime / 1000
+            $secondsToWait = $script:w6_List_Stick_BadInput_Sleep_Milliseconds_FirstTime / 1000
 
             Write-Host ''
             Write-Host "$boundaryOpening"
@@ -2669,7 +2838,7 @@ function Invoke-uSelectFileFromList {
             Write-Host "$boundaryClosing"
             Write-Host ''
 
-            Start-Sleep -Milliseconds $script:uList_Stick_BadInput_Sleep_Milliseconds_FirstTime
+            Start-Sleep -Milliseconds $script:w6_List_Stick_BadInput_Sleep_Milliseconds_FirstTime
             return
         }
 
@@ -2679,24 +2848,29 @@ function Invoke-uSelectFileFromList {
         Write-Host "$boundaryClosing"
         Write-Host ''
 
-        Start-Sleep -Milliseconds $script:uList_Stick_BadInput_Sleep_Milliseconds_NotFirstTime
+        Start-Sleep -Milliseconds $script:w6_List_Stick_BadInput_Sleep_Milliseconds_NotFirstTime
     }
 
-    function Invoke-uOneStickRepetition {
-        $letAnswerPass = $false
+    function Invoke-w6_OneStickRepetition {
         $errorTimes = 0
         $exceptionMessages = @()
 
-        while ( -not $letAnswerPass ) {
+        while ( $true ) {
 
             try {
-                $beginningLocation = ( Get-Location )
-                $script:uChildren = @( Get-uChildren )
-                Write-uFullItemList -ChildrenItems $script:uChildren -IsDir:$UseDirectories -IsStick -NoNewlineUnderList
+                $script:w6_Children = @( Get-w6_ChildItems -IsDir:$UseDirectories -Force:$ForceFiles )
+                Write-w6_FullItemList `
+                    -AttributesBlackList:$AttributesBlackList `
+                    -AttributesPriorityList:$AttributesPriorityList `
+                    -ChildrenItems $script:w6_Children `
+                    -IsDir:$UseDirectories `
+                    -IsStick `
+                    -NoNewlineUnderList `
+                    -SoftClearBeforeList:$SoftClearBeforeList
 
                 $stickOption = ( Read-Host 'Option' )
 
-                $whichByAlphabet_Times_Queue = @( Get-uWhichByAlphabetTimesQueue `
+                $whichByAlphabet_Times_Queue = @( Get-w6_WhichByAlphabetTimesQueue `
                         -OneString $stickOption `
                         -TolerateDisplayListCharacter `
                         -TolerateZeroCharacter `
@@ -2704,50 +2878,55 @@ function Invoke-uSelectFileFromList {
                 )
 
                 foreach ( $whichByAlphabetTimes_Pair in $whichByAlphabet_Times_Queue ) {
-                    $script:uWhichByAlphabet = $whichByAlphabetTimes_Pair[0]
+                    $script:w6_WhichByAlphabet = $whichByAlphabetTimes_Pair[0]
 
-                    if ( $script:uList_Character_ExitStick -eq $script:uWhichByAlphabet ) {
-                        $script:uStickLoopDoBreak = $true
+                    if ( $script:w6_List_Character_ExitStick -eq $script:w6_WhichByAlphabet ) {
+                        $script:w6_StickLoopDoBreak = $true
                         return
+                    }
+
+                    if ( $script:w6_SentinelValue_String -eq $script:w6_WhichByAlphabet ) {
+                        continue
                     }
 
                     $times = $whichByAlphabetTimes_Pair[1]
 
                     for ( $i = 0; $i -lt $times; $i++ ) {
-                        $script:uChildren = @( Get-uChildren )
-                        $ListLength = $script:uChildren.Length
+                        $script:w6_Children = @( Get-w6_ChildItems -IsDir:$UseDirectories -Force:$ForceFiles )
+                        $ListLength = $script:w6_Children.Length
 
-                        Use-uWhichByAlphabet -ListLength $ListLength
+                        Use-w6_WhichByAlphabet -ListLength $ListLength
                     }
                 }
 
-                $letAnswerPass = $true
+                if ( $whichByAlphabet_Times_Queue.Length -eq 1 ) {
+                    $isFirstQueueItemEmpty = ( $whichByAlphabet_Times_Queue[0][0] -eq $script:w6_SentinelValue_String )
+
+                    if ( $isFirstQueueItemEmpty) {
+                        Invoke-w6_StickBadInputAction
+                    }
+                }
+
+                break
             }
             catch {
-                Invoke-uStickBadInputAction
+                $errorTimes++
 
-                if ( $beginningLocation -eq ( Get-Location ) ) {
-                    $errorTimes += 1
-                }
-                else {
-                    $errorTimes = 0
-                }
-
-                $exceptionMessage = ( $_.Exception.Message )
+                $exceptionMessage = $_.Exception.Message
 
                 if ( $exceptionMessage -notin $exceptionMessages ) {
                     $exceptionMessages += $exceptionMessage
                 }
 
-                if ( $errorTimes -gt $script:uList_Stick_BadInput_MaxErrorRetries ) {
+                if ( $errorTimes -ge $script:w6_List_Stick_BadInput_MaxErrorRetries ) {
 
                     Write-Host ''
 
-                    Write-Host "$( Get-uBoundary `
-                        -LengthMultiplier $script:uBoundary_Length_Long `
-                        -Direction $script:uBoundary_Direction_Name_Right )"
+                    Write-Host "$( Get-w6_Boundary `
+                        -LengthMultiplier $script:w6_Boundary_Length_Long `
+                        -Direction $script:w6_Boundary_Direction_Name_Right )"
 
-                    Write-Host "An Exception/s have Occurred Repeatedly ( $errorTimes times )"
+                    Write-Host "One or more Exceptions have Occurred Repeatedly ( $errorTimes times )"
                     Write-Host 'Exceptions:'
 
                     $exceptionWriteCount = 0
@@ -2766,481 +2945,1059 @@ function Invoke-uSelectFileFromList {
                         else {
                             Write-Host " ( The Exception's Message Property is Empty )"
                         }
+
+                        Write-Host ''
+                        Write-Host 'TIP: USE CTRL+C TO EXIT STICK'
                     }
 
-                    Write-Host "$( Get-uBoundary `
-                        -LengthMultiplier $script:uBoundary_Length_Long `
-                        -Direction $script:uBoundary_Direction_Name_Right )"
+                    Write-Host "$( Get-w6_Boundary `
+                        -LengthMultiplier $script:w6_Boundary_Length_Long `
+                        -Direction $script:w6_Boundary_Direction_Name_Right )"
 
                     Write-Host ''
 
                     $errorTimes = 0
-                    Set-Location -Path '.\..'
-
-                    $letAnswerPass = $true
+                    Set-Location -Path (
+                        Get-w6_StringWithoutDoubleSlashes -String "$( $script:w6_OperatingPath )$( $script:w6_PathSlash ).." )
                 }
 
             }
             # Improvement idea: Be more explicit with error catching here.
-
         }
-
-        if ( $script:uList_Stick_MoveTerminalAfterCorrectAnswer ) {
-            Write-uSoftCleanTerminal
-        }
-
     }
 
-    function Invoke-uStickFunction {
-        $script:uSelectFileFromList_IsStick = $false
-        $script:uStickLoopDoBreak = $false
+    function Invoke-w6_StickFunction {
+        $script:w6_SelectFileFromList_IsStick = $false
+        $script:w6_StickLoopDoBreak = $false
 
-        while ( -not $script:uStickLoopDoBreak ) {
-            Invoke-uOneStickRepetition
+        while ( -not $script:w6_StickLoopDoBreak ) {
+            Invoke-w6_OneStickRepetition
         }
 
         Write-Host ''
-        Write-Host 'Exited The Stick Mode!'
+        Write-Host 'You Quit Stick Mode!'
         Write-Host ''
 
     }
 
-    function Use-uWhichByAlphabet {
+    function Use-w6_WhichByAlphabet {
         param(
             [Parameter( Mandatory = $true )] [int] $ListLength
         )
 
-        $script:uWhichByAlphabet = ( Get-uCorrectedWhichByAlphabet `
+        $script:w6_WhichByAlphabet = ( Get-w6_CorrectedWhichByAlphabet `
                 -ListLength $ListLength `
                 -AllowDisplayListCharacter `
                 -AllowZeroCharacter `
                 -AllowNegative )
 
-        if ( $script:uSelectFileFromList_IsStick ) {
+        if ( $script:w6_SelectFileFromList_IsStick ) {
             if ( -not $UseDirectories ) {
-                Write-Host ( "The '-UseDirectories' Parameter has to be True in order to use the '-Stick' Parameter",
-                    "with 'Invoke-uSelectFileFromList'" -join '' )
+                Write-Host ( "The '-UseDirectories' Parameter has to be True in to use the '-Stick' Parameter",
+                    "with 'Invoke-w6_SelectFileFromList'" -join '' )
                 return
             }
 
-            Invoke-uStickFunction
+            Invoke-w6_StickFunction
             return
         }
 
-        if ( $script:uSentinelValue_String -eq $script:uWhichByAlphabet ) {
+        if ( $script:w6_SentinelValue_String -eq $script:w6_WhichByAlphabet ) {
             if ( $NoList ) {
                 return
             }
 
-            Write-uFullItemList -ChildrenItems $script:uChildren -IsDir
+            Write-w6_FullItemList `
+                -AttributesBlackList:$AttributesBlackList `
+                -AttributesPriorityList:$AttributesPriorityList `
+                -ChildrenItems $script:w6_Children `
+                -IsDir:$UseDirectories `
+                -SoftClearBeforeList:$SoftClearBeforeList
             return
         }
 
-        Invoke-uWhichByDirectoryCorrectFormatAction
+        Invoke-w6_WhichByDirectoryCorrectFormatAction
     }
 
-    Use-uWhichByAlphabet -ListLength $ListLength
+    Use-w6_WhichByAlphabet -ListLength $ListLength
 }
 
 
-
-function Invoke-uCdaLikeFunction {
+function Invoke-w6_CdaLikeFunction {
     param(
-        [Parameter( Mandatory = $false )] [String] $OperatingPath,
-        [Parameter( Mandatory = $false )] [Object] $WhichByAlphabet,
-        [Parameter( Mandatory = $false )] [Object] $Times,
-        [Parameter( Mandatory = $false )] [scriptblock] $HelpFunction = $script:uSentinelValue_Scriptblock,
-        [Switch] $Stick,
-        [Switch] $Help,
-        [Switch] $UseDirectories,
-        [Switch] $ListForce,
-        [Switch] $NoList,
-        [Switch] $WriteSelectedFile
+        [Parameter( Mandatory = $false )] [string] $OperatingPath,
+        [Parameter( Mandatory = $false )] [object] $WhichByAlphabet,
+        [Parameter( Mandatory = $false )] [object] $Times,
+        [Parameter( Mandatory = $false )] [object] $AttributesBlackList,
+        [Parameter( Mandatory = $false )] [object] $AttributesPriorityList,
+        [switch] $Stick,
+        [switch] $Help,
+        [switch] $UseDirectories,
+        [switch] $ListForce,
+        [switch] $NoList,
+        [switch] $WriteSelectedFiles,
+        [switch] $ForceFiles,
+        [switch] $SoftClearBeforeList
     )
 
-    function Write-uListIfForce {
-        if ( $ListForce ) {
-            $script:uWhichByAlphabet = $script:uSentinelValue_String
-            Invoke-uSelectFileFromList -UseDirectories:$UseDirectories
-        }
+
+    if ( $WhichByAlphabet.GetType().IsArray ) {
+        $WhichByAlphabet = @( @( $WhichByAlphabet ) | Where-Object -FilterScript {
+                ( $_ -is [string] ) -or ( $_ -is [int] )
+            }
+        )
+    }
+    elseif ( ( $WhichByAlphabet -isnot [int] ) -and ( $WhichByAlphabet -isnot [string] ) ) {
+        $WhichByAlphabet = $script:w6_SentinelValue_String
     }
 
-    if ( $Stick ) {
-        $NoList = $true
+    if ( $Times.GetType().IsArray ) {
+        $Times = @( @( $Times ) | Where-Object -FilterScript {
+                ( $_ -is [string] ) -or ( $_ -is [int] )
+            }
+        )
+    }
+    elseif ( ( $Times -isnot [int] ) -and ( $Times -isnot [string] ) ) {
+        $Times = $script:w6_List_Times_DefaultValue
     }
 
-    Set-uOperatingPathIfValid -Path:$OperatingPath -Silent:$script:uSetOperatingPath_DefaultSilent_IfUsedBy_Script
+    if ( $AttributesBlackList.GetType().IsArray ) {
+        $AttributesBlackList = @( @( $AttributesBlackList ) | ForEach-Object -Process {
+                if ( ( $_ -is [string] ) -or ( $_ -is [int] ) ) {
+                    "$_"
+                }
+            }
+        )
+    }
+    elseif ( ( $AttributesBlackList -is [string] ) -or ( $AttributesBlackList -is [int] ) ) {
+        $AttributesBlackList = @( "$AttributesBlackList" )
+    }
+    else {
+        $AttributesBlackList = @()
+    }
 
-    $whichByAlphabet_Times_Queue = @( Get-uWhichByAlphabetTimesQueue `
+    if ( $AttributesPriorityList.GetType().IsArray ) {
+        $AttributesPriorityList = @( @( $AttributesPriorityList ) | ForEach-Object -Process {
+                if ( ( $_ -is [string] ) -or ( $_ -is [int] ) ) {
+                    "$_"
+                }
+            } )
+    }
+    elseif ( ( $AttributesPriorityList -is [string] ) -or ( $AttributesPriorityList -is [int] ) ) {
+        $AttributesPriorityList = @( "$AttributesPriorityList" )
+    }
+    else {
+        $AttributesPriorityList = @( )
+    }
+
+    Set-w6_OperatingPathIfValid -Path:$OperatingPath -Silent:$script:w6_SetOperatingPath_DefaultParameterValue_Silent_IfUsedBy_Script -Fallback '.'
+
+
+    $whichByAlphabet_Times_Queue = @( Get-w6_WhichByAlphabetTimesQueue `
             -WhichByAlphabet:$WhichByAlphabet `
             -Times:$Times `
             -TolerateZeroCharacter `
             -TolerateDisplayListCharacter )
 
-    if ( $Help ) {
-        $null = ( & $HelpFunction )
-        Write-uListIfForce
-        return
-    }
-
     foreach ( $whichByAlphabetTimes_Pair in $whichByAlphabet_Times_Queue ) {
-        $script:uWhichByAlphabet = $whichByAlphabetTimes_Pair[0]
+        $script:w6_WhichByAlphabet = $whichByAlphabetTimes_Pair[0]
 
         for ( $i = 0; $i -lt $whichByAlphabetTimes_Pair[1]; $i++ ) {
 
-            Invoke-uSelectFileFromList `
+            Invoke-w6_SelectFileFromList `
+                -AttributesBlackList:$AttributesBlackList `
+                -AttributesPriorityList:$AttributesPriorityList `
                 -UseDirectories:$UseDirectories `
-                -WriteSelectedFile:$WriteSelectedFile `
-                -NoList:$NoList
+                -Stick:$false `
+                -WriteSelectedFiles:$WriteSelectedFiles `
+                -NoList:$NoList `
+                -ForceFiles:$ForceFiles `
+                -SoftClearBeforeList:$SoftClearBeforeList
         }
     }
 
     if ( $Stick ) {
-        Invoke-uSelectFileFromList -Stick:$Stick -UseDirectories -WriteSelectedFile:$WriteSelectedFile
+        Invoke-w6_SelectFileFromList `
+            -AttributesBlackList:$AttributesBlackList `
+            -AttributesPriorityList:$AttributesPriorityList `
+            -UseDirectories `
+            -Stick `
+            -WriteSelectedFiles:$WriteSelectedFiles `
+            -ForceFiles:$ForceFiles `
+            -SoftClearBeforeList:$SoftClearBeforeList
     }
-
-    Write-uListIfForce
 }
 
 
-function Write-uApproximateTimeSinceScriptStart {
-    $script:uLoadingEndTime = ( Get-Date )
-    $script:uLoadTimeMillisecondsRounded = [Math]::Floor( ( $script:uLoadingEndTime - $script:uLoadingStartTime ).TotalMilliseconds + 0.5 )
+function Write-w6_ApproximateTimeSinceScriptStart {
+    $script:w6_LoadingTimeStopwatch.Stop()
+    $scriptLoadingTimeMilliseconds = $script:w6_LoadingTimeStopwatch.Elapsed.TotalMilliseconds
+    $scriptLoadingTimeMillisecondsRounded = [Math]::Floor( $scriptLoadingTimeMilliseconds + 0.5 )
 
-    Write-Host "The $script:uProductName loaded in approximately $script:uLoadTimeMillisecondsRounded ms."
+    Write-Host "$script:w6_Product_Name loaded in approximately $scriptLoadingTimeMillisecondsRounded ms"
     Write-Host ''
 }
 
 
-# ------------------------------- MAIN FUNCTIONS ------------------------------
+function Get-w6_UnelevScheduledTaskName {
+    $scheduledTasksNames = ( [string[]] ( Get-ScheduledTask ).TaskName )
+    $scheduledTasksNamesHashSet = ( [System.Collections.Generic.HashSet[string]]::new( $scheduledTasksNames ) )
+
+    $taskNameIndex = 0
+
+    while ( $true ) {
+        $taskNameIndex++
+
+        $taskNameCandidate = ( "$script:w6_Unelev_ScheduledTaskName_RemoveMeNamedPrefix unelev - Start a New Unelevated PowerShell Session ( $taskNameIndex )" -join '' )
+
+        if ( -not ( $scheduledTasksNamesHashSet.Contains( $taskNameCandidate ) ) ) {
+            return $taskNameCandidate
+        }
+    }
+}
 
 
-function Write-uFileIntroduction {
-    if ( $script:uIntroduction_DoClearTerminalBeforeIntroduction ) {
+# ------------------------------ PUBLIC FUNCTIONS -----------------------------
+
+
+function Write-FileWalkerIntroduction {
+    param(
+        [switch] $IsAutomatic
+    )
+
+    if ( $IsAutomatic ) {
+        Update-w6_IntroductionTotalAutomaticWrites -Value ( $script:w6_Introduction_TotalAutomaticWrites + 1 )
+    }
+
+    if ( $script:w6_Introduction_DoClearConsoleBeforeIntroduction ) {
         Clear-Host
     }
 
-    $Message = @()
+    $messageBuilder = ( New-Object -TypeName 'System.Text.StringBuilder' )
 
     # ------------------------- INTRODUCTION BEGINNING ------------------------
 
-    $Message += @(
-        "$( Get-uBoundary -LengthMultiplier $script:uBoundary_Length_Long -Direction $script:uBoundary_Direction_Name_Right )" )
+    # ==========> Message Begin
+    $null = $messageBuilder.AppendLine( @"
+$( Get-w6_Boundary -LengthMultiplier $script:w6_Boundary_Length_Long -Direction $script:w6_Boundary_Direction_Name_Right )
+$( $w6_s1 )$script:w6_Product_Name $script:w6_Product_Version
+"@ )
+    # <========== Message End
 
-    if ( $script:uIntroduction_Greeting_CurrentTimeText_Toggle -and ( $script:uSentinelValue_String -ne $greetingString ) ) {
+    if ( $script:w6_Introduction_Toggle_Greeting -or $script:w6_Introduction_Toggle_DetectedOS -or $script:w6_Introduction_Toggle_ConfigStats ) {
+        # ==========> Message Begin
+        $null = $messageBuilder.AppendLine( '' )
+        # <========== Message End
 
-        $Message += @(
-            "$( $s1 )$( Get-uGreeting )"
-            '' )
+        if ( $script:w6_Introduction_Toggle_Greeting ) {
+            # ==========> Message Begin
+            $null = $messageBuilder.AppendLine( @"
+$( $w6_s1 )$( Get-w6_Greeting )
+"@ )
+            # <========== Message End
+        }
+
+        if ( $script:w6_Introduction_Toggle_DetectedOS ) {
+            # ==========> Message Begin
+            $null = $messageBuilder.AppendLine( @"
+$( $w6_s1 )Detected OS: $script:w6_CurrentOSType
+"@ )
+            # <========== Message End
+        }
+
+        if ( $script:w6_Introduction_Toggle_ConfigStats ) {
+            # ==========> Message Begin
+            $null = $messageBuilder.AppendLine( @"
+$( $w6_s1 )Config: Found $script:w6_Config_Found_Count (Success $script:w6_Config_Success_Count; Error $script:w6_Config_Error_Count)
+"@ )
+            # <========== Message End
+        }
+
     }
 
-    $Message += @(
-        "$( $s1 )The $script:uProductName Has Been Applied!"
-        "$( $s4 )- Version $script:uCurrentVersion"
-        "$( $s4 )- Detected Operating System: $script:uCurrentOSType" )
+    if ( $script:w6_Introduction_Toggle_CommandsHelp ) {
 
-    if ( ( $script:uIsWindows ) -and ( $script:uSentinelValue_String -ne $script:uWindowsTerminalIsAdmin ) ) {
-        $Message += "$( $s4 )- IsAdmin - $script:uWindowsTerminalIsAdmin"
+        # ==========> Message Begin
+        $null = $messageBuilder.AppendLine( @"
+
+$( $w6_s2 )cda - Change Directory Alphabetically - Changing Directory Without Writing File Names
+$( $w6_s4 )Usage
+$( $w6_s6 )> cda > Displays a list of directories that you can jump to
+$( $w6_s6 )> cda 1 > Jumps to the 1'st directory from the list
+$( $w6_s6 )> cda -stick > Displays the list and Asks where to jump continuously
+
+$( $w6_s2 )cdf - Current Directory File - Selecting a File From The Current Directory
+$( $w6_s4 )Usage
+$( $w6_s6 )> cdf > Displays a list of files you can choose
+$( $w6_s6 )> cdf 1 > Returns the 1'st file from the list
+"@ )
+        # <========== Message End
+
+        if ( $script:w6_IsWindows ) {
+            # ==========> Message Begin
+            $null = $messageBuilder.AppendLine( @"
+
+$( $w6_s2 )elev - Quickly open an Admin PowerShell Session at your current working directory
+$( $w6_s4 )Usage
+$( $w6_s6 )> elev > Opens a new Admin PowerShell Session at your current working directory
+$( $w6_s6 )> elev -exit > Opens an Admin PowerShell Session, and closes your current "old" PowerShell session
+
+$( $w6_s2 )unelev - Open a Non-Admin PowerShell Session at your current working directory
+$( $w6_s4 )Usage
+$( $w6_s6 )> unelev > Opens a new Non-Admin PowerShell Session at your current working directory
+$( $w6_s6 )> unelev -exit > Opens a Non-Admin PowerShell Session, and closes your current "old" PowerShell session
+"@ )
+            # <========== Message End
+        }
+
+        # ==========> Message Begin
+        $null = $messageBuilder.AppendLine( @"
+
+$( $w6_s1 )The PowerShell-File-Walker Commands Bundle is highly configurable!
+$( $w6_s1 )Settings Wiki: [sorry, work in progress]
+"@ )
+        # <========== Message End
+
     }
 
-    $Message += @(
-        ''
-        "$( $s1 )Features:"
-        "$( $s2 )'cda' ( Change Directory Alphabetically ) -> Changing Directory without having to write filenames ( upgraded 'cd' )"
-        "$( $s4 )Usage:"
-        "$( $s6 )-> 'cda' -> Displays a list of directories that You can jump to"
-        "$( $s6 )-> 'cda -Help' -> more information"
-        "$( $s6 )-> 'cda directory_number_from_list' -> jump to a directory"
-        "$( $s6 )-> 'cda 1' -> go to the first directory from the list"
-        "$( $s6 )-> 'cda 2*4 -> jump to the 8'th directory from the list"
-        "$( $s6 )-> 'cda 2,3,4 -> jump to the 2'nd directory, then to the 3'rd, and then to the 4'th"
-        "$( $s6 )   This is the same as writing 'cda 2; cda 3; cda 4'"
-        "$( $s6 )-> 'cda 0 3' -> jump to the 0'th directory 3 times."
-        "$( $s6 )   This is the same as writing 'cda 0; cda 0; cda 0'"
-        "$( $s6 )-> 'cda 1,2 3,4' -> Jump to the 1'st directory 3 times, and to the 2'nd directory 4 times."
-        "$( $s6 )   This is the same as writing 'cda 1; cda 1; cda 1; cda 2; cda 2; cda 2; cda 2"
-        "$( $s6 )   This is also the same as writing 'cda 1 3; cda 2 4'"
-        "$( $s6 )-> 'cda' -Stick -> Makes the 'cda' command - makes You a real directory walker - displays a list and instantly prompts You for the answer - when You answer - a new list is displayed - repeated infinitely until You answer with the Quit character."
-        "$( $s6 )   The stick parameter is pretty close to a file explorer, but not quite - it does not directly support file management - it makes You 'walk' the files"
-        "$( $s5 )Note: The selected directory is also saved as '`$f'"
-        ''
-        "$( $s2 )'cdf' ( Current Directory File ) -> Selecting a file from the current Directory."
-        "$( $s4 )Usage:"
-        "$( $s6 ) Documentation in progress - this command is pretty similar to 'cda'."
-        "$( $s6 )-> 'cdf -Path [your_path]' -> use 'cda' but from a path that's not the current working directory."
-        "$( $s6 )-> 'cdf -Help' -> more information"
-        "$( $s6 )-> 'cdf -Path [your_path]' -> use 'cdf' but from a path that's not the current working directory."
-        "$( $s5 )Note: The selected file is also saved as '`$f'" )
+    if ( $IsAutomatic ) {
 
-    if ( $script:uIsWindows ) {
+        $displaysLeft = $( $script:w6_Introduction_MaxTotalAutomaticWrites - $script:w6_Introduction_TotalAutomaticWrites )
 
-        $Message += @(
-            "`n"
-            "$( $s2 )'elev' ( Elevate Terminal ) - Starts a new powershell prompt with admin permissions in the same directory."
-            "$( $s4 )Usage:"
-            "$( $s6 )-> 'elev' -> Elevates the terminal to admin"
-            "$( $s6 )-> 'sudo' -> An Alias for 'elev'"
-            "$( $s5 )Note: This function is for Windows machines only." )
+        # ==========> Message Begin
+        $null = $messageBuilder.AppendLine( '' )
+        # <========== Message End
+
+        if ( 0 -eq $displaysLeft ) {
+            # ==========> Message Begin
+            $null = $messageBuilder.AppendLine( @"
+$( $w6_s1 )This introduction has been automatically displayed for the last time
+"@ )
+            # <========== Message End
+        }
+        elseif ( 1 -eq $displaysLeft ) {
+            # ==========> Message Begin
+            $null = $messageBuilder.AppendLine( @"
+$( $w6_s1 )This introduction will be automatically displayed 1 more time
+"@ )
+            # <========== Message End
+        }
+        else {
+            # ==========> Message Begin
+            $null = $messageBuilder.AppendLine( @"
+$( $w6_s1 )This introduction will be automatically displayed $displaysLeft more times
+"@ )
+            # <========== Message End
+        }
     }
 
-    $Message += @(
-        "`n"
-        "$( Get-uBoundary -LengthMultiplier $script:uBoundary_Length_Long -Direction $script:uBoundary_Direction_Name_Left )" )
+    if ( $script:w6_Introduction_Toggle_CommandsHelp ) {
+        # ==========> Message Begin
+        $null = $messageBuilder.AppendLine( @"
 
-    if ( $script:uIntroduction_ScrollUpMessage_DoDisplay ) {
+$( $w6_s1 )Tip: Use Get-Help [command] for more info
+"@ )
+        # <========== Message End
+    }
 
-        $Message += @(
-            "$( "`n" * ( $script:uIntroduction_ScrollUpMessage_NewlinesAbove - 1 ) )"
-            "Scroll up for information about the applied $script:uProductName..."
-            '...' )
+    # ==========> Message Begin
+    $null = $messageBuilder.AppendLine( @"
+$( Get-w6_Boundary -LengthMultiplier $script:w6_Boundary_Length_Long -Direction $script:w6_Boundary_Direction_Name_Left )
+"@ )
+    # <========== Message End
 
-        Set-uNewWindowSizeVariables
-        $newLinesAmount = $script:uWindow_Height - 5
-        if ( $script:uAlways_Write_Approximate_Loading_Time ) {
+    if ( $script:w6_Introduction_ScrollUpMessage_DoDisplay ) {
+
+        # ==========> Message Begin
+        $null = $messageBuilder.AppendLine( @"
+$( "`n" * ( $script:w6_Introduction_ScrollUpMessage_NewlinesAbove - 1 ) )
+Scroll up for information about the applied $script:w6_Product_Name...
+...
+"@ )
+        # <========== Message End
+
+        Set-w6_NewWindowSizeVariables -Height
+        $newLinesAmount = $script:w6_Window_Height - 5
+        if ( $script:w6_Write_Approximate_Loading_Time ) {
             $newLinesAmount -= 2
         }
         $newLines = ( "`n" * [Math]::Max( $newLinesAmount, 0 ) )
 
-        $Message += "$newLines"
+        # ==========> Message Begin
+        $null = $messageBuilder.Append( "$newLines" )
+        # <========== Message End
+
     }
     else {
-        $Message += "`n"
+
+        # ==========> Message Begin
+        $null = $messageBuilder.Append( "`n" )
+        # <========== Message End
+
     }
 
-    Write-Host -Object ( $Message -join "`n" )
+    Write-Host -Object ( $messageBuilder.ToString() )
 }
 
+
+<#
+.SYNOPSIS
+    Write example text for each foreground+background color combination
+.DESCRIPTION
+    *Write-ColorCombinations is a command from the PowerShell-File-Walker Commands Bundle
+
+    This command was created to help you choose foreground and/or background colors for your PowerShell console text
+    Write-ColorCombinations will display a simple sentence for each color combination
+
+    Default sentence example: "This is DarkBlue Text on a Cyan Background"
+.PARAMETER CustomText
+    Text to write for each combination
+
+    If you didn't specify custom text, the default text is used
+    Default text examples
+    - "This is Black Text on a Red Background"
+    - "This is DarkGreen Text on a Red Background."
+    - and so on...
+.PARAMETER Swap
+    Swaps the order of for-loops within the code
+    Default order: displays all background colors for each foreground color
+    Swap order: displays all foreground colors for each background color
+.PARAMETER NoAlign
+    Removes the center-alignment of the text
+    Makes the text be aligned to the left instead
+.EXAMPLE
+    Write-ColorCombinations
+    *consider this text colored correctly*
+    This is Red Text on a Black Background.
+    This is Red Text on a DarkBlue Background.
+    This is Red Text on a DarkGreen Background.
+    ...
+.EXAMPLE
+    Write-ColorCombinations -Swap
+    *consider this text colored correctly*
+    This is Black Text on a Red Background.
+    This is DarkBlue Text on a Red Background.
+    This is DarkGreen Text on a Red Background.
+    ...
+.NOTES
+    [!Important Note] The written text is aligned to the middle of the console by default
+.LINK
+    [placeholder] - Online documentation (not finished yet)
+#> # TODO ADD A NOTE THAT THIS COMMAND IS CUSTOMIZABLE
+
+function Write-ColorCombinations {
+    param(
+        [Parameter( Mandatory = $false )] [Alias( 'text', 't' )] [string] $CustomText = $script:w6_SentinelValue_String,
+        [switch] [Alias( 's', 'switch', 'f', 'flip' )] $Swap,
+        [switch] [Alias( 'na' )] $NoAlign
+    )
+
+    Write-Host ''
+
+    foreach ( $foregroundColor in $script:w6_List_Attributes_Colors_ValidColors ) {
+        foreach ( $backgroundColor in $script:w6_List_Attributes_Colors_ValidColors ) {
+
+            Write-w6_OneColorCombination `
+                -CustomText:$CustomText `
+                -BackgroundColor $backgroundColor `
+                -ForegroundColor $foregroundColor `
+                -Swap:$Swap `
+                -NoAlign:$NoAlign
+        }
+        Write-Host ''
+    }
+}
+
+
+<#
+.SYNOPSIS
+    Display a formatted list of all current directory's files and return the paths of the files you select
+.DESCRIPTION
+    *Cdf is a command from the PowerShell-File-Walker Commands Bundle
+    Tested for:  Windows 10, 11 PowerShell 5, 7 | Linux (Ubuntu) PowerShell 7
+
+    'cdf' => Display a numbered list of all files at your current directory
+    'cdf x' => Select/return the path of the x'th file
+
+    Example:
+    PS C:\BookAuthors> cdf
+    ---------------------------------------------------------------------->
+        You're at: C:\BookAuthors
+
+    Found Items:
+    [0] Parent Directory - C:\
+    [1] Notes    >                                   -> Directory [1]
+    [2] $100M Offers.txt                                          [2]
+    [3] The Way Of The Superior Man.txt    >            -> SYSTEM [3]
+    [4] Why We Seep.txt    >                          -> ReadOnly [4]
+
+        You're at: C:\BookAuthors
+    <----------------------------------------------------------------------
+    PS C:\BookAuthors> cdf 2
+    C:\BookAuthors\$100M Offers.txt   <- Cdf returned the full path of the selected file
+    PS C:\BookAuthors> cd (cdf 1)
+    PS C:\BookAuthors\Notes>
+
+
+    Learn More
+    =============================
+    #1 Important Information
+    #2 The Only Differences Between Cdf And Cda You Should Know About
+    #3 Parameter Summary
+    =============================
+
+
+        #1 Important Information
+    There are two sibling commands: Cdf and Cda. They are very similar
+
+    Cdf is for selecting files
+    Cda is for changing directories
+
+    Cda has an Amazing documentation
+    Cdf doesn't have an Amazing documentation
+
+    "Great! But how do I use advanced Cdf features?!?!"
+    Since Cdf and Cda are nearly the same: the Great Majority of the Cda documentation applies to Cdf
+
+    Please continue reading to the section #2 which explains The Only Differences Between Cda and Cdf
+    Then read the Cda documentation with "Get-Help cda"
+
+
+            #2 The Only Differences Between Cdf And Cda You Should Know About
+    - Cdf outputs the path of the selected files. Cda changes the directory to the selected file
+    - Cdf means "Current Directory File". Cda means "Change Directory Alphabetically"
+    - Cdf doesn't have Stick mode
+    - A few Cdf parameters have different Default Values than Cda parameters
+
+
+            #3 Parameters Summary
+    Parameter Name => Description
+    Supported Types | Usual Default Value | Aliases
+
+    WhichByAlphabet => Where to go
+    Number, Array, String | $script:w6_SentinelValue_String | w, i, n, wba, index, number
+
+    Times => How Many Times to go there
+    Number, Array, String | 1 | t
+
+    OperatingPath => Cdf will Operate from this path
+    String | .\ or ./ | p, op, path
+
+    AttributesBlackList => Cdf will Hide these attributes from the list
+    Array, String | NotContentIndexed, ReparsePoint, Normal, Archive | bl, blist, black, blacklist
+
+    AttributesPriorityList => Cdf will Make these attributes stand out
+    Array, String | System | pl, plist, priority, prioritylist
+
+    ListForce => After all jumps - cdf will Forcefully Display the list
+    Switch | False | l, lf
+
+    NoList => Passing invalid WhichByAlphabet won't trigger the list display
+    Switch | False | nl
+
+    WriteSelectedFiles => Cdf will Write the selected files. Useful for debugging
+    Switch | False | w, wsf, write
+
+    ForceFiles => Cdf will use -Force with the Get-ChildItem command when generating the files list
+    Switch | True | f, ff, force
+
+    SoftClearBeforeList => Cdf will Write empty lines above the list, to hide the previous text
+    Switch | True | c, sc, scbl, clear, softclear
+.LINK
+    [placeholder] - Online documentation (not finished yet)
+.LINK
+    Cda - A version of Cdf for Changing Directories
+#>
 
 function cdf {
     param(
-        [Parameter( Mandatory = $false, ValueFromPipeline = $true )] [Alias( 'w', 'i', 'n', 'number' )] [Object] `
-            $WhichByAlphabet = $script:uSentinelValue_String,
+        [Parameter( Mandatory = $false, ValueFromPipeline = $true )] [Alias( 'w', 'i', 'n', 'wba', 'index', 'number' )] [object] $WhichByAlphabet = $script:w6_SentinelValue_String,
 
-        [Parameter( Mandatory = $false )] [Alias( 'o', 'p', 'path' )] [String] $OperatingPath = '.\',
+        [Parameter( Mandatory = $false )] [Alias( 't' )] [object] $Times = $script:w6_List_Times_DefaultValue,
 
-        [Alias( 'h' )] [Switch] $Help,
+        [Parameter( Mandatory = $false )] [Alias( 'p', 'op', 'path' )] [string] $OperatingPath = ".$script:w6_PathSlash",
 
-        [Alias( 'l' )] [Switch] $ListForce,
+        [Parameter( Mandatory = $false )] [Alias( 'bl', 'blist', 'black', 'blacklist' )] [object] $AttributesBlackList = $script:w6_List_Attributes_BlackList_cdf,
 
-        [Alias( 'nl' )] [Switch] $NoList,
+        [Parameter( Mandatory = $false )] [Alias( 'pl', 'plist', 'priority', 'prioritylist' )] [object] $AttributesPriorityList = $script:w6_List_Attributes_PriorityList_cdf,
 
-        [Alias( 'ws' )] [Switch] $WriteSelectedFile
+        [Alias( 'l', 'lf' )] [switch] $ListForce,
+
+        [Alias( 'nl' )] [switch] $NoList,
+
+        [Alias( 'wf', 'wsf', 'write' )] [switch] $WriteSelectedFiles = $script:w6_List_WriteSelectedFiles_DefaultValue_cdf,
+
+        [Alias( 'f', 'ff', 'force' )] [switch] $ForceFiles = $script:w6_List_ForceFiles_DefaultValue,
+
+        [Alias( 'c', 'sc', 'scbl', 'clear', 'softclear' )] [switch] $SoftClearBeforeList = $script:w6_List_BeforeDisplay_SoftClearConsole
     )
 
-    Invoke-uCdaLikeFunction -WhichByAlphabet:$WhichByAlphabet -Times '1' -OperatingPath:$OperatingPath `
-        -HelpFunction { 'hello!' } -Stick:$false -Help:$Help -UseDirectories:$false -ListForce:$ListForce `
-        -WriteSelectedFile:$WriteSelectedFile -NoList:$NoList
-}
+    Invoke-w6_CdaLikeFunction `
+        -WhichByAlphabet:$WhichByAlphabet `
+        -Times:$Times `
+        -OperatingPath:$OperatingPath `
+        -AttributesBlackList:$AttributesBlackList `
+        -AttributesPriorityList:$AttributesPriorityList `
+        -Stick:$false `
+        -UseDirectories:$false `
+        -ListForce:$ListForce `
+        -NoList:$NoList `
+        -WriteSelectedFiles:$WriteSelectedFiles `
+        -ForceFiles:$ForceFiles `
+        -SoftClearBeforeList:$SoftClearBeforeList
 
+}
+Set-w6_AliasBulk -Value 'cdf' -Aliases $script:w6_Aliases_cdf -Scope 'Script'
+
+
+<#
+.SYNOPSIS
+    Display a formatted list of all current directory's files and change directory to the one you select
+.DESCRIPTION
+    *Cda is a command from the PowerShell-File-Walker Commands Bundle
+    Tested for:  Windows 10, 11 PowerShell 5, 7 | Linux (Ubuntu) PowerShell 7
+
+    'cda' => Display a numbered list of directories you can jump to
+    'cda x' => Jump to the x'th directory
+    'cda -Stick' => Enable stick mode - repeatedly display the directory list and ask to choose a directory
+
+    PS C:\Users> cda
+    ------------------------------------------------------>
+        You're at: C:\Users
+
+    Found Directories:
+    [0] Parent Directory - C:\
+    [1] All Users    >          -> SYSTEM, Hidden [1]
+    [2] Default    >          -> ReadOnly, Hidden [2]
+    [3] Default User    >       -> SYSTEM, Hidden [3]
+    [4] Admin                                     [4]
+    [5] Public    >                   -> ReadOnly [5]
+
+        You're at: C:\Users
+    <------------------------------------------------------
+    PS C:\Users> cda 4
+    PS C:\Users\Admin>
+
+
+    Learn More
+    =============================
+    #1 Parameter Summary
+    #2 Positional Parameters
+    #3 Times - Usage
+    #4 WhichByAlphabet - Special 0 Number
+    #5 WhichByAlphabet - Negative Numbers
+    #6 WhichByAlphabet - Arrays as Input
+    #7 Times and WhichByAlphabet - Arrays as Input
+    #8 Stick Mode
+    #9 Config
+    #10 Notes
+    =============================
+
+
+            #1 Parameter Summary
+    Parameter Name => Description
+    Supported Types | Usual Default Value | Aliases
+
+    WhichByAlphabet => Where to go
+    Number, Array, String | $script:w6_SentinelValue_String | w, i, n, wba, index, number
+
+    Times => How Many Times to go there
+    Number, Array, String | 1 | t
+
+    OperatingPath => Cda will Operate from this path
+    String | .\ or ./ | p, op, path
+
+    AttributesBlackList => Cda will Hide these attributes from the list
+    Array, String | Directory, NotContentIndexed, ReparsePoint, Normal, Archive | bl, blist, black, blacklist
+
+    AttributesPriorityList => Cda will Make these attributes stand out
+    Array, String | System | pl, plist, priority, prioritylist
+
+    Stick => Cda will Repeatedly Display the list and Ask to choose a directory
+    Switch | False | s
+
+    ListForce => After all jumps - cda will Forcefully Display the list
+    Switch | False | l, lf
+
+    NoList => Passing invalid WhichByAlphabet won't trigger the list display
+    Switch | False | nl
+
+    WriteSelectedFiles => Cda will Write the selected files. Useful for debugging
+    Switch | False | w, wsf, write
+
+    ForceFiles => Cda will use -Force with the Get-ChildItem command when generating the files list
+    Switch | True | f, ff, force
+
+    SoftClearBeforeList => Cda will Write empty lines above the list, to hide the previous text
+    Switch | True | c, sc, scbl, clear, softclear
+
+
+            #2 Positional Parameters
+    First two positional parameters are WhichByAlphabet and Times
+    'cda -WhichByAlphabet 1 -Times 2'  equals  'cda 1 2'
+
+
+            #3 Times - Usage
+    WhichByAlphabet - where to jump | Times - how many Times to jump
+    'cda 1 3'  equals  'cda 1; cda 1; cda 1'
+    'cda 1 3'  equals  'jump to the 1'st directory 3 Times'
+
+
+            #4 WhichByAlphabet - Special 0 Number
+    'cda 0'  equals  'jump to the parent directory'
+    C:\Users\Admin> cda 0
+    C:\Users>
+
+    C:\Users\Admin\Desktop\100MDollarOffers> cda 0 10
+    C:\>
+
+
+            #5 WhichByAlphabet - Negative Numbers
+    When you pass a negative number as WhichByAlphabet - the item is selected from the end
+
+    In this list:
+    [1] Photos
+    [2] Videos
+    [3] Audio
+    Negative numbers are here:
+    [-3] Photos
+    [-2] Videos
+    [-1] Audio
+
+    'cda -1' here will select the Audio directory
+
+
+            #6 WhichByAlphabet - Arrays as Input
+    PowerShell sees 0,2,3 as @(0,2,3) - both are correct
+    'cda @(4,6)'  equals  'cda 4; cda 6'
+    'cda 0,2,3'  equals  'cda 0; cda 2; cda 3'
+
+
+            #7 Times and WhichByAlphabet - Arrays as Input
+    When both WhichByAlphabet and Times are arrays - each WhichByAlphabet number lines up with a Times number from left to right
+    'cda 1,2,3 4,5,6'  equals  'cda 1 4; cda 2 5; cda 3 6'
+
+    Default values:
+    Times: 1
+    WhichByAlphabet: *deletes its Times partner*
+
+    'cda 2 3,4'  equals  'cda 2 3'
+    4 was deleted by the missing WhichByAlphabet
+
+    'cda 5,6 7'  equals  'cda 5,6 7,1'
+    Missing Times was replaced with 1
+
+
+            #8 Stick Mode
+    'cda -Stick' => enter stick mode
+    Stick Mode will repeatedly display the list and ask to choose a directory
+    Answer 'q' => exit stick mode
+
+    'cda -s' => '-s' is an alias of '-Stick'
+
+    C:\Users\Admin> cda -s
+     *the list is displayed*
+    Option: 0 10
+     *Stick Mode runs 'cda 0 10'
+     *the list is displayed*
+    Option: 2
+     *Stick Mode runs 'cda 2'
+     *the list is displayed*
+    Option: q
+     *You Quit Stick Mode!*
+    C:\Program Files>
+
+    1'st found 1 or more recognized characters - WhichByAlphabet
+    2'nd found 1 or more recognized characters - Times
+
+    Each group of recognized characters is separated by one or more unrecognized characters
+    This allows Stick Mode to differentiate between WhichByAlphabet and Times
+
+    All recognized characters:
+    - Special characters -> q, l, ...
+    - Digits -> 0, 1, 2, ...
+    - Commas -> ,
+    - Most math characters -> * / + - ( ) .
+    All other characters are unrecognized!
+    Space is an Unrecognized character!
+
+    Stick Mode allows you to define both WhichByAlphabet and Times
+    Other parameters like -WriteSelectedFiles must be defined BEFORE entering a Stick session
+
+    Stick Mode supports advanced WhichByAlphabet and Times input
+    Negative numbers, special characters, math characters, and so on...
+
+    Examples Template:
+    'text' => Role => Description
+
+    Option: 2,3 4,5
+    '2,3' => WhichByAlphabet => 1'st found recognized characters
+    ' ' => unrecognized characters => ends the 1'st found recognized characters group
+    '4,5' => Times => 2'nd found recognized characters
+
+    Option: hi 1,-1,b,1,5 hello 6,7
+    'hi ' => unrecognized characters => ends nothing
+    '1,-1,' => WhichByAlphabet => 1'st found recognized characters.  Note: the , comma at the end is ignored
+    'b' => unrecognized character => ends 1'st found recognized characters group
+    ',1,5' => Times => 2'nd found recognized characters. Note: the , comma at the beginning is ignored
+    ' hello ' => unrecognized characters => ends 2'nd found recognized characters group
+    '6,7' => Ignored => 3'rd found recognized characters
+
+
+            #9 Config
+    Cda is highly configurable. Configure cda by changing special variables. Changed variables don't save between sessions.
+    Use a PowerShell Profile to permanently save your changes!!!
+    More info + special variables list at https://github.com/JakuWorks/Powershell-File-Walker/wiki
+
+
+            #10 Notes
+    Files that contain / or \ slashes in their filenames may cause errors
+    Cda has no aliases by default
+.LINK
+    [placeholder] - Online documentation (not finished yet)
+.LINK
+    Cdf - A version of Cda for Selecting Files
+#>
 
 function cda {
     param(
-        [Parameter( Mandatory = $false, ValueFromPipeline = $true )] [Alias( 'i', 'n', 'number' )] [Object] `
-            $WhichByAlphabet = $script:uSentinelValue_String,
+        [Parameter( Mandatory = $false, ValueFromPipeline = $true )] [Alias( 'w', 'i', 'n', 'wba', 'index', 'number' )] [object] $WhichByAlphabet = $script:w6_SentinelValue_String,
 
-        [Parameter( Mandatory = $false )] [Alias( 't', 'r', 'repeat' )] [Object] $Times = 1,
+        [Parameter( Mandatory = $false )] [Alias( 't' )] [object] $Times = $script:w6_List_Times_DefaultValue,
 
-        [Parameter( Mandatory = $false )] [Alias( 'o', 'p', 'path' )] [String] $OperatingPath = '.\',
+        [Parameter( Mandatory = $false )] [Alias( 'p', 'op', 'path' )] [string] $OperatingPath = ".$script:w6_PathSlash",
 
-        [Alias( 's' )] [Switch] $Stick,
+        [Parameter( Mandatory = $false )] [Alias( 'bl', 'blist', 'black', 'blacklist' )] [object] $AttributesBlackList = $script:w6_List_Attributes_Blacklist_cda,
 
-        [Alias( 'h' )] [Switch] $Help,
+        [Parameter( Mandatory = $false )] [Alias( 'pl', 'plist', 'priority', 'prioritylist' )] [object] $AttributesPriorityList = $script:w6_List_Attributes_PriorityList_cda,
 
-        [Alias( 'l' )] [Switch] $ListForce,
+        [Alias( 's' )] [switch] $Stick,
 
-        [Alias( 'nl' )] [Switch] $NoList,
+        [Alias( 'l', 'lf' )] [switch] $ListForce,
 
-        [Alias( 'w' )] [Switch] $WriteSelectedFile
+        [Alias( 'nl' )] [switch] $NoList = $Stick,
 
+        [Alias( 'wf', 'wsf', 'write' )] [switch] $WriteSelectedFiles = $script:w6_List_WriteSelectedFiles_DefaultValue_cda,
+
+        [Alias( 'f', 'ff', 'force' )] [switch] $ForceFiles = $script:w6_List_ForceFiles_DefaultValue,
+
+        [Alias( 'c', 'sc', 'scbl', 'clear', 'softclear' )] [switch] $SoftClearBeforeList = $script:w6_List_BeforeDisplay_SoftClearConsole
     )
 
-    function Write-uHelp {
-
-        Write-Host -Object ( @(
-                ''
-                "$( Get-uBoundary -LengthMultiplier $script:uBoundary_Length_Long -Direction $script:uBoundary_Direction_Name_Right )"
-                'cda - Command Help:'
-                ''
-                'Description:'
-                "$( $s2 )'cda' in an abbreviation for 'Change Directory Alphabetically'"
-                "$( $s2 )This function is an alternative to writing the directory names manually with the 'cd' command."
-                "$( $s2 )It allows the user to change the directory simply by writing the number of that directory from a displayed list."
-                ''
-                'Possible Usage:'
-                "$( $s2 )+ cda -> Get list of all directories in Your current working directory numbered and sorted alphabetically. ( Use this to check where You can Go )"
-                "$( $s2 )+ cda [some number] -> Use this to go to a directory"
-                "$( $s2 )+ cda 0 -> A special number -> This is the same as doing 'cd .\..` - Going back one directory level"
-                "$( $s2 )+ cda -Path -> Use a custom path with cda"
-                "$( $s2 )+ cda -Stick -> Enter stick mode -> This function will be called repeatedly until You quit it with '-1'"
-                ''
-                "For More Specific Argument Help and Available Aliases, do - 'help cda'"
-                "$( Get-uBoundary -LengthMultiplier $script:uBoundary_Length_Long -Direction $script:uBoundary_Direction_Name_Left )"
-                ''
-            ) -join "`n" )
-    }
-
-    Invoke-uCdaLikeFunction -WhichByAlphabet:$WhichByAlphabet -Times:$Times -OperatingPath:$OperatingPath `
-        -HelpFunction { Write-uHelp } -Stick:$Stick -Help:$Help -UseDirectories -ListForce:$ListForce `
-        -WriteSelectedFile:$WriteSelectedFile -NoList:$NoList
+    Invoke-w6_CdaLikeFunction `
+        -WhichByAlphabet:$WhichByAlphabet `
+        -Times:$Times `
+        -OperatingPath:$OperatingPath `
+        -AttributesBlackList:$AttributesBlackList `
+        -AttributesPriorityList:$AttributesPriorityList `
+        -Stick:$Stick `
+        -UseDirectories `
+        -ListForce:$ListForce `
+        -NoList:$NoList `
+        -WriteSelectedFiles:$WriteSelectedFiles `
+        -ForceFiles:$ForceFiles `
+        -SoftClearBeforeList:$SoftClearBeforeList
 
 }
-Set-uAliasBulk -Value 'cdf' -Aliases $script:uAliases_cdf -Scope 'Script'
-Set-uAliasBulk -Value 'cda' -Aliases $script:uAliases_cda -Scope 'Script'
+Set-w6_AliasBulk -Value 'cda' -Aliases $script:w6_Aliases_cda -Scope 'Script'
 
 
-if ( $script:uIsWindows ) {
+if ( $script:w6_IsWindows ) {
 
+    # Old PowerShell Session
+    # New Admin PowerShell Session
+
+    <#
+.SYNOPSIS
+    Quickly open a New Admin PowerShell Session at your Current Directory
+.DESCRIPTION
+    *Elev is a command from the PowerShell-File-Walker Commands Bundle
+    Elev works only on Windows devices
+
+    Elev means "Elevate", and refers to "Elevating (giving) Permissions"
+    Elev opens a New PowerShell Session at your Current Directory that has Admin Permissions
+
+    Elev can be used inside Admin and Non-Admin PowerShell Sessions
+
+    The steps:
+    1. You use Elev
+    2. Elev takes a Snapshot of your Current Working Directory in your Current PowerShell Session
+    3. Elev opens a New Admin PowerShell Session
+    - Elev may ask you for admin permission if it cannot open a New Admin PowerShell Session
+    4. Elev loads the PowerShell-File-Walker Commands Bundle to the New Admin PowerShell Session, because it heavily depends on it
+    5. Elev starts taskbar flashing for the New Admin PowerShell Session
+    6. Elev sets the Working Directory of the New Admin PowerShell Session to the directory from the Snapshot
+    7. If everything went well - Elev will write a message in the Old PowerShell Session about its success
+
+    Elev Aliases:  wudo (short for "Windows Sudo")
+    Use  'Get-Help elev -Examples'  or  'Get-Help elev -Full'  for more information
+.PARAMETER ExitCurrentSession
+    Should Elev use the "Exit" command in the Current PowerShell Session after launching the New Admin PowerShell Session?
+    ExitCurrentSession Aliases:  e  q  ex  qu  exit  quit
+
+    If you cancel the Admin Permission Ask Prompt - the "Exit" command will NOT be used
+.EXAMPLE
+    PS C:\Users\Jacob> elev
+    *Elev asks for admin permission* - *You allow it*
+    *Elev opened a New Admin PowerShell Session with 'C:\Users\Jacob' as the working directory*
+.EXAMPLE
+    PS C:\Users\Jacob> elev -ExitCurrentSession
+    *Elev asks for admin permission* - *You allow it*
+    *Elev opened a New Admin PowerShell Session with 'C:\Users\Jacob' as the working directory*
+    *Elev closed the Old PowerShell Session because everything went well*
+.EXAMPLE
+    PS C:\Users\Jacob> elev -ExitCurrentSession
+    *Elev asks for Admin Permission* - *You cancel it*
+    *Nothing is closed and nothing happens because Elev failed*
+.NOTES
+    Elevation method: Start-Process -RunAs. Please read the code for more info
+.LINK
+    [placeholder] - Online documentation (not finished yet)
+.LINK
+    Unelev - Open a New Non-Admin PowerShell Session at your current working directory
+#> # TODO ADD A NOTE THAT THIS COMMAND IS CUSTOMIZABLE
 
     function elev {
         param(
-            [Alias( 'e', 'q', 'ex', 'qu', 'exit', 'quit' )] [Switch] $ExitCurrentTerminal = `
-                $script:uElev_Default_ExitCurrentTerminal
+            [Alias( 'e', 'q', 'ex', 'qu', 'exit', 'quit' )] [switch] $ExitCurrentSession = $script:w6_Elev_Default_ExitCurrentSession
         )
 
         try {
-            $currentAbsoluteLocation = ( Convert-Path -Path ( Get-Location ) )
+            Write-Host 'Launching a New Admin PowerShell Session...'
 
-            Start-Process -FilePath 'powershell.exe' -Verb RunAs -ArgumentList (
+            $currentAbsoluteLocation = ( Get-Location )
+
+            Start-Process -FilePath $script:w6_PowerShellLaunchCommand -Verb RunAs -ArgumentList (
                 '-NoExit',
                 '-Command',
-                '( $host.UI.RawUI.WindowTitle = $script:uElev_NewTerminalTitle );',
-                '( Start-uTaskbarFlashingForConsoleWindow );',
-                "( Set-uNearestAvailableLocationFromPath -AbsolutePath '$currentAbsoluteLocation' );",
-                "( Set-uOperatingPathIfValid -Path ( Get-uNearestAvailableLocationFromPath -AbsolutePath '$currentAbsoluteLocation' ) -Silent:`$script:uSetOperatingPath_DefaultSilent_IfUsedBy_Script );",
-                ( 'Write-Host """You''ve Launched An Elevated PowerShell Prompt! ( IsAdmin ', `
-                    '$( $script:uWindowsTerminalIsAdmin ) )."""' -join '' ) -join ' ' )
+                "( . { if ( -not `$script:w6_AlreadyLoaded ) { . '$script:w6_Product_Path' } } );",
+                "( . { if ( '$script:w6_Elev_NewConsoleTitle' -ne '$script:w6_ElevationCommands_UnsetTitle' ) { `$host.UI.RawUI.WindowTitle = '$script:w6_Elev_NewConsoleTitle' } } );",
+                "( Set-w6_NearestAvailableLocationFromPath -AbsolutePath '$currentAbsoluteLocation' );", # todo Improvement Idea: save Get-w6_NearestAvailableLocationFromPath to a variable
+                "( Set-w6_OperatingPathIfValid -Path ( Get-w6_NearestAvailableLocationFromPath -AbsolutePath '$currentAbsoluteLocation' ) -Silent:`$script:w6_SetOperatingPath_DefaultParameterValue_Silent_IfUsedBy_Script );",
+                "( Start-w6_TaskbarFlashingForCurrentConsoleWindow -FlashTimes $script:w6_TaskbarFlashing_FlashTimes -OneFlashDurationMilliseconds $script:w6_TaskbarFlashing_OneFlashDurationMilliseconds );",
+                '( Write-Host """You''ve Launched A New Admin PowerShell Session!""" )' -join ' ' )
 
-            if ( $ExitCurrentTerminal ) {
-                Exit
-            }
-            else {
-                Write-Host 'Launching an elevated PowerShell terminal...'
+            if ( $ExitCurrentSession ) {
+                Write-Host 'Closing the Current PowerShell Session...'
+                exit
             }
         }
         catch {
-            $Introduction = 'Something went wrong while launching a new elevated terminal.'
-            Write-uShortErrorCatchMessage -Introduction $Introduction -ErrorObject $_
+            $errorIntroduction = 'Something went wrong while opening a New Admin PowerShell Session'
+            Write-w6_ShortErrorCatchMessage -Introduction $errorIntroduction -ErrorObject $_
         }
         # Improvement idea: Be more explicit with error catching here.
 
     }
+    Set-w6_AliasBulk -Value 'elev' -Aliases $script:w6_Aliases_elev -Scope 'Script'
 
-    Set-uAliasBulk -Value 'elev' -Aliases $script:uAliases_elev -Scope 'Script'
 
+    <#
+.SYNOPSIS
+    Quickly open a New Non-Admin PowerShell Session at your Current Directory
+.DESCRIPTION
+    *Unelev is a command from the PowerShell-File-Walker Commands Bundle
+    Unelev works only on Windows devices
 
-    function noelev {
+    Unelev means "Unelevate", and refers to "Unelevating (revoking) Permissions"
+    Unelev opens a New PowerShell Session at your Current Directory that has User (Non-Admin) Permissions
+
+    Unelev can be used inside Admin and Non-Admin PowerShell Sessions
+
+    The steps:
+    1. You use Unelev
+    2. Unelev takes a Snapshot of your Current Working Directory in your Current PowerShell Session
+    3. Unelev opens a New Non-Admin PowerShell Session
+    4. Unelev loads the PowerShell-File-Walker Commands Bundle to the New Non-Admin PowerShell Session, because it heavily depends on it
+    5. Unelev starts taskbar flashing for the New Non-Admin PowerShell Session
+    6. Unelev sets the Working Directory of the New Non-Admin PowerShell Session to the directory from the Snapshot
+    7. If everything went well - Unelev will write a message in the Old PowerShell Session about its success
+
+    Unelev Aliases:  nudo (short for "No Sudo")
+    Use  'Get-Help unelev -Examples'  or  'Get-Help unelev -Full'  for more information
+.PARAMETER ExitCurrentSession
+    Should Unelev use the "Exit" command in the Current PowerShell Session after launching the New Non-Admin PowerShell Session?
+    ExitCurrentSession Aliases:  e  q  ex  qu  exit  quit
+
+    If Unelev fails - the "Exit" command will NOT be used
+.EXAMPLE
+    PS C:\Users\Jacob> unelev
+    *Unelev opened a New Non-Admin PowerShell Session with 'C:\Users\Jacob' as the working directory*
+.EXAMPLE
+    PS C:\Users\Jacob> unelev -ExitCurrentSession
+    *Unelev opened a New Non-Admin PowerShell Session with 'C:\Users\Jacob' as the working directory*
+    *Unelev closed the Old PowerShell Session because everything went well*
+.EXAMPLE
+    PS C:\Users\Jacob> unelev -ExitCurrentSession
+    *Unelev fails*
+    *Nothing is closed and nothing happens because Unelev failed*
+.NOTES
+    Unelevation method: Windows Task Scheduler - Scheduling a one-time task to start PowerShell. Then immediately calling the scheduled task - then deleting that task. Please read the code for more info
+.LINK
+    [placeholder] - Online documentation (not finished yet)
+.LINK
+    Elev - Open an New Admin PowerShell Session at your current working directory
+#> # TODO ADD A NOTE THAT THIS COMMAND IS CUSTOMIZABLE
+
+    function unelev {
         param(
-            [Alias( 'e', 'q', 'ex', 'qu', 'exit', 'quit' )] [Switch] $ExitCurrentTerminal = `
-                $script:uNoElev_Default_ExitCurrentTerminal
+            [Alias( 'e', 'q', 'ex', 'qu', 'exit', 'quit' )] [switch] $ExitCurrentSession = $script:w6_Unelev_Default_ExitCurrentSession
         )
 
-        $currentAbsoluteLocation = ( Convert-Path -Path ( Get-Location ) )
-
-        function Get-uNoElevScheduledTaskName {
-            $scheduledTasksNames = ( [String[]] ( Get-ScheduledTask ).TaskName )
-            $scheduledTasksNamesHashSet = ( [System.Collections.Generic.HashSet[String]]::new(
-                    $scheduledTasksNames ) )
-
-            $taskNameIndex = 0
-
-            while ( $true ) {
-                $taskNameIndex++
-
-                $taskNameCandidate = ( "$script:uNoElev_ScheduledTaskName_DeleteMePrefix noelev - Start New ",
-                    "Terminal ( $taskNameIndex )" -join '' )
-
-                if ( $taskNameCandidate -notin ( $scheduledTasksNamesHashSet ) ) {
-                    return $taskNameCandidate
-                }
-            }
-        }
+        $currentAbsoluteLocation = ( Get-Location )
 
         try {
-            Unregister-uDeleteMeTasks
+            Write-Host 'Launching a New Non-Admin PowerShell Session...'
 
-            $action = ( New-ScheduledTaskAction -Execute 'powershell.exe' -Argument (
+            Unregister-w6_RemoveMeNamedTasks
+
+            $taskAction = ( New-ScheduledTaskAction -Execute $script:w6_PowerShellLaunchCommand -Argument (
                     '-NoExit',
                     '-Command',
-                    '( $host.UI.RawUI.WindowTitle = $script:uNoElev_NewTerminalTitle );',
-                    "( Set-uNearestAvailableLocationFromPath -AbsolutePath '$currentAbsoluteLocation' );",
-                    "( Set-uOperatingPathIfValid -Path ( Get-uNearestAvailableLocationFromPath -AbsolutePath '$currentAbsoluteLocation' ) -Silent:`$script:uSetOperatingPath_DefaultSilent_IfUsedBy_Script );",
-                    '( Write-Host """You''ve Launched a Normal PowerShell Prompt! ( IsAdmin $( $script:uWindowsTerminalIsAdmin ) ).""" )' `
+                    "( . { if ( -not `$script:w6_AlreadyLoaded ) { . '$script:w6_Product_Path' } } );",
+                    "( . { if ( '$script:w6_Unelev_NewConsoleTitle' -ne '$script:w6_ElevationCommands_UnsetTitle' ) { `$host.UI.RawUI.WindowTitle = '$script:w6_Unelev_NewConsoleTitle' } } );",
+                    "( Set-w6_NearestAvailableLocationFromPath -AbsolutePath '$currentAbsoluteLocation' );", # todo Improvement Idea: save Get-w6_NearestAvailableLocationFromPath to a variable
+                    "( Set-w6_OperatingPathIfValid -Path ( Get-w6_NearestAvailableLocationFromPath -AbsolutePath '$currentAbsoluteLocation' ) -Silent:`$script:w6_SetOperatingPath_DefaultParameterValue_Silent_IfUsedBy_Script );",
+                    "( Start-w6_TaskbarFlashingForCurrentConsoleWindow -FlashTimes $script:w6_TaskbarFlashing_FlashTimes -OneFlashDurationMilliseconds $script:w6_TaskbarFlashing_OneFlashDurationMilliseconds );",
+                    '( Write-Host """You''ve Launched a Non-Admin PowerShell Prompt!""" )' `
                         -join ' ' )
             )
-            $trigger = ( New-ScheduledTaskTrigger -Once -At ( $script:uUnixEpochDate ) )
-            $taskName = ( Get-uNoElevScheduledTaskName )
-            $settings = ( New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries ) # Do not forget the crucial
-            # -AllowStartIfOnBatteries when editing this area.
+            $taskTrigger = ( New-ScheduledTaskTrigger -Once -At ( $script:w6_UnixEpochDate ) )
+            $taskName = ( Get-w6_UnelevScheduledTaskName )
+            $taskSettings = ( New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries )
 
-            $windowsTerminalProcessesSnapshot = @( Get-uWindowsTerminalProcesses )
-
-            Register-ScheduledTask -Action $action -Trigger $trigger -TaskName $taskName -Settings $settings -Force | `
+            Register-ScheduledTask -Action $taskAction -Trigger $taskTrigger -TaskName $taskName -Settings $taskSettings -Force | `
                     Start-ScheduledTask
 
-            Unregister-uDeleteMeTasks
+            Unregister-w6_RemoveMeNamedTasks
 
-            $windowsTerminalProcessesSnapshot_New = ( Get-uWindowsTerminalProcesses )
-            $newWindowsTerminalProcesses = @( @( $windowsTerminalProcessesSnapshot_New ) | Where-Object -FilterScript {
-                    $_ -notin $windowsTerminalProcessesSnapshot }
-            )
-
-            if ( 0 -eq $newWindowsTerminalProcesses.Length ) {
-                @( @( $windowsTerminalProcessesSnapshot_New ) | ForEach-Object -Process {
-                        Start-uTaskbarFlashingForProcess -Process $_ }
-                )
-            }
-            else {
-                @( @( $newWindowsTerminalProcesses ) | ForEach-Object -Process {
-                        Start-uTaskbarFlashingForProcess -Process $_ }
-                )
-            }
-
-            if ( $ExitCurrentTerminal ) {
-                Exit
+            if ( $ExitCurrentSession ) {
+                Write-Host 'Closing the Current PowerShell Session...'
+                exit
             }
 
         }
         catch {
-            $Introduction = 'Something went wrong while opening a new normal terminal.'
-            Write-uShortErrorCatchMessage -Introduction $Introduction -ErrorObject $_
+            $errorIntroduction = 'Something went wrong while opening a New Non-Admin PowerShell Session'
+            Write-w6_ShortErrorCatchMessage -Introduction $errorIntroduction -ErrorObject $_
         }
         # Improvement idea: Be more explicit with error catching here.
 
     }
-
-    Set-uAliasBulk -Value 'noelev' -Aliases $script:uAliases_noelev -Scope 'Script'
+    Set-w6_AliasBulk -Value 'unelev' -Aliases $script:w6_Aliases_unelev -Scope 'Script'
 }
 
 
 # --------------------------- INTRODUCTION AND SETUP --------------------------
 
-if ( $script:uIntroduction_Toggle ) {
-    Write-uFileIntroduction
+if ( $script:w6_Introduction_Toggle ) {
+    Write-FileWalkerIntroduction -IsAutomatic
 }
 
-if ( $script:uAlways_Write_Approximate_Loading_Time ) {
-    Write-uApproximateTimeSinceScriptStart
+foreach ( $errorCatchMessage in $script:w6_Config_Error_CathMessages ) {
+    Write-Host $errorCatchMessage
 }
 
-# ---------------------------------> LICENSE <---------------------------------
-# MIT License
-
-# Copyright (c) 2023 Jakub Wojnowski
-
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# in the Software without restriction, including without limitation the rights
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-
-# The above copyright notice and this permission notice shall be included in all
-# copies or substantial portions of the Software.
-
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
+if ( $script:w6_Write_Approximate_Loading_Time ) {
+    Write-w6_ApproximateTimeSinceScriptStart
+}
