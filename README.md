@@ -69,6 +69,12 @@ v1.0.0 baby! Woo hoo! :tada: :tada: :tada:
 Go to [releases](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/releases/new) to download!
 
 
+Here are the 4 main commands and their help messages: `note: if you want to understand what this project is, these help messages are your best choice`
+- [Cda](https://gist.github.com/JakuWorks/954a9d9cba66d078be9f629fa6265665) (Change Directory Alphabetically) most important command
+- [Cdf](https://gist.github.com/JakuWorks/21c4371a10a782326e793ec270e40ea6) (Current Directory File) select files in a cda-like manner
+- [Elev](https://gist.github.com/JakuWorks/26878e257feca06120ea142ad54c283b) Elevate your PowerShell session to admin permissions
+- [Unelev](https://gist.github.com/JakuWorks/bfe8c744a6232082e434e5ea64749041) Unelevate your PowerShell session back to user permissions
+
 Temporary readme advertisement documentation:
 
 MAIN COMMANDS
