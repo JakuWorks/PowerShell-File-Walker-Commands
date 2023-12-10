@@ -63,6 +63,8 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
 </p>
 
 ---
+this readme is temporary, expect a better one very soon
+
 
 v1.0.0 baby! Woo hoo! :tada: :tada: :tada:
 
