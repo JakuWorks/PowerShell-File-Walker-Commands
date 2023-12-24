@@ -6,7 +6,7 @@
   alt="Banner With 'PowerShell File Walker' Text"
 />
 
-$${\Large \color{White}File \space Navigation \space Made \color{Green} \space Easy }$$
+$${\Large \color{LightBlue}File \space Navigation \space Made \color{Green} \space Easy }$$
 
 <p align="center">
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/releases">
@@ -63,6 +63,11 @@ $${\Large \color{White}File \space Navigation \space Made \color{Green} \space E
 </p>
 
 ---
+
+# PowerShell-File-Walker Commands Bundle
+
+
+
 this readme is temporary, expect a better one very soon
 
 
