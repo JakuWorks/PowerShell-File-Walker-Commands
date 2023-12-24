@@ -6,7 +6,7 @@
   alt="Banner With 'PowerShell File Walker' Text"
 />
 
-$${\Large \color{#00A64F}File \space Navigation \color{DarkOrange} \space Made \space Easy }$$
+$${\Large \color{#f0b501}File \space Navigation \color{#3b7ded} \space Made \space Easy }$$
 
 <p align="center">
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/releases">
