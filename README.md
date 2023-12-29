@@ -1,11 +1,3 @@
-<img
-  align="center"
-  src=".\GitHub-Assets\Banner.webp"
-  width="1200"
-  height="250"
-  alt="Banner With 'PowerShell File Walker' Text"
-/>
-
 $${\Large \color{#f0b501}File \space Navigation \color{#3b7ded} \space Made \space Easy }$$
 
 <p align="center">
