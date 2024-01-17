@@ -1,10 +1,3 @@
-<img
-  align="center"
-  src=".\GitHub-Assets\Banner.webp"
-  width="1200"
-  height="250"
-  alt="Banner With 'PowerShell File Walker' Text"
-/>
 
 $${\Large \color{#f0b501}File \space Navigation \color{#3b7ded} \space Made \space Easy }$$
 
@@ -46,7 +39,6 @@ $${\Large \color{#f0b501}File \space Navigation \color{#3b7ded} \space Made \spa
     />
   </a>
 
-  <!-- TODO ADD A MEANINGFUL HREF -->
   <a>
     <img
       src=".\GitHub-Assets\platform-Windows_Linux_MacOS-008080.svg"
@@ -58,8 +50,9 @@ $${\Large \color{#f0b501}File \space Navigation \color{#3b7ded} \space Made \spa
 </p>
 
 <p align="center">
-  <a href="TODO">W.I.P.</a> •
-  <a href="TODO2">W.I.P.</a>
+  <!-- Todo: Add a wiki link once I create a wiki -->
+  <a href="TODO">Installation Guide</a> •
+  <a href="https://github.com/JakuWorks/PowerShell-File-Walker-Commands/releases">Releases</a>
 </p>
 
 ---
