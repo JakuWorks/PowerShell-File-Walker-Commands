@@ -59,38 +59,31 @@ $${\Large \color{#f0b501}File \space Navigation \color{#3b7ded} \space Made \spa
 
 # PowerShell-File-Walker Commands Bundle
 
+A set of powerful commands for changing directories written in pure PowerShell Script (with a few C# imports)
 
+The description is W.I.P. but here is a summary:
 
-this readme is temporary, expect a better one very soon
+The `cda` command (without any arguments) will write a simple gui somewhat like this:
+```
+------------>
+[1] Folder1
+[2] Folder2
+<------------
+```
+If you use the command like this `cda 1` - you will be moved to Folder1.
+If you want to - you can chain these: `cda 1,2`
+Or you can go in -stick mode that will recursively call the `cda` command and ask you to choose a directory to go there. And you can exit outta stick mode by passing q as your answer
 
+There are also:
+- `cdf` - a version of cda but for selecting files (obviously does not support stick mode)
+- `wudo` - starts a new Elevated PowerShell Terminal at the same location you are in
+- `nudo` - starts a new Not-Elevated PowerShell Terminal
 
-v1.0.0 baby! Woo hoo! :tada: :tada: :tada:
-
-Go to [releases](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/releases/new) to download!
-
-
-Here are the 4 main commands and their help messages: `note: if you want to understand what this project is, these help messages are your best choice`
-- [Cda](https://gist.github.com/JakuWorks/954a9d9cba66d078be9f629fa6265665) (Change Directory Alphabetically) most important command
-- [Cdf](https://gist.github.com/JakuWorks/21c4371a10a782326e793ec270e40ea6) (Current Directory File) select files in a cda-like manner
-- [Elev](https://gist.github.com/JakuWorks/26878e257feca06120ea142ad54c283b) Elevate your PowerShell session to admin permissions
-- [Unelev](https://gist.github.com/JakuWorks/bfe8c744a6232082e434e5ea64749041) Unelevate your PowerShell session back to user permissions
-
-Temporary readme advertisement documentation:
-
-MAIN COMMANDS
-
-cda - Instead of using `cd` and having to write the names. Simply use `cda [number]` to go to an item from the list displayed by using `cda` without anu numbers
-
-cdf - Same as cda, but for getting the full path of selected items
-
-BONUS COMMANDS
-
-elev - elevate your powershell session AND KEEP THE current working directory
-unelev - unelevate your powershell session and keep the current working directory
-
-
-Main Features:
-- 4 awesome commands
-- 89 settings!
-- Extensive documentation (use Get-Help [command]) to display it
-- This script is so good even I use it personally
+Since there is no fully finished installation guide, you will need knowledge of PowerShell (or a stable WiFi connection) to understand topics touched in this very short installation summary:
+1. Download the latest release .zip file  
+2. Extract this file from the .zip `PowerShell-File-Walker.ps1`  
+3. Here you have 2 options  
+  a) Add this file to your PowerShell Profile (loads in about 300ms)  
+  b) Manually run the file  
+  `psst: you need to run the file IN YOUR SCOPE, so you can actually use the commands.  Please use the . dot operator. Example of running the file using relative paths:` `. ".\PowerShell-File-Walker.ps1"`
+4. If everything worked you should get an introductionary message (it will only display three times)
