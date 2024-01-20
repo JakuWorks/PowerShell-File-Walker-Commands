@@ -63,7 +63,7 @@ A set of powerful commands for changing directories written in pure PowerShell S
 
 The description is W.I.P. but here is a summary:
 
-The `cda` command (without any arguments) will write a simple gui somewhat like this:
+The `cda` command (without any arguments) will write a simple message somewhat like this:
 ```
 ------------>
 [1] Folder1
