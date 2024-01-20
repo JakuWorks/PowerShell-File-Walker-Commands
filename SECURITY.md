@@ -2,7 +2,7 @@
 
 ## Reporting Vulnerabilities
 
-Do not hesitate to report (suspected) security vulnerabilities at `jakuworksofficial@gmail.com`
+Do not hesitate to report suspected or real security vulnerabilities at `jakuworksofficial@gmail.com`
 
 <br>
 
@@ -10,4 +10,4 @@ Do not hesitate to report (suspected) security vulnerabilities at `jakuworksoffi
 
 **If the vulnerability is rejected, You may post it publicly unless the rejection is withdrawn.**
 
-**After the vulnerability is fixed, You may disclose the vulnerability details publicly.**
+**After the vulnerability is fixed, You may disclose the vulnerability details publicly if you wish to.**
