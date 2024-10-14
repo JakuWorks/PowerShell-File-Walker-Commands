@@ -85,5 +85,5 @@ Since there is no fully finished installation guide, you will need knowledge of 
 3. Here you have 2 options  
   a) Add this file to your PowerShell Profile (loads in about 300ms)  
   b) Manually run the file  
-  `psst: you need to run the file IN YOUR SCOPE, so you can actually use the commands.  Please use the . dot operator. Example of running the file using relative paths:` `. ".\PowerShell-File-Walker.ps1"`
+  `psst: you need to run the file IN YOUR SCOPE, so you can actually use the commands. To do that use the '.' dot operator. Example of running the file:` `. "C:\PowerShell-File-Walker.ps1"`
 4. If everything worked you should get an introductionary message (it will only display three times)
