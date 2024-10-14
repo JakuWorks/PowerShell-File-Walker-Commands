@@ -87,3 +87,8 @@ Since there is no fully finished installation guide, you will need knowledge of 
   b) Manually run the file  
   `psst: you need to run the file IN YOUR SCOPE, so you can actually use the commands. To do that use the '.' dot operator. Example of running the file:` `. "C:\PowerShell-File-Walker.ps1"`
 4. If everything worked you should get an introductionary message (it will only display three times)
+
+### Note
+This project IS functional if set up correctly.
+However is old. It was rushed too. And bad programming practices were applied in it.
+It's state does not reflect my current abilities
