@@ -23,13 +23,6 @@ $${\Large \color{#f0b501}File \space Navigation \color{#3b7ded} \space Made \spa
     />
   </a>
 
-  <a href="https://github.com/JakuWorks/Powershell-File-Walker/pulls">
-    <img
-      src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg"
-      alt="View Pull Requests"
-    />
-  </a>
-
   <a href="https://github.com/JakuWorks/Powershell-File-Walker/blob/main/LICENSE">
     <img
       src=".\GitHub-Assets\license-MIT-blue.svg"
