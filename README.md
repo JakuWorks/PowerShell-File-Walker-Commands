@@ -76,7 +76,7 @@ Or you can go in -stick mode that will recursively call the `cda` command and as
 
 There are also:
 - `cdf` - a version of cda but for selecting files (obviously does not support stick mode)
-- `wudo` - starts a new Elevated PowerShell Terminal at the same location you are in
+- `wudo` - starts a new Elevated PowerShell Terminal in the same location you are in
 - `nudo` - starts a new Not-Elevated PowerShell Terminal
 
 Since there is no fully finished installation guide, you will need knowledge of PowerShell (or a stable WiFi connection) to understand topics touched in this very short installation summary:
