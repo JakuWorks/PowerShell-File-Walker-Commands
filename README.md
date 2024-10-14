@@ -90,5 +90,5 @@ Since there is no fully finished installation guide, you will need knowledge of 
 
 ### Note
 This project IS functional if set up correctly.
-However is old. It was rushed too. And bad programming practices were applied tp it.
+However is old. It was rushed too. And bad programming practices were applied to it.
 It's state does not reflect my current abilities
