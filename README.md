@@ -6,11 +6,12 @@ PowerShell-File-Walker-Commands is a bundle of four commands `cda`, `cdf`, `elev
 
 
 ## Commands
-Here are all the commands, short descriptions and usage instructions
+Here are all the commands, brief descriptions and usage instructions
 
 - `cda` - "Change Directory Alphabetically"
 - `cda` - Display a nice list of all directories in your current path
 - `cda n` - Go to the n'th directory from the list  
+- `cda -Stick` - Enter special "sticky" mode
 
 [READ MORE ABOUT CDA](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/cda-guide.txt)
 
@@ -31,6 +32,14 @@ Here are all the commands, short descriptions and usage instructions
 [READ MORE ABOUT UNELEV](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/unelev-guide.txt)
 
 
+## Configuration
+This software can be __extensively__ configured:
+1. Open `PowerShell-File-Walker.ps1` in a text editor
+2. Scroll down and look for a "Settings" header (should be around line 80)
+3. Edit the variables
+4. Save
+
+
 ## Used Languages
 - PowerShell (with a few C# imports)
 
@@ -45,7 +54,7 @@ Here are all the commands, short descriptions and usage instructions
 - 2025 - 03.03.2025 (1 day) (DD.MM.YYYY) - updating the README, changing a few comments and tiny improvements
 
 
-## Usage
+## Download & Installation
 1. Download the repository (click the green "Code" button; click "Download ZIP")
 2. Set execution policy to "Bypass"
 ```
