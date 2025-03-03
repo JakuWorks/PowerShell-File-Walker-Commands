@@ -30,4 +30,4 @@ However this is very rare. On top of that there are many ways to bypass PowerShe
 
 ### Afterword
 
-Execution policies do not stop malware developers from using PowerShell code. It is pretty easy to work around them. It does not matter for them do you have a `Restricted` or a `Bypass` policy too much.
+Execution policies do NOT stop malware developers from using PowerShell code. They are just a restriction for YOU not to shoot yourself in the foot
