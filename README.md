@@ -8,24 +8,24 @@ PowerShell-File-Walker-Commands is a bundle of four commands `cda`, `cdf`, `elev
 ## Commands
 Here are all the commands, short descriptions and usage instructions
 
-cda - Change Directory Alphabetically
+- `cda` - "Change Directory Alphabetically"
 - `cda` - Display a nice list of all directories in your current path
 - `cda n` - Go to the n'th directory from the list  
 
 [READ MORE ABOUT CDA](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/cda-guide.txt)
 
-cdf - Current Directory File
+- `cdf` - "Current Directory File"
 - `cdf` - Display a nice list of all files and directories in your current path
 - `cdf n` - Get the path of the n'th file from the list  
 
 [READ MORE ABOUT CDF](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/cdf-guide.txt)
 
-elev - Elevate:
+- `elev` - "Elevate"
 - `elev` - Asks for admin permission and opens a new elevated PowerShell prompt at your current directory  
 
 [READ MORE ABOUT ELEV](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/elev-guide.txt)
 
-unelev - Unelevate:
+- `unelev` - "Unelevate"
 - `unelev` - Opens a new normal PowerShell prompt at your current directory  
 
 [READ MORE ABOUT UNELEV](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/unelev-guide.txt)
