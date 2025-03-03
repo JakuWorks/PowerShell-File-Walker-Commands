@@ -26,7 +26,7 @@ PowerShell scripts are VERY RARELY used by malware. So if you would get a virus 
 
    - If you had a `Bypass` execution policy - the virus would do the action
 
-However this should be really rare. Because why would they use a PowerShell script (which must be a file) to run PowerShell commands? There is a dozen other ways do run PowerShell code ignoring the execution policy. Why would they do that?
+However this is very rare. On top of that there are many ways to bypass PowerShell's execution policy that a malicious program could exploit. This is why this arguments is very weak
 
 ### Afterword
 
