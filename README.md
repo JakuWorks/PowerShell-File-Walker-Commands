@@ -2,24 +2,28 @@
 
 
 ## Short Description
-A suite of four commands (cda, cdf, elev, unelev) that assist in common PowerShell interactive shell tasks
+A suite of four commands `cda`, `cdf`, `elev`, `unelev` that help with common PowerShell shell tasks
 
-cda - `change directory alphabetically`:
-- `cda` - display a nicely formatted list of all dirs in your cwd
-- `cda n` - go to the n'th directory from the list  
+cda - Change Directory Alphabetically
+- `cda` - Display a nice list of all directories in your current path
+- `cda n` - Go to the n'th directory from the list  
+
 [READ MORE ABOUT CDA](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/cda-guide.txt)
 
-cdf - `current directory file`:
-- `cdf` - display a nice formatted list of all files and directories in your cwd
-- `cdf n` - get the path of the n'th file from the list  
+cdf - Current Directory File
+- `cdf` - Display a nice list of all files and directories in your current path
+- `cdf n` - Get the path of the n'th file from the list  
+
 [READ MORE ABOUT CDF](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/cdf-guide.txt)
 
-elev - `elevate`:
-- `elev` - asks for admin permission and opens an elevated PowerShell prompt at your current directory  
+elev - Elevate:
+- `elev` - Asks for admin permission and opens a new elevated PowerShell prompt at your current directory  
+
 [READ MORE ABOUT ELEV](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/elev-guide.txt)
 
-unelev - `unelevate`:
-- `unelev` - simply opens a non-elevated PowerShell prompt at your current directory  
+unelev - Unelevate:
+- `unelev` - Opens a new normal PowerShell prompt at your current directory  
+
 [READ MORE ABOUT UNELEV](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/unelev-guide.txt)
 
 
