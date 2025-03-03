@@ -7,20 +7,20 @@ A suite of four commands (cda, cdf, elev, unelev) that assist in common PowerShe
 cda - `change directory alphabetically`:
 - `cda` - display a nicely formatted list of all dirs in your cwd
 - `cda n` - go to the n'th directory from the list  
-[READ MORE ABOUT CDA](https://example.com)
+[READ MORE ABOUT CDA](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/cda-guide.txt)
 
 cdf - `current directory file`:
 - `cdf` - display a nice formatted list of all files and directories in your cwd
-- `cdf n` - get the path of the n'th file from the list
-[READ MORE ABOUT CDF](https://example.com)
+- `cdf n` - get the path of the n'th file from the list  
+[READ MORE ABOUT CDF](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/cdf-guide.txt)
 
 elev - `elevate`:
-- `elev` - asks for admin permission and opens an elevated PowerShell prompt at your current directory
-[READ MORE ABOUT ELEV](https://example.com)
+- `elev` - asks for admin permission and opens an elevated PowerShell prompt at your current directory  
+[READ MORE ABOUT ELEV](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/elev-guide.txt)
 
 unelev - `unelevate`:
-- `unelev` - simply opens a non-elevated PowerShell prompt at your current directory
-[READ MORE ABOUT UNELEV](https://example.com)
+- `unelev` - simply opens a non-elevated PowerShell prompt at your current directory  
+[READ MORE ABOUT UNELEV](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/unelev-guide.txt)
 
 
 ## Used Languages
@@ -43,7 +43,7 @@ unelev - `unelevate`:
 ```
 Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
 ```
-[READ ABOUT THE RISKS OF CHANGING THE EXECUTION POLICY](https://example.com)
+[READ ABOUT THE RISKS OF CHANGING THE EXECUTION POLICY](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/Risks-Of-Changing-Execution-Policy.md)
 
 3. Run the `PowerShell-File-Walker.ps1` file in your current context. Template:
 ```
