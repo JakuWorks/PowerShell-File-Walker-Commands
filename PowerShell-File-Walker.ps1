@@ -5,6 +5,9 @@ $script:w6_StartingWindowTitle = [string] $host.UI.RawUI.WindowTitle
 $script:w6_Product_Name = [string] 'PowerShell-File-Walker Commands Bundle'
 $script:w6_Product_Version = [string] 'v1.0.0'
 
+# UPDATE 2025 - LOADING USER CONFIGURATION HAS BEEN DEPRECATED
+# UPDATE 2025 - WIKI HAS BEEN CANCELLED
+
 # BY USING/MODIFYING/SHARING/DEALING WITH THIS SOFTWARE, YOU AGREE TO ITS LICENSE!
 
 # ---------------------------------- LICENSE ----------------------------------
@@ -32,58 +35,22 @@ $script:w6_Product_Version = [string] 'v1.0.0'
 # -------------------------------- Introduction -------------------------------
 
 # This file contains cda and cdf functions that make file navigation in PowerShell a piece of cake!
-# It also contains the elev and unelev functions
-
-#                 I'd appreciate a notice of the The Original Project
-#                 in Your edits/forks - https://github.com/JakuWorks/PowerShell-File-Walker
-#                 I'm no lawyer, so make sure the MIT doesn't ask for that already
-
-# Note about forks:
-#       One of the main reasons for making this project was to fill my GitHub with stars - so I could have a good portfolio during freelancing
-#       I would love to see people fork/upgrade this software - so we can help more people. But please keep in mind that I really need a good portfolio to even have a chance at freelancing
-#       To be clear: My dream outcome is that you place message and a link to the original project at the bottom of your README, and encourage people to support the original project by giving it a star
-
-# Note about contributing to beta:
-#       Tl;dr - Don't do it yet... Wait until I create a better contributing experience for you
-#       Writing a contributor's guide will be done at the end stage of development. Right now (!) the contributing experience is terrible. I recommend not doing it YET, because there is ZERO onboarding
-#       No one likes declining other people's commits. I hate it too... But unless a pull request is GREAT, and I would have zero concerns - I literally cannot accept it and therefore I MUST decline it
-
-# Note about this project:
-#       This was intended to be a "small personal project", that would take me 2 weeks. It's the 4'th month now and the project is still not finished...
-#
-#       Today (4'th of November 2023) and I've almost finished the Documentation
-#
-#       After the documentation is done, there will be a "wait and see" period
-#       The "wait and see" period will last until this project becomes popular (so 40-100 stars)
-#       I will focus on something else during this period
-#
-#       After this project reaches some level popularity, I will try to find the time, and revolutionize all the documentation - the code will mostly remain unchanged
-#       The "revolution" period is where I depersonalize this project, and make it more professional
-#       I will probably remove the Introduction section in this script entirely, and replace it with something better, more depersonalized
-#       The documentation will contain less "I", and more "we"
-#       This is also where I make documentation, guidelines, etc. for contributors, and prepare this project to be continued by others, so I can focus on other things
-#
-#       This is as far as the plans go right now. It's hard to predict what will happen in the future
-
-# Note about irrelevant comments:
-#       Please remove/edit any no-longer-relevant comments
-
-# Note about the data file:
-#       The script creates a .dotfile at the user's home directory. It is used to store data. Currently the .dotfile has only one thing to store - the loads count.
-#       The writing/reading code is very primitive. Just simple ReadAllText and WriteAllText operations
-#       To store more than one piece of information you'd have to upgrade this script
+# It also contains the elev and unelev functions as bonuses
 
 # Note about prefixes:
-#       Most script-scope variables and functions are prefixed to avoid the user overriding them them by mistake
+#       Most variables and functions are prefixed (currently with "w6_") to avoid the user/other PowerShell scripts from overriding them them by mistake
 
-# Note about sentinel values:
-#       Many $false, $null, '', and other negative values were replaced with $script:w6_SentinelValue_String,
-#       because it's easier to compare and evaluate a sentinel string than a $null
+#                 I'd appreciate a notice of the The Original Project in Your edits/forks
+#                 I'm no lawyer, so make sure the MIT doesn't ask for that already
+
+# Note about the data file:
+#       The script creates a .dotfile at the user's home directory. It is used to store persistent data
+#       Currently the .dotfile has only one thing to store - the loads count
+#       To store more than one piece of information you'd have to upgrade this script
 
 # Helpful RegExes to make code formatting easier:
-#       Here are some RegExes to help find formatting overlooks:
 
-#       These RegExes should work with VSCode's Ctrl+F:
+#    These RegExes should work with VSCode's Ctrl+F feature:
 
 #       - Find () brackets without spaces -  (?:(?<! |\(|\n)\))|(?:\((?! |\)|\n))
 
@@ -95,21 +62,21 @@ $script:w6_Product_Version = [string] 'v1.0.0'
 
 #       - Find script-scope variables without 'w6_' -  (?:\$script:[^w][^6][^_]\w*)
 
-#       These RegExes do not work with VSCode's Ctrl+F
+#    These RegExes do not work with VSCode's Ctrl+F feature - use an alternative tool:
 
 #       - Find variables with missing '$script:' (experimental)
 #           \$(?!script:)(\w+(?!\w))(?<=\$script:\1[\S\s]*)
 #         Works on https://regex101.com with the ECMAScript (JavaScript) flavour
-#         Explanation: If a script-scope variable is defined with '$script:', BUT later the variable is referenced WITHOUT '$script:' - the reference WITHOUT '$script' should be matched by this regex
+#         Explanation: If a script-scope variable is defined with '$script:' - BUT LATER the variable is referenced WITHOUT '$script:' - the reference WITHOUT '$script' should be found by this regex
 #         e.g.:
 #         $RegexTest_Hello        <- doesn't match, because this regex does not match backwards BEFORE a definition with '$script'
 #         $script:RegexTest_Hello <- doesn't match. A reference with '$script:' tells the regex that this is a script-scope variable
 #         $RegexTest_Hello        <- should match, because there is missing '$script' text
 
 
-# ------------------------------ Default Settings -----------------------------
+# -------------------------------------- Settings -----------------------------
 
-# This is an important section where all default settings are stored
+# This is an important section where all settings are stored
 $script:w6_Boundary_Character_Body = [string] '-'
 $script:w6_Boundary_Character_LeftTip = [string] '<'
 $script:w6_Boundary_Character_RightTip = [string] '>'
@@ -136,7 +103,7 @@ $script:w6_Introduction_ScrollUpMessage_DoDisplay = [bool] $true
 $script:w6_Introduction_ScrollUpMessage_NewlinesAbove = [int] 5
 $script:w6_Introduction_Toggle = [bool] $false
 $script:w6_Introduction_Toggle_CommandsHelp = [bool] $true
-$script:w6_Introduction_Toggle_ConfigStats = [bool] $true
+# $script:w6_Introduction_Toggle_ConfigStats = [bool] $true
 $script:w6_Introduction_Toggle_DetectedOS = [bool] $true
 $script:w6_Introduction_Toggle_Greeting = [bool] $true
 $script:w6_List_AfterAttributesListNumber_ListNumber_Visible = [bool] $true # Turning this off may be useful if you want to have custom "frame" for cda - you can change the afterattributes
@@ -179,7 +146,7 @@ $script:w6_List_Input_MathCharacters = [string[]] @( '*', '/', '%', '+', '-', '(
 $script:w6_List_NegativeValues_Display_Separator = [string] ','
 $script:w6_List_NegativeValues_Display_ShowEveryXthListing = [int] 5
 $script:w6_List_NegativeValues_Display_Toggle = [bool] $false
-$script:w6_List_Stick_BadInput_FirstTime = [bool] $true # If set to true - the first time an incorrect stick option is passed - an alternative (longer) message will be displayed. # TODO FINISHED HERE
+$script:w6_List_Stick_BadInput_FirstTime = [bool] $true # If set to true - the first time an incorrect stick option is passed - an alternative (longer) message will be displayed
 $script:w6_List_Stick_BadInput_MaxErrorRetries = [int] 4
 $script:w6_List_Stick_BadInput_Sleep_Milliseconds_FirstTime = [int] 1000
 $script:w6_List_Stick_BadInput_Sleep_Milliseconds_NotFirstTime = [int] 300
@@ -262,11 +229,11 @@ $script:w6_List_Attributes_Colors = [hashtable] @{
     #  - 'Any' - Will always be applied
 
     # Color Name:
-    #  - 'Default' - you can explicitly say to use the default color chosen by the console.
+    #  - 'Default' - you can explicitly say to use the default color chosen by the console
 }
 
 # Aliases Notes:
-# A big amount of aliases can noticeably decrease the loading times - some options are commented out.
+# A big amount of aliases can noticeably decrease the loading times - thus many are commented out
 # Double ## means that the alias is considered better than others
 
 $script:w6_Aliases_cda = [string[]] @(
@@ -887,7 +854,7 @@ function Update-w6_IntroductionTotalAutomaticWrites {
     }
     catch [System.Management.Automation.MethodInvocationException] {
         Write-w6_ShortErrorCatchMessage `
-            -CustomExceptionMessage 'Updating the PowerShell-File-Walker total automatic introduction writes count file has failed!'
+            -CustomExceptionMessage 'Failed to update the PowerShell-File-Walker data file!'
 
         # `nSuspected reason: Invalid path was generated '$script:w6_Introduction_TotalAutomaticWrites_Path'
     }
@@ -911,10 +878,8 @@ function Update-w6_IntroductionTotalAutomaticWrites {
 
     Reset-FileWalkerIntroductionAutomaticWrites sets the Total Loads Count back to 0
 .LINK
-    [placeholder] - Online documentation (not finished yet)
-.LINK
     Write-FileWalkerIntroduction -> Manually write the introduction
-#> # TODO ADD A NOTE THAT THIS COMMAND IS CUSTOMIZABLE
+#> 
 
 function Reset-FileWalkerIntroductionAutomaticWrites {
     Update-w6_IntroductionTotalAutomaticWrites -Value $script:w6_Introduction_TotalAutomaticWrites_Default_String
@@ -975,52 +940,53 @@ $script:w6_Boundary_Character_Body_Length = $script:w6_Boundary_Character_Body.L
 
 # ------------------------- Loading User Configuration ------------------------
 
-$script:w6_ConfigParentPaths = @( @(
-        [System.IO.Path]::GetFullPath( ( $PROFILE.AllUsersAllHosts ) ),
-        [System.IO.Path]::GetFullPath( ( $PROFILE.AllUsersCurrentHost ) ),
-        [System.IO.Path]::GetFullPath( ( $PROFILE.CurrentUserAllHosts ) ),
-        [System.IO.Path]::GetFullPath( ( $PROFILE.CurrentUserCurrentHost ) ),
-        [System.IO.Path]::GetFullPath( ( Get-w6_StringWithoutDoubleSlashes -String "$( $script:w6_Product_Path )$( $script:w6_PathSlash ).." ) )
-    ) | Select-Object -Unique
-)
+# UPDATE 2025 - LOADING USER CONFIGURATION HAS BEEN DEPRECATED
+# $script:w6_ConfigParentPaths = @( @(
+#         [System.IO.Path]::GetFullPath( ( $PROFILE.AllUsersAllHosts ) ),
+#         [System.IO.Path]::GetFullPath( ( $PROFILE.AllUsersCurrentHost ) ),
+#         [System.IO.Path]::GetFullPath( ( $PROFILE.CurrentUserAllHosts ) ),
+#         [System.IO.Path]::GetFullPath( ( $PROFILE.CurrentUserCurrentHost ) ),
+#         [System.IO.Path]::GetFullPath( ( Get-w6_StringWithoutDoubleSlashes -String "$( $script:w6_Product_Path )$( $script:w6_PathSlash ).." ) )
+#     ) | Select-Object -Unique
+# )
 
-$script:w6_ConfigFileName = 'PowerShell-File-Walker-Config.ps1'
-$script:w6_Config_Found_Count = 0
-$script:w6_Config_Found_Files = @()
-$script:w6_Config_Success_Count = 0
-$script:w6_Config_Error_Count = 0
-$script:w6_Config_Error_CathMessages = @()
+# $script:w6_ConfigFileName = 'PowerShell-File-Walker-Config.ps1'
+# $script:w6_Config_Found_Count = 0
+# $script:w6_Config_Found_Files = @()
+# $script:w6_Config_Success_Count = 0
+# $script:w6_Config_Error_Count = 0
+# $script:w6_Config_Error_CathMessages = @()
 
-foreach ( $configParentPath in $script:w6_ConfigParentPaths ) {
-    $configPath = ( $configParentPath + $script:w6_PathSlash + $script:w6_ConfigFileName )
-    $configPath = ( Get-w6_StringWithoutDoubleSlashes -String $configPath )
-    $wasFound = $true
+# foreach ( $configParentPath in $script:w6_ConfigParentPaths ) {
+#     $configPath = ( $configParentPath + $script:w6_PathSlash + $script:w6_ConfigFileName )
+#     $configPath = ( Get-w6_StringWithoutDoubleSlashes -String $configPath )
+#     $wasFound = $true
 
-    try {
-        . ( $configPath )
-        $script:w6_Config_Success_Count++
-    }
-    catch [System.Management.Automation.CommandNotFoundException] {
-        $wasFound = $false
-    }
-    catch {
-        $script:w6_Config_Error_Count++
+#     try {
+#         . ( $configPath )
+#         $script:w6_Config_Success_Count++
+#     }
+#     catch [System.Management.Automation.CommandNotFoundException] {
+#         $wasFound = $false
+#     }
+#     catch {
+#         $script:w6_Config_Error_Count++
 
-        $script:w6_Config_Error_CathMessages += @"
-$( Get-w6_Boundary -Direction $script:w6_Boundary_Direction_Name_Left -LengthMultiplier $script:w6_Boundary_Length_Long )
-  Errors have occurred while loading the User Configuration Files:
+#         $script:w6_Config_Error_CathMessages += @"
+# $( Get-w6_Boundary -Direction $script:w6_Boundary_Direction_Name_Left -LengthMultiplier $script:w6_Boundary_Length_Long )
+#   Errors have occurred while loading the User Configuration Files:
 
-$_
-$( Get-w6_Boundary -Direction $script:w6_Boundary_Direction_Name_Right -LengthMultiplier $script:w6_Boundary_Length_Long )
+# $_
+# $( Get-w6_Boundary -Direction $script:w6_Boundary_Direction_Name_Right -LengthMultiplier $script:w6_Boundary_Length_Long )
 
-"@
-    }
+# "@
+#     }
 
-    if ( $wasFound ) {
-        $script:w6_Config_Found_Files += $configPath
-        $script:w6_Config_Found_Count++
-    }
-}
+#     if ( $wasFound ) {
+#         $script:w6_Config_Found_Files += $configPath
+#         $script:w6_Config_Found_Count++
+#     }
+# }
 
 
 # ----------------- Globals, Constants & Developer Settings 2 -----------------
@@ -3184,7 +3150,7 @@ $( $w6_s1 )$script:w6_Product_Name $script:w6_Product_Version
 "@ )
     # <========== Message End
 
-    if ( $script:w6_Introduction_Toggle_Greeting -or $script:w6_Introduction_Toggle_DetectedOS -or $script:w6_Introduction_Toggle_ConfigStats ) {
+    if ( $script:w6_Introduction_Toggle_Greeting -or $script:w6_Introduction_Toggle_DetectedOS ) {
         # ==========> Message Begin
         $null = $messageBuilder.AppendLine( '' )
         # <========== Message End
@@ -3205,13 +3171,14 @@ $( $w6_s1 )Detected OS: $script:w6_CurrentOSType
             # <========== Message End
         }
 
-        if ( $script:w6_Introduction_Toggle_ConfigStats ) {
-            # ==========> Message Begin
-            $null = $messageBuilder.AppendLine( @"
-$( $w6_s1 )Config: Found $script:w6_Config_Found_Count (Success $script:w6_Config_Success_Count; Error $script:w6_Config_Error_Count)
-"@ )
-            # <========== Message End
-        }
+# UPDATE 2025 - LOADING USER CONFIGURATION HAS BEEN DEPRECATED
+#         if ( $script:w6_Introduction_Toggle_ConfigStats ) {
+#             # ==========> Message Begin
+#             $null = $messageBuilder.AppendLine( @"
+# $( $w6_s1 )Config: Found $script:w6_Config_Found_Count (Success $script:w6_Config_Success_Count; Error $script:w6_Config_Error_Count)
+# "@ )
+#             # <========== Message End
+#         }
 
     }
 
@@ -3254,7 +3221,6 @@ $( $w6_s6 )> unelev -exit > Opens a Non-Admin PowerShell Session, and closes you
         $null = $messageBuilder.AppendLine( @"
 
 $( $w6_s1 )The PowerShell-File-Walker Commands Bundle is highly configurable!
-$( $w6_s1 )Settings Wiki: [sorry, work in progress]
 "@ )
         # <========== Message End
 
@@ -3381,9 +3347,7 @@ Scroll up for information about the applied $script:w6_Product_Name...
     ...
 .NOTES
     [!Important Note] The written text is aligned to the middle of the console by default
-.LINK
-    [placeholder] - Online documentation (not finished yet)
-#> # TODO ADD A NOTE THAT THIS COMMAND IS CUSTOMIZABLE
+#>
 
 function Write-ColorCombinations {
     param(
@@ -3503,8 +3467,6 @@ function Write-ColorCombinations {
 
     SoftClearBeforeList => Cdf will Write empty lines above the list, to hide the previous text
     Switch | True | c, sc, scbl, clear, softclear
-.LINK
-    [placeholder] - Online documentation (not finished yet)
 .LINK
     Cda - A version of Cdf for Changing Directories
 #>
@@ -3745,16 +3707,12 @@ Set-w6_AliasBulk -Value 'cdf' -Aliases $script:w6_Aliases_cdf -Scope 'Script'
 
 
             #9 Config
-    Cda is highly configurable. Configure cda by changing special variables. Changed variables don't save between sessions.
-    Use a PowerShell Profile to permanently save your changes!!!
-    More info + special variables list at https://github.com/JakuWorks/Powershell-File-Walker/wiki
+    Cda is highly configurable. Configure cda by changing the constant variables within the script
 
 
             #10 Notes
     Files that contain / or \ slashes in their filenames may cause errors
     Cda has no aliases by default
-.LINK
-    [placeholder] - Online documentation (not finished yet)
 .LINK
     Cdf - A version of Cda for Selecting Files
 #>
@@ -3811,6 +3769,9 @@ if ( $script:w6_IsWindows ) {
 .SYNOPSIS
     Quickly open a New Admin PowerShell Session at your Current Directory
 .DESCRIPTION
+    WARNING, EXECUTING THIS COMMAND MAY ALLOW A SOPHISTICATED THREAT ACTOR TO GAIN ELEVATED PERMISSIONS (by modifying elev's code)
+    EXERCISE CAUTION
+
     *Elev is a command from the PowerShell-File-Walker Commands Bundle
     Elev works only on Windows devices
 
@@ -3852,10 +3813,8 @@ if ( $script:w6_IsWindows ) {
 .NOTES
     Elevation method: Start-Process -RunAs. Please read the code for more info
 .LINK
-    [placeholder] - Online documentation (not finished yet)
-.LINK
     Unelev - Open a New Non-Admin PowerShell Session at your current working directory
-#> # TODO ADD A NOTE THAT THIS COMMAND IS CUSTOMIZABLE
+#> 
 
     function elev {
         param(
@@ -3896,6 +3855,9 @@ if ( $script:w6_IsWindows ) {
 .SYNOPSIS
     Quickly open a New Non-Admin PowerShell Session at your Current Directory
 .DESCRIPTION
+    WARNING, EXECUTING THIS COMMAND MAY ALLOW A SOPHISTICATED THREAT ACTOR TO GAIN ELEVATED PERMISSIONS (by modifying unelev's code)
+    EXERCISE CAUTION
+
     *Unelev is a command from the PowerShell-File-Walker Commands Bundle
     Unelev works only on Windows devices
 
@@ -3934,10 +3896,8 @@ if ( $script:w6_IsWindows ) {
 .NOTES
     Unelevation method: Windows Task Scheduler - Scheduling a one-time task to start PowerShell. Then immediately calling the scheduled task - then deleting that task. Please read the code for more info
 .LINK
-    [placeholder] - Online documentation (not finished yet)
-.LINK
     Elev - Open an New Admin PowerShell Session at your current working directory
-#> # TODO ADD A NOTE THAT THIS COMMAND IS CUSTOMIZABLE
+#> 
 
     function unelev {
         param(
@@ -3956,7 +3916,7 @@ if ( $script:w6_IsWindows ) {
                     '-Command',
                     "( . { if ( -not `$script:w6_AlreadyLoaded ) { . '$script:w6_Product_Path' } } );",
                     "( . { if ( '$script:w6_Unelev_NewConsoleTitle' -ne '$script:w6_ElevationCommands_UnsetTitle' ) { `$host.UI.RawUI.WindowTitle = '$script:w6_Unelev_NewConsoleTitle' } } );",
-                    "( Set-w6_NearestAvailableLocationFromPath -AbsolutePath '$currentAbsoluteLocation' );", # todo Improvement Idea: save Get-w6_NearestAvailableLocationFromPath to a variable
+                    "( Set-w7_NearestAvailableLocationFromPath -AbsolutePath '$currentAbsoluteLocation' );", # todo Improvement Idea: save Get-w7_NearestAvailableLocationFromPath to a variable
                     "( Set-w6_OperatingPathIfValid -Path ( Get-w6_NearestAvailableLocationFromPath -AbsolutePath '$currentAbsoluteLocation' ) -Silent:`$script:w6_SetOperatingPath_DefaultParameterValue_Silent_IfUsedBy_Script );",
                     "( Start-w6_TaskbarFlashingForCurrentConsoleWindow -FlashTimes $script:w6_TaskbarFlashing_FlashTimes -OneFlashDurationMilliseconds $script:w6_TaskbarFlashing_OneFlashDurationMilliseconds );",
                     '( Write-Host """You''ve Launched a Non-Admin PowerShell Prompt!""" )' `
@@ -3994,9 +3954,10 @@ if ( $script:w6_Introduction_Toggle ) {
     Write-FileWalkerIntroduction -IsAutomatic
 }
 
-foreach ( $errorCatchMessage in $script:w6_Config_Error_CathMessages ) {
-    Write-Host $errorCatchMessage
-}
+# UPDATE 2025 - LOADING USER CONFIGURATION HAS BEEN DEPRECATED
+# foreach ( $errorCatchMessage in $script:w6_Config_Error_CathMessages ) {
+#     Write-Host $errorCatchMessage
+# }
 
 if ( $script:w6_Write_Approximate_Loading_Time ) {
     Write-w6_ApproximateTimeSinceScriptStart

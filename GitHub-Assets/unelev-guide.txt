@@ -1,0 +1,49 @@
+PowerShell comment-based help for "unelev" copied on 03.03.2025 (DD.MM.YYYY):
+
+    <#
+.SYNOPSIS
+    Quickly open a New Non-Admin PowerShell Session at your Current Directory
+.DESCRIPTION
+    WARNING, EXECUTING THIS COMMAND MAY ALLOW A SOPHISTICATED THREAT ACTOR TO GAIN ELEVATED PERMISSIONS (by modifying unelev's code)
+    EXERCISE CAUTION
+
+    *Unelev is a command from the PowerShell-File-Walker Commands Bundle
+    Unelev works only on Windows devices
+
+    Unelev means "Unelevate", and refers to "Unelevating (revoking) Permissions"
+    Unelev opens a New PowerShell Session at your Current Directory that has User (Non-Admin) Permissions
+
+    Unelev can be used inside Admin and Non-Admin PowerShell Sessions
+
+    The steps:
+    1. You use Unelev
+    2. Unelev takes a Snapshot of your Current Working Directory in your Current PowerShell Session
+    3. Unelev opens a New Non-Admin PowerShell Session
+    4. Unelev loads the PowerShell-File-Walker Commands Bundle to the New Non-Admin PowerShell Session, because it heavily depends on it
+    5. Unelev starts taskbar flashing for the New Non-Admin PowerShell Session
+    6. Unelev sets the Working Directory of the New Non-Admin PowerShell Session to the directory from the Snapshot
+    7. If everything went well - Unelev will write a message in the Old PowerShell Session about its success
+
+    Unelev Aliases:  nudo (short for "No Sudo")
+    Use  'Get-Help unelev -Examples'  or  'Get-Help unelev -Full'  for more information
+.PARAMETER ExitCurrentSession
+    Should Unelev use the "Exit" command in the Current PowerShell Session after launching the New Non-Admin PowerShell Session?
+    ExitCurrentSession Aliases:  e  q  ex  qu  exit  quit
+
+    If Unelev fails - the "Exit" command will NOT be used
+.EXAMPLE
+    PS C:\Users\Jacob> unelev
+    *Unelev opened a New Non-Admin PowerShell Session with 'C:\Users\Jacob' as the working directory*
+.EXAMPLE
+    PS C:\Users\Jacob> unelev -ExitCurrentSession
+    *Unelev opened a New Non-Admin PowerShell Session with 'C:\Users\Jacob' as the working directory*
+    *Unelev closed the Old PowerShell Session because everything went well*
+.EXAMPLE
+    PS C:\Users\Jacob> unelev -ExitCurrentSession
+    *Unelev fails*
+    *Nothing is closed and nothing happens because Unelev failed*
+.NOTES
+    Unelevation method: Windows Task Scheduler - Scheduling a one-time task to start PowerShell. Then immediately calling the scheduled task - then deleting that task. Please read the code for more info
+.LINK
+    Elev - Open an New Admin PowerShell Session at your current working directory
+#> 

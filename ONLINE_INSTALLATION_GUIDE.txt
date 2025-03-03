@@ -1,2 +1,0 @@
-Please follow this link if you want to see the guide:
-https://github.com/JakuWorks/PowerShell-File-Walker-Commands/wiki/%E2%9D%97--Installation-Guide

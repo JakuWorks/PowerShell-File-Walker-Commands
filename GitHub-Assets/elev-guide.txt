@@ -1,0 +1,52 @@
+PowerShell comment-based help for "elev" copied on 03.03.2025 (DD.MM.YYYY):
+
+    <#
+.SYNOPSIS
+    Quickly open a New Admin PowerShell Session at your Current Directory
+.DESCRIPTION
+    WARNING, EXECUTING THIS COMMAND MAY ALLOW A SOPHISTICATED THREAT ACTOR TO GAIN ELEVATED PERMISSIONS (by modifying elev's code)
+    EXERCISE CAUTION
+
+    *Elev is a command from the PowerShell-File-Walker Commands Bundle
+    Elev works only on Windows devices
+
+    Elev means "Elevate", and refers to "Elevating (giving) Permissions"
+    Elev opens a New PowerShell Session at your Current Directory that has Admin Permissions
+
+    Elev can be used inside Admin and Non-Admin PowerShell Sessions
+
+    The steps:
+    1. You use Elev
+    2. Elev takes a Snapshot of your Current Working Directory in your Current PowerShell Session
+    3. Elev opens a New Admin PowerShell Session
+    - Elev may ask you for admin permission if it cannot open a New Admin PowerShell Session
+    4. Elev loads the PowerShell-File-Walker Commands Bundle to the New Admin PowerShell Session, because it heavily depends on it
+    5. Elev starts taskbar flashing for the New Admin PowerShell Session
+    6. Elev sets the Working Directory of the New Admin PowerShell Session to the directory from the Snapshot
+    7. If everything went well - Elev will write a message in the Old PowerShell Session about its success
+
+    Elev Aliases:  wudo (short for "Windows Sudo")
+    Use  'Get-Help elev -Examples'  or  'Get-Help elev -Full'  for more information
+.PARAMETER ExitCurrentSession
+    Should Elev use the "Exit" command in the Current PowerShell Session after launching the New Admin PowerShell Session?
+    ExitCurrentSession Aliases:  e  q  ex  qu  exit  quit
+
+    If you cancel the Admin Permission Ask Prompt - the "Exit" command will NOT be used
+.EXAMPLE
+    PS C:\Users\Jacob> elev
+    *Elev asks for admin permission* - *You allow it*
+    *Elev opened a New Admin PowerShell Session with 'C:\Users\Jacob' as the working directory*
+.EXAMPLE
+    PS C:\Users\Jacob> elev -ExitCurrentSession
+    *Elev asks for admin permission* - *You allow it*
+    *Elev opened a New Admin PowerShell Session with 'C:\Users\Jacob' as the working directory*
+    *Elev closed the Old PowerShell Session because everything went well*
+.EXAMPLE
+    PS C:\Users\Jacob> elev -ExitCurrentSession
+    *Elev asks for Admin Permission* - *You cancel it*
+    *Nothing is closed and nothing happens because Elev failed*
+.NOTES
+    Elevation method: Start-Process -RunAs. Please read the code for more info
+.LINK
+    Unelev - Open a New Non-Admin PowerShell Session at your current working directory
+#> 

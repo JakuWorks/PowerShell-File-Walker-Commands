@@ -1,0 +1,206 @@
+PowerShell comment-based help for "cda" copied on 03.03.2025 (DD.MM.YYYY):
+
+<#
+.SYNOPSIS
+    Display a formatted list of all current directory's files and change directory to the one you select
+.DESCRIPTION
+    *Cda is a command from the PowerShell-File-Walker Commands Bundle
+    Tested for:  Windows 10, 11 PowerShell 5, 7 | Linux (Ubuntu) PowerShell 7
+
+    'cda' => Display a numbered list of directories you can jump to
+    'cda x' => Jump to the x'th directory
+    'cda -Stick' => Enable stick mode - repeatedly display the directory list and ask to choose a directory
+
+    PS C:\Users> cda
+    ------------------------------------------------------>
+        You're at: C:\Users
+
+    Found Directories:
+    [0] Parent Directory - C:\
+    [1] All Users    >          -> SYSTEM, Hidden [1]
+    [2] Default    >          -> ReadOnly, Hidden [2]
+    [3] Default User    >       -> SYSTEM, Hidden [3]
+    [4] Admin                                     [4]
+    [5] Public    >                   -> ReadOnly [5]
+
+        You're at: C:\Users
+    <------------------------------------------------------
+    PS C:\Users> cda 4
+    PS C:\Users\Admin>
+
+
+    Learn More
+    =============================
+    #1 Parameter Summary
+    #2 Positional Parameters
+    #3 Times - Usage
+    #4 WhichByAlphabet - Special 0 Number
+    #5 WhichByAlphabet - Negative Numbers
+    #6 WhichByAlphabet - Arrays as Input
+    #7 Times and WhichByAlphabet - Arrays as Input
+    #8 Stick Mode
+    #9 Config
+    #10 Notes
+    =============================
+
+
+            #1 Parameter Summary
+    Parameter Name => Description
+    Supported Types | Usual Default Value | Aliases
+
+    WhichByAlphabet => Where to go
+    Number, Array, String | $script:w6_SentinelValue_String | w, i, n, wba, index, number
+
+    Times => How Many Times to go there
+    Number, Array, String | 1 | t
+
+    OperatingPath => Cda will Operate from this path
+    String | .\ or ./ | p, op, path
+
+    AttributesBlackList => Cda will Hide these attributes from the list
+    Array, String | Directory, NotContentIndexed, ReparsePoint, Normal, Archive | bl, blist, black, blacklist
+
+    AttributesPriorityList => Cda will Make these attributes stand out
+    Array, String | System | pl, plist, priority, prioritylist
+
+    Stick => Cda will Repeatedly Display the list and Ask to choose a directory
+    Switch | False | s
+
+    ListForce => After all jumps - cda will Forcefully Display the list
+    Switch | False | l, lf
+
+    NoList => Passing invalid WhichByAlphabet won't trigger the list display
+    Switch | False | nl
+
+    WriteSelectedFiles => Cda will Write the selected files. Useful for debugging
+    Switch | False | w, wsf, write
+
+    ForceFiles => Cda will use -Force with the Get-ChildItem command when generating the files list
+    Switch | True | f, ff, force
+
+    SoftClearBeforeList => Cda will Write empty lines above the list, to hide the previous text
+    Switch | True | c, sc, scbl, clear, softclear
+
+
+            #2 Positional Parameters
+    First two positional parameters are WhichByAlphabet and Times
+    'cda -WhichByAlphabet 1 -Times 2'  equals  'cda 1 2'
+
+
+            #3 Times - Usage
+    WhichByAlphabet - where to jump | Times - how many Times to jump
+    'cda 1 3'  equals  'cda 1; cda 1; cda 1'
+    'cda 1 3'  equals  'jump to the 1'st directory 3 Times'
+
+
+            #4 WhichByAlphabet - Special 0 Number
+    'cda 0'  equals  'jump to the parent directory'
+    C:\Users\Admin> cda 0
+    C:\Users>
+
+    C:\Users\Admin\Desktop\100MDollarOffers> cda 0 10
+    C:\>
+
+
+            #5 WhichByAlphabet - Negative Numbers
+    When you pass a negative number as WhichByAlphabet - the item is selected from the end
+
+    In this list:
+    [1] Photos
+    [2] Videos
+    [3] Audio
+    Negative numbers are here:
+    [-3] Photos
+    [-2] Videos
+    [-1] Audio
+
+    'cda -1' here will select the Audio directory
+
+
+            #6 WhichByAlphabet - Arrays as Input
+    PowerShell sees 0,2,3 as @(0,2,3) - both are correct
+    'cda @(4,6)'  equals  'cda 4; cda 6'
+    'cda 0,2,3'  equals  'cda 0; cda 2; cda 3'
+
+
+            #7 Times and WhichByAlphabet - Arrays as Input
+    When both WhichByAlphabet and Times are arrays - each WhichByAlphabet number lines up with a Times number from left to right
+    'cda 1,2,3 4,5,6'  equals  'cda 1 4; cda 2 5; cda 3 6'
+
+    Default values:
+    Times: 1
+    WhichByAlphabet: *deletes its Times partner*
+
+    'cda 2 3,4'  equals  'cda 2 3'
+    4 was deleted by the missing WhichByAlphabet
+
+    'cda 5,6 7'  equals  'cda 5,6 7,1'
+    Missing Times was replaced with 1
+
+
+            #8 Stick Mode
+    'cda -Stick' => enter stick mode
+    Stick Mode will repeatedly display the list and ask to choose a directory
+    Answer 'q' => exit stick mode
+
+    'cda -s' => '-s' is an alias of '-Stick'
+
+    C:\Users\Admin> cda -s
+     *the list is displayed*
+    Option: 0 10
+     *Stick Mode runs 'cda 0 10'
+     *the list is displayed*
+    Option: 2
+     *Stick Mode runs 'cda 2'
+     *the list is displayed*
+    Option: q
+     *You Quit Stick Mode!*
+    C:\Program Files>
+
+    1'st found 1 or more recognized characters - WhichByAlphabet
+    2'nd found 1 or more recognized characters - Times
+
+    Each group of recognized characters is separated by one or more unrecognized characters
+    This allows Stick Mode to differentiate between WhichByAlphabet and Times
+
+    All recognized characters:
+    - Special characters -> q, l, ...
+    - Digits -> 0, 1, 2, ...
+    - Commas -> ,
+    - Most math characters -> * / + - ( ) .
+    All other characters are unrecognized!
+    Space is an Unrecognized character!
+
+    Stick Mode allows you to define both WhichByAlphabet and Times
+    Other parameters like -WriteSelectedFiles must be defined BEFORE entering a Stick session
+
+    Stick Mode supports advanced WhichByAlphabet and Times input
+    Negative numbers, special characters, math characters, and so on...
+
+    Examples Template:
+    'text' => Role => Description
+
+    Option: 2,3 4,5
+    '2,3' => WhichByAlphabet => 1'st found recognized characters
+    ' ' => unrecognized characters => ends the 1'st found recognized characters group
+    '4,5' => Times => 2'nd found recognized characters
+
+    Option: hi 1,-1,b,1,5 hello 6,7
+    'hi ' => unrecognized characters => ends nothing
+    '1,-1,' => WhichByAlphabet => 1'st found recognized characters.  Note: the , comma at the end is ignored
+    'b' => unrecognized character => ends 1'st found recognized characters group
+    ',1,5' => Times => 2'nd found recognized characters. Note: the , comma at the beginning is ignored
+    ' hello ' => unrecognized characters => ends 2'nd found recognized characters group
+    '6,7' => Ignored => 3'rd found recognized characters
+
+
+            #9 Config
+    Cda is highly configurable. Configure cda by changing the constant variables within the script
+
+
+            #10 Notes
+    Files that contain / or \ slashes in their filenames may cause errors
+    Cda has no aliases by default
+.LINK
+    Cdf - A version of Cda for Selecting Files
+#>

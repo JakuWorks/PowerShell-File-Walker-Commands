@@ -1,0 +1,99 @@
+PowerShell comment-based help for "cdf" copied on 03.03.2025 (DD.MM.YYYY):
+
+<#
+.SYNOPSIS
+    Display a formatted list of all current directory's files and return the paths of the files you select
+.DESCRIPTION
+    *Cdf is a command from the PowerShell-File-Walker Commands Bundle
+    Tested for:  Windows 10, 11 PowerShell 5, 7 | Linux (Ubuntu) PowerShell 7
+
+    'cdf' => Display a numbered list of all files at your current directory
+    'cdf x' => Select/return the path of the x'th file
+
+    Example:
+    PS C:\BookAuthors> cdf
+    ---------------------------------------------------------------------->
+        You're at: C:\BookAuthors
+
+    Found Items:
+    [0] Parent Directory - C:\
+    [1] Notes    >                                   -> Directory [1]
+    [2] $100M Offers.txt                                          [2]
+    [3] The Way Of The Superior Man.txt    >            -> SYSTEM [3]
+    [4] Why We Seep.txt    >                          -> ReadOnly [4]
+
+        You're at: C:\BookAuthors
+    <----------------------------------------------------------------------
+    PS C:\BookAuthors> cdf 2
+    C:\BookAuthors\$100M Offers.txt   <- Cdf returned the full path of the selected file
+    PS C:\BookAuthors> cd (cdf 1)
+    PS C:\BookAuthors\Notes>
+
+
+    Learn More
+    =============================
+    #1 Important Information
+    #2 The Only Differences Between Cdf And Cda You Should Know About
+    #3 Parameter Summary
+    =============================
+
+
+        #1 Important Information
+    There are two sibling commands: Cdf and Cda. They are very similar
+
+    Cdf is for selecting files
+    Cda is for changing directories
+
+    Cda has an Amazing documentation
+    Cdf doesn't have an Amazing documentation
+
+    "Great! But how do I use advanced Cdf features?!?!"
+    Since Cdf and Cda are nearly the same: the Great Majority of the Cda documentation applies to Cdf
+
+    Please continue reading to the section #2 which explains The Only Differences Between Cda and Cdf
+    Then read the Cda documentation with "Get-Help cda"
+
+
+            #2 The Only Differences Between Cdf And Cda You Should Know About
+    - Cdf outputs the path of the selected files. Cda changes the directory to the selected file
+    - Cdf means "Current Directory File". Cda means "Change Directory Alphabetically"
+    - Cdf doesn't have Stick mode
+    - A few Cdf parameters have different Default Values than Cda parameters
+
+
+            #3 Parameters Summary
+    Parameter Name => Description
+    Supported Types | Usual Default Value | Aliases
+
+    WhichByAlphabet => Where to go
+    Number, Array, String | $script:w6_SentinelValue_String | w, i, n, wba, index, number
+
+    Times => How Many Times to go there
+    Number, Array, String | 1 | t
+
+    OperatingPath => Cdf will Operate from this path
+    String | .\ or ./ | p, op, path
+
+    AttributesBlackList => Cdf will Hide these attributes from the list
+    Array, String | NotContentIndexed, ReparsePoint, Normal, Archive | bl, blist, black, blacklist
+
+    AttributesPriorityList => Cdf will Make these attributes stand out
+    Array, String | System | pl, plist, priority, prioritylist
+
+    ListForce => After all jumps - cdf will Forcefully Display the list
+    Switch | False | l, lf
+
+    NoList => Passing invalid WhichByAlphabet won't trigger the list display
+    Switch | False | nl
+
+    WriteSelectedFiles => Cdf will Write the selected files. Useful for debugging
+    Switch | False | w, wsf, write
+
+    ForceFiles => Cdf will use -Force with the Get-ChildItem command when generating the files list
+    Switch | True | f, ff, force
+
+    SoftClearBeforeList => Cdf will Write empty lines above the list, to hide the previous text
+    Switch | True | c, sc, scbl, clear, softclear
+.LINK
+    Cda - A version of Cdf for Changing Directories
+#>

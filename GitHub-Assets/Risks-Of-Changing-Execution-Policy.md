@@ -1,6 +1,6 @@
 Here are a few facts:
 
-- The simplified purpose of the execution policies is this: To stop PowerShell scripts from working
+- The simplified purpose of the execution policies is this: To stop PowerShell scripts (.ps1 files, etc.) from working
 
 - A PowerShell script is a file that contains PowerShell commands that PowerShell can run.
 
