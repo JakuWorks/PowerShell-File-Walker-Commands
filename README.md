@@ -2,7 +2,11 @@
 
 
 ## Short Description
-A suite of four commands `cda`, `cdf`, `elev`, `unelev` that help with common PowerShell shell tasks
+PowerShell-File-Walker-Commands is a bundle of four commands `cda`, `cdf`, `elev`, `unelev` that simplify common PowerShell shell tasks
+
+
+## Commands
+Here are all the commands, short descriptions and usage instructions
 
 cda - Change Directory Alphabetically
 - `cda` - Display a nice list of all directories in your current path
