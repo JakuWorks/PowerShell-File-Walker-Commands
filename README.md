@@ -47,6 +47,7 @@ This software can be __extensively__ configured:
 ## Learnt Skills
 - Basics of programming in PowerShell
 - Basics of Windows' inner systems  
+**This project is old and its quality does not reflect my current skills**
 
 
 ## Time
