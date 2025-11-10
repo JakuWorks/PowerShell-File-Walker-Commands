@@ -1,6 +1,13 @@
 # Project Summary
 
 
+## Repository Status
+I will no longer update this project due to the following reasons:
+- No personal incentive - I've switched away from Windows and no longer depend on PowerShell and this program
+- [Technical debt](https://en.wikipedia.org/wiki/Technical_debt) - I've created this project at the beginning of my programming career. My lack of experience resulted in poor code quality, which in turn led to unmaintainability
+-  Security risks - the Elev command may pose a security threat: a malicious actor could tamper with Elev's code to achieve [privilege escalation](https://en.wikipedia.org/wiki/Privilege_escalation)
+
+
 ## Short Description
 PowerShell-File-Walker-Commands is a bundle of four commands `cda`, `cdf`, `elev`, `unelev` that simplify common PowerShell shell tasks
 
@@ -65,7 +72,7 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
 
 3. Run the `PowerShell-File-Walker.ps1` file in your current context. Template:
 ```
-. ./path/to/PowerShell-File-Walker.ps1`
+. ./path/to/PowerShell-File-Walker.ps1
 ```
 
 You can also use [PowerShell Profiles](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.5) to run this command for you every time you start PowerShell
