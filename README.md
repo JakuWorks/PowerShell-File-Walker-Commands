@@ -68,4 +68,4 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
 . ./path/to/PowerShell-File-Walker.ps1`
 ```
 
-You can also use [PowerShell Profiles](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.5) to run the command for you every time you start PowerShell
+You can also use [PowerShell Profiles](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.5) to run this command for you every time you start PowerShell
