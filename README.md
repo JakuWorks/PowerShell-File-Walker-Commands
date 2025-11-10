@@ -16,14 +16,14 @@ PowerShell-File-Walker-Commands is a bundle of four commands `cda`, `cdf`, `elev
 Here are all the commands, brief descriptions and usage instructions
 
 - `cda` - "Change Directory Alphabetically"
-- `cda` - Display a nice list of all directories in your current path
+- `cda` - Display a list of all directories in your current path
 - `cda n` - Go to the n'th directory from the list  
-- `cda -Stick` - Enter special "sticky" mode
+- `cda -Stick` - Enter the special "sticky" mode
 
 [READ MORE ABOUT CDA](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/cda-guide.txt)
 
 - `cdf` - "Current Directory File"
-- `cdf` - Display a nice list of all files and directories in your current path
+- `cdf` - Display a list of all files and directories in your current path
 - `cdf n` - Get the path of the n'th file from the list  
 
 [READ MORE ABOUT CDF](https://github.com/JakuWorks/PowerShell-File-Walker-Commands/blob/main/GitHub-Assets/cdf-guide.txt)
