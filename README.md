@@ -9,7 +9,7 @@ I will no longer update this project due to the following reasons:
 
 
 ## Short Description
-PowerShell-File-Walker-Commands is a bundle of four commands `cda`, `cdf`, `elev`, `unelev` that simplify common PowerShell shell tasks
+PowerShell-File-Walker-Commands is a bundle of four commands: `cda`, `cdf`, `elev`, `unelev` - that simplify common PowerShell shell tasks.
 
 
 ## Commands
@@ -51,15 +51,15 @@ This software can be __extensively__ configured:
 - PowerShell (with a few C# imports)
 
 
-## Learnt Skills
+## Learned Skills
 - Basics of programming in PowerShell
 - Basics of Windows' inner systems  
-**This project is old and its quality does not reflect my current skills**
+**This project is old, and its quality does not reflect my current skills**
 
 
 ## Time
 - 2023 - 4 months during and after summer - main working period
-- 2025 - 03.03.2025 (1 day) (DD.MM.YYYY) - updating the README, changing a few comments and tiny improvements
+- 2025 - 03.03.2025 (1 day) (DD.MM.YYYY) - updating the README, changing a few comments, and tiny improvements
 
 
 ## Download & Installation
@@ -75,4 +75,4 @@ Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope CurrentUser -Force
 . ./path/to/PowerShell-File-Walker.ps1
 ```
 
-You can also use [PowerShell Profiles](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.5) to run this command for you every time you start PowerShell
+You can also use [PowerShell Profiles](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_profiles?view=powershell-7.5) to run this command for you every time you start PowerShell.
