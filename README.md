@@ -5,7 +5,6 @@
 I will no longer update this project due to the following reasons:
 - No personal incentive - I've switched away from Windows and no longer depend on PowerShell and this program
 - [Technical debt](https://en.wikipedia.org/wiki/Technical_debt) - I've created this project at the beginning of my programming career. My lack of experience resulted in poor code quality, which in turn led to unmaintainability
--  Security risks - the Elev command may pose a security threat: a malicious actor could tamper with Elev's code to achieve [privilege escalation](https://en.wikipedia.org/wiki/Privilege_escalation)
 
 
 ## Short Description
